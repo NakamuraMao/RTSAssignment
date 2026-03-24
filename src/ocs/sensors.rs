@@ -4,7 +4,7 @@
 //! **task separation**: Thermal / IMU / Power are each run in a **separate `tokio` task** (individually `spawn`ed by `runtime`),
 //! avoid a single `select!` super loop. send to a common `mpsc::Sender` (MPSC) with `try_send`.
 
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
@@ -14,8 +14,8 @@ use super::time;
 use crate::sensor_values::SensorQuantity;
 
 use super::types::{
-    BufferDropEvent, DataPriority, DropReason, FaultInjectionState, FaultKind, SafetyEvent,
-    SafetyEventKind, SensorId, SensorSample,
+    BenchmarkMetrics, BufferDropEvent, DataPriority, DropReason, FaultInjectionState, FaultKind,
+    SafetyEvent, SafetyEventKind, SensorId, SensorSample,
 };
 
 // -----------------------------------------------------------------------------
@@ -75,7 +75,8 @@ pub async fn run_thermal_sensor(
     fault_rx: watch::Receiver<FaultInjectionState>,
     buffer_sample_count: Arc<AtomicUsize>,
     buffer_capacity: usize,
-    last_priority_drop_log_ms: Arc<Mutex<u64>>,
+    last_priority_drop_log_ms: Arc<AtomicU64>,
+    bench_metrics: Arc<Mutex<BenchmarkMetrics>>,
 ) {
     sensor_sampling_loop(
         SensorId(0),
@@ -90,6 +91,7 @@ pub async fn run_thermal_sensor(
         buffer_sample_count,
         buffer_capacity,
         last_priority_drop_log_ms,
+        Some(bench_metrics),
     )
     .await;
 }
@@ -102,7 +104,7 @@ pub async fn run_imu_sensor(
     fault_rx: watch::Receiver<FaultInjectionState>,
     buffer_sample_count: Arc<AtomicUsize>,
     buffer_capacity: usize,
-    last_priority_drop_log_ms: Arc<Mutex<u64>>,
+    last_priority_drop_log_ms: Arc<AtomicU64>,
 ) {
     sensor_sampling_loop(
         SensorId(1),
@@ -117,6 +119,7 @@ pub async fn run_imu_sensor(
         buffer_sample_count,
         buffer_capacity,
         last_priority_drop_log_ms,
+        None,
     )
     .await;
 }
@@ -129,7 +132,7 @@ pub async fn run_power_sensor(
     fault_rx: watch::Receiver<FaultInjectionState>,
     buffer_sample_count: Arc<AtomicUsize>,
     buffer_capacity: usize,
-    last_priority_drop_log_ms: Arc<Mutex<u64>>,
+    last_priority_drop_log_ms: Arc<AtomicU64>,
 ) {
     sensor_sampling_loop(
         SensorId(2),
@@ -144,6 +147,7 @@ pub async fn run_power_sensor(
         buffer_sample_count,
         buffer_capacity,
         last_priority_drop_log_ms,
+        None,
     )
     .await;
 }
@@ -160,7 +164,8 @@ async fn sensor_sampling_loop(
     fault_rx: watch::Receiver<FaultInjectionState>,
     buffer_sample_count: Arc<AtomicUsize>,
     buffer_capacity: usize,
-    last_priority_drop_log_ms: Arc<Mutex<u64>>,
+    last_priority_drop_log_ms: Arc<AtomicU64>,
+    bench_metrics: Option<Arc<Mutex<BenchmarkMetrics>>>,
 ) {
     let mut interval = tokio::time::interval(Duration::from_millis(period_ms));
     interval.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Skip);
@@ -168,7 +173,6 @@ async fn sensor_sampling_loop(
 
     loop {
         interval.tick().await;
-        let mut log_guard = last_priority_drop_log_ms.lock().expect("priority_drop_log lock");
         let tick_result = sample_tick(
             sensor_id,
             data_priority,
@@ -182,9 +186,9 @@ async fn sensor_sampling_loop(
             &fault_rx,
             &buffer_sample_count,
             buffer_capacity,
-            &mut *log_guard,
+            &last_priority_drop_log_ms,
+            bench_metrics.as_ref(),
         );
-        drop(log_guard);
         if tick_result.is_err() {
             break;
         }
@@ -208,36 +212,40 @@ fn sample_tick(
     fault_rx: &watch::Receiver<FaultInjectionState>,
     buffer_sample_count: &Arc<AtomicUsize>,
     buffer_capacity: usize,
-    last_priority_drop_log_ms: &mut u64,
+    last_priority_drop_log_ms: &Arc<AtomicU64>,
+    bench_metrics: Option<&Arc<Mutex<BenchmarkMetrics>>>,
 ) -> Result<(), ()> {
     let t_read_start = time::now_ms();
     let fault = fault_rx.borrow().clone();
 
-    // Delayed: suppress sending for the target sensor. do not update the state related to sending.
-    // (receiver can reliably detect "not coming" by last_seen, so the state on the sensors side does not affect the receiver).
+    let actual_ms = t_read_start.0;
+    // Delayed: suppress sending for the target sensor.
+    // Keep phase state updated to avoid counting fault-window gaps as normal-operation jitter.
     if fault.active
         && fault.sensor_id == Some(sensor_id)
         && fault.kind == FaultKind::Delayed
     {
+        if state.last_sample_ms > 0 && jitter_threshold_ms > 0 {
+            let actual_interval_ms = actual_ms.saturating_sub(state.last_sample_ms);
+            let jitter_ms = actual_interval_ms.saturating_sub(period_ms);
+            if let Some(metrics) = bench_metrics {
+                if let Ok(mut m) = metrics.try_lock() {
+                    m.thermal_sensor_fault_max_jitter_ms =
+                        m.thermal_sensor_fault_max_jitter_ms.max(jitter_ms as i64);
+                }
+            }
+        }
+        state.last_sample_ms = actual_ms;
+        state.next_deadline_ms = actual_ms.saturating_add(period_ms);
         return Ok(());
     }
-
-    let actual_ms = t_read_start.0;
     // difference between the next deadline (next_deadline_ms) synchronized with the previous actual = only the delay for this period (no chain accumulation).
     let drift_ms = if state.sequence > 0 {
         actual_ms as i64 - state.next_deadline_ms as i64
     } else {
         0
     };
-    if state.sequence > 0 {
-        crate::ocs_ts_eprintln!(
-            "[sensors] drift sensor_id={} next_deadline_ms={} actual_ms={} drift_ms={}",
-            sensor_id.0,
-            state.next_deadline_ms,
-            actual_ms,
-            drift_ms
-        );
-    }
+    let _ = drift_ms;
 
     // priority check before sending: Low/Normal and backlog >= 80% then drop without sending (update state).
     let threshold = buffer_capacity * 80 / 100;
@@ -248,15 +256,20 @@ fn sample_tick(
         state.last_sample_ms = actual_ms;
         state.next_deadline_ms = actual_ms.saturating_add(period_ms);
         let now_ms = time::now_ms().0;
-        if *last_priority_drop_log_ms == 0
-            || now_ms.saturating_sub(*last_priority_drop_log_ms) >= PRIORITY_DROP_LOG_INTERVAL_MS
+        let last_log_ms = last_priority_drop_log_ms.load(Ordering::Relaxed);
+        if last_log_ms == 0 || now_ms.saturating_sub(last_log_ms) >= PRIORITY_DROP_LOG_INTERVAL_MS
         {
             crate::ocs_ts_eprintln!(
                 "[sensors] drop priority buffer_high sensor_id={} event_at={}",
                 sensor_id.0,
                 now_ms
             );
-            *last_priority_drop_log_ms = now_ms;
+            last_priority_drop_log_ms.store(now_ms, Ordering::Relaxed);
+        }
+        if let Some(metrics) = bench_metrics {
+            if let Ok(mut m) = metrics.try_lock() {
+                m.total_dropped_samples = m.total_dropped_samples.saturating_add(1);
+            }
         }
         return Ok(());
     }
@@ -328,6 +341,11 @@ fn sample_tick(
                 sensor_id.0,
                 at.0
             );
+            if let Some(metrics) = bench_metrics {
+                if let Ok(mut m) = metrics.try_lock() {
+                    m.total_dropped_samples = m.total_dropped_samples.saturating_add(1);
+                }
+            }
         }
         Err(mpsc::error::TrySendError::Closed(_)) => return Err(()),
     }
@@ -335,6 +353,12 @@ fn sample_tick(
     if state.last_sample_ms > 0 && jitter_threshold_ms > 0 {
         let actual_interval_ms = actual_ms.saturating_sub(state.last_sample_ms);
         let jitter_ms = actual_interval_ms.saturating_sub(period_ms);
+        if let Some(metrics) = bench_metrics {
+            if let Ok(mut m) = metrics.try_lock() {
+                m.thermal_sensor_max_jitter_ms =
+                    m.thermal_sensor_max_jitter_ms.max(jitter_ms as i64);
+            }
+        }
         if jitter_ms > jitter_threshold_ms {
             let at = time::now_ms();
             let _ = safety_tx.try_send(SafetyEvent {

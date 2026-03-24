@@ -1,8 +1,0 @@
-# OCS shutdown snapshot
-thermal_max_jitter_ms=18
-drift_max_ms=47
-drift_sum_ms=48064
-drift_count=3606
-deadline_violations=4212
-cpu_util_sum_active_ms=1275
-cpu_util_sum_total_ms=53001

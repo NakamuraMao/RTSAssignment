@@ -134,8 +134,9 @@ pub async fn run() {
         res = tokio::signal::ctrl_c() => {
             let _ = res;
             shutdown_ctrl_c.try_shutdown();
+            // Ctrl+C branch: wait for graceful supervisor shutdown.
+            let _ = (&mut supervisor_run).await;
         }
         _ = &mut supervisor_run => {}
     }
-    supervisor_run.await;
 }

@@ -3,7 +3,7 @@
 use crate::gcs::logging::{log_event, LogEvent};
 use crate::gcs::types::{Command, FaultState, RejectionReason};
 
-/// Unsafe command names (fault中に送ると危険): mode change, execute/trigger, reset/restart.
+/// Unsafe command names : mode change, execute/trigger, reset/restart.
 const UNSAFE_NAMES: &[&str] = &[
     "mode_change",
     "set_mode",

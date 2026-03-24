@@ -16,7 +16,7 @@ const ALERT_WAIT_TIMEOUT_SECS: u64 = 5;
 const RECOVERY_DEADLINE_MS: u64 = safety::RECOVERY_ABORT_THRESHOLD_MS;
 
 /// Every 60 seconds: inject Delayed fault → wait for alert → clear fault → receive RecoveryTimeMetric and evaluate/log only the target sensor.
-/// At the start of each cycle, read BenchmarkMetrics, log a summary line of jitter/drift/deadline/cpu, and reset.
+/// At the start of each cycle, read BenchmarkMetrics and log a summary line of cumulative jitter/drift/deadline/cpu.
 pub async fn run_benchmarking(
     fault_tx: watch::Sender<FaultInjectionState>,
     mut metrics_rx: mpsc::Receiver<RecoveryTimeMetric>,
@@ -31,9 +31,9 @@ pub async fn run_benchmarking(
         interval.tick().await;
         cycle += 1;
 
-        // 60s start: read previous cycle metrics, log summary line, and reset
+        // 60s start: read cumulative metrics and log summary line
         {
-            let mut m = bench_metrics.lock().expect("bench_metrics lock");
+            let m = bench_metrics.lock().expect("bench_metrics lock");
             let drift_avg_ms = if m.drift_count == 0 {
                 0.0_f64
             } else {
@@ -44,10 +44,30 @@ pub async fn run_benchmarking(
             } else {
                 (m.cpu_util_sum_active_ms as f64 / m.cpu_util_sum_total_ms as f64) * 100.0
             };
-            let jitter_max = if m.thermal_max_jitter_ms == i64::MIN {
+            let e2e_latency_avg = if m.e2e_latency_count == 0 {
+                0.0_f64
+            } else {
+                m.e2e_latency_sum_ms as f64 / m.e2e_latency_count as f64
+            };
+            let tx_queue_latency_avg = if m.tx_queue_latency_count == 0 {
+                0.0_f64
+            } else {
+                m.tx_queue_latency_sum_ms as f64 / m.tx_queue_latency_count as f64
+            };
+            let sensor_jitter_max = if m.thermal_sensor_max_jitter_ms == i64::MIN {
                 "n/a".to_string()
             } else {
-                m.thermal_max_jitter_ms.to_string()
+                m.thermal_sensor_max_jitter_ms.to_string()
+            };
+            let sensor_fault_jitter_max = if m.thermal_sensor_fault_max_jitter_ms == i64::MIN {
+                "n/a".to_string()
+            } else {
+                m.thermal_sensor_fault_max_jitter_ms.to_string()
+            };
+            let thermal_sched_drift_max = if m.thermal_scheduling_drift_ms == i64::MIN {
+                "n/a".to_string()
+            } else {
+                m.thermal_scheduling_drift_ms.to_string()
             };
             let drift_max = if m.drift_max_ms == i64::MIN {
                 "n/a".to_string()
@@ -55,16 +75,24 @@ pub async fn run_benchmarking(
                 m.drift_max_ms.to_string()
             };
             crate::ocs_ts_eprintln!(
-                "[benchmarking] cycle={} eval jitter_max_ms={} drift_max_ms={} drift_avg_ms={:.2} drift_late_starts={} deadline_violations={} cpu_util_avg={:.1}%",
+                "[benchmarking] cycle={} eval thermal_sensor_jitter_max_ms={} thermal_sensor_fault_jitter_max_ms={} thermal_sched_drift_max_ms={} drift_max_ms={} drift_avg_ms={:.2} drift_late_starts={} deadline_violations={} cpu_util_avg={:.1}% e2e_latency_max_ms={} e2e_latency_avg_ms={:.2} tx_queue_latency_max_ms={} tx_queue_latency_avg_ms={:.2} peak_buffer_fill_rate_percent={} dropped_samples={} compression_overload_skips={}",
                 cycle,
-                jitter_max,
+                sensor_jitter_max,
+                sensor_fault_jitter_max,
+                thermal_sched_drift_max,
                 drift_max,
                 drift_avg_ms,
                 m.drift_late_start_count,
                 m.deadline_violations,
-                cpu_util_avg
+                cpu_util_avg,
+                m.max_e2e_latency_ms,
+                e2e_latency_avg,
+                m.max_tx_queue_latency_ms,
+                tx_queue_latency_avg,
+                m.peak_buffer_fill_rate_percent,
+                m.total_dropped_samples,
+                m.compression_overload_skip_count
             );
-            m.reset();
         }
 
         let target_sensor = SensorId(0); // Thermal

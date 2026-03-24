@@ -3,7 +3,7 @@
 //! [`UdpSocket`] is pseudo-connected with `bind(0.0.0.0:0)` → `connect(gcs_addr)` and sent with `send` thereafter.
 
 use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use tokio::net::UdpSocket;
@@ -15,7 +15,7 @@ use crate::reliability::{CircuitBreaker, ExponentialBackoff};
 use crate::wire::{FIXED_HEADER_BYTES, LENGTH_PREFIX_BYTES};
 
 use super::time;
-use super::types::DownlinkPacket;
+use super::types::{BenchmarkMetrics, DownlinkPacket};
 use crate::supervisor::debug_log_ndjson;
 
 const DEGRADED_THRESHOLD_PERCENT: u64 = 80;
@@ -66,6 +66,7 @@ pub async fn run_downlink(
     gcs_addr: &str,
     capacity: usize,
     queued: Arc<AtomicUsize>,
+    bench_metrics: Arc<Mutex<BenchmarkMetrics>>,
 ) {
     let capacity = capacity.max(1);
     let mut socket: Option<UdpSocket> = None;
@@ -86,20 +87,17 @@ pub async fn run_downlink(
 
         let now = time::now_ms();
         let queueing_delay_ms = now.0.saturating_sub(packet.prepared_at.0);
-        crate::ocs_ts_eprintln!(
-            "[downlink] queueing_delay sequence={} delay_ms={}",
-            packet.sequence,
-            queueing_delay_ms
-        );
+        if let Ok(mut m) = bench_metrics.try_lock() {
+            m.max_tx_queue_latency_ms = m.max_tx_queue_latency_ms.max(queueing_delay_ms);
+            m.tx_queue_latency_sum_ms = m.tx_queue_latency_sum_ms.saturating_add(queueing_delay_ms);
+            m.tx_queue_latency_count = m.tx_queue_latency_count.saturating_add(1);
+        }
 
         let q = queued.load(Ordering::Relaxed);
         let usage_pct: u64 = (q.saturating_add(1)).saturating_mul(100) as u64 / capacity as u64;
-        crate::ocs_ts_eprintln!(
-            "[downlink] queue_usage capacity={} queued={} usage_pct={}%",
-            capacity,
-            q,
-            usage_pct
-        );
+        if let Ok(mut m) = bench_metrics.try_lock() {
+            m.peak_buffer_fill_rate_percent = m.peak_buffer_fill_rate_percent.max(usage_pct);
+        }
 
         if usage_pct >= DEGRADED_THRESHOLD_PERCENT {
             if !degraded {
@@ -213,14 +211,6 @@ pub async fn run_downlink(
         match sock.send(&frame[..frame_len]).await {
             Ok(_) => {
                 circuit.on_success();
-                let sent_at = time::now_ms();
-                let send_delay_ms = sent_at.0.saturating_sub(packet.prepared_at.0);
-                crate::ocs_ts_eprintln!(
-                    "[downlink] sent sequence={} sent_at={} send_delay_ms={}",
-                    packet.sequence,
-                    sent_at.0,
-                    send_delay_ms
-                );
             }
             Err(e) => {
                 crate::ocs_ts_eprintln!(

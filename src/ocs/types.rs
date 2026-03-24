@@ -159,7 +159,12 @@ pub struct CpuUtilizationMetric {
 /// recovery time (`recovery_*`) is the **cumulative of the entire execution**, not cleared by `reset` (only `reset_all` initializes).
 #[derive(Clone, Debug)]
 pub struct BenchmarkMetrics {
-    pub thermal_max_jitter_ms: i64,
+    /// Thermal sensor-side (10ms period) max jitter.
+    pub thermal_sensor_max_jitter_ms: i64,
+    /// Thermal sensor jitter observed while fault injection is active for the sensor.
+    pub thermal_sensor_fault_max_jitter_ms: i64,
+    /// Thermal scheduling-side (50ms period) max interval deviation.
+    pub thermal_scheduling_drift_ms: i64,
     pub drift_max_ms: i64,
     pub drift_sum_ms: i64,
     pub drift_count: u64,
@@ -169,6 +174,20 @@ pub struct BenchmarkMetrics {
     pub deadline_violations: u64,
     pub cpu_util_sum_active_ms: u64,
     pub cpu_util_sum_total_ms: u64,
+    /// max sensor read-to-receiver latency.
+    pub max_e2e_latency_ms: u64,
+    pub e2e_latency_sum_ms: u64,
+    pub e2e_latency_count: u64,
+    /// max compression-prepared to downlink-send task receive latency.
+    pub max_tx_queue_latency_ms: u64,
+    pub tx_queue_latency_sum_ms: u64,
+    pub tx_queue_latency_count: u64,
+    /// peak downlink queue fill rate.
+    pub peak_buffer_fill_rate_percent: u64,
+    /// total dropped samples observed across sensors/receiver.
+    pub total_dropped_samples: u64,
+    /// intentional compression skips under overload protection.
+    pub compression_overload_skip_count: u64,
     /// last observed recovery time (ms) in the fault injection cycle.
     pub recovery_last_duration_ms: Option<u64>,
     /// maximum observed recovery time (ms). not used when `recovery_count == 0`.
@@ -182,7 +201,9 @@ pub struct BenchmarkMetrics {
 impl Default for BenchmarkMetrics {
     fn default() -> Self {
         Self {
-            thermal_max_jitter_ms: i64::MIN,
+            thermal_sensor_max_jitter_ms: i64::MIN,
+            thermal_sensor_fault_max_jitter_ms: i64::MIN,
+            thermal_scheduling_drift_ms: i64::MIN,
             drift_max_ms: i64::MIN,
             drift_sum_ms: 0,
             drift_count: 0,
@@ -190,6 +211,15 @@ impl Default for BenchmarkMetrics {
             deadline_violations: 0,
             cpu_util_sum_active_ms: 0,
             cpu_util_sum_total_ms: 0,
+            max_e2e_latency_ms: 0,
+            e2e_latency_sum_ms: 0,
+            e2e_latency_count: 0,
+            max_tx_queue_latency_ms: 0,
+            tx_queue_latency_sum_ms: 0,
+            tx_queue_latency_count: 0,
+            peak_buffer_fill_rate_percent: 0,
+            total_dropped_samples: 0,
+            compression_overload_skip_count: 0,
             recovery_last_duration_ms: None,
             recovery_max_duration_ms: 0,
             recovery_sum_duration_ms: 0,
@@ -202,7 +232,9 @@ impl Default for BenchmarkMetrics {
 impl BenchmarkMetrics {
     /// reset only jitter / drift / deadline / CPU. recovery totals are retained.
     pub fn reset(&mut self) {
-        self.thermal_max_jitter_ms = i64::MIN;
+        self.thermal_sensor_max_jitter_ms = i64::MIN;
+        self.thermal_sensor_fault_max_jitter_ms = i64::MIN;
+        self.thermal_scheduling_drift_ms = i64::MIN;
         self.drift_max_ms = i64::MIN;
         self.drift_sum_ms = 0;
         self.drift_count = 0;
@@ -210,6 +242,15 @@ impl BenchmarkMetrics {
         self.deadline_violations = 0;
         self.cpu_util_sum_active_ms = 0;
         self.cpu_util_sum_total_ms = 0;
+        self.max_e2e_latency_ms = 0;
+        self.e2e_latency_sum_ms = 0;
+        self.e2e_latency_count = 0;
+        self.max_tx_queue_latency_ms = 0;
+        self.tx_queue_latency_sum_ms = 0;
+        self.tx_queue_latency_count = 0;
+        self.peak_buffer_fill_rate_percent = 0;
+        self.total_dropped_samples = 0;
+        self.compression_overload_skip_count = 0;
     }
 
     /// when pipeline starts: initialize all fields including recovery totals.

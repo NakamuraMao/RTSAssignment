@@ -1,11 +1,11 @@
 //! OCS: health monitoring task logic and reporting.
-//! ① センサアラート監視（safety の [bool;3]、1つでも true なら NG）
-//! ③ 正常ログ出力（OK/NG ともに alerts={:?} でどのセンサが alert か分かる）
+//! ① sensor alert monitoring (safety's [bool;3], NG if any true)
+//! ③ normal log output (OK/NG both show which sensor is alerted via alerts={:?})
 
 use super::time;
 
-/// ヘルスチェック。scheduling の Health タスクから呼ばれる。
-/// センサアラート状態を監視し、1つでも true なら NG。結果と alerts をログ出力する。
+/// Health check. called from Health task in scheduling.
+/// Monitor sensor alert state, NG if any true. Log result and alerts.
 #[must_use]
 pub fn check(alert_snapshot: [bool; 3]) -> bool {
     let at = time::now_ms();

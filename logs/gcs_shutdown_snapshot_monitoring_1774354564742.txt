@@ -1,9 +1,9 @@
-# GCS Performance Metrics Snapshot (at_ms=55508)
+# GCS Performance Metrics Snapshot (at_ms=61552)
 
 ## Uplink jitter (ms)
-- last: 1
-- max: 1
-- avg: 1.00
+- last: 0
+- max: 0
+- avg: 0.00
 - count: 1
 
 ## Telemetry backlog (unprocessed packets)
@@ -12,9 +12,9 @@
 
 ## Scheduler drift (ms, actual_dispatch_at - execute_at)
 - last: 0
-- max: 1
-- abs_max: 1
-- avg: 0.50
+- max: 0
+- abs_max: 0
+- avg: 0.00
 - count: 2
 
 ## Missed deadlines
@@ -22,19 +22,19 @@
 - last_command_id: n/a
 
 ## Fault recovery
-- last_duration_ms: 4003
-- max_duration_ms: 4003
+- last_duration_ms: 4289
+- max_duration_ms: 4289
 - recovery_count: 1
 - recovery_over_100ms_count: 2
 
-## Interlock latency (ms, fault detection → blocking)
-- last: 2001
-- max: 2001
-- avg: 2001.00
+## Interlock latency (ms, fault recv → state published to scheduler)
+- last: 0
+- max: 0
+- avg: 0.00
 - count: 1
 
 ## System load (%)
-- last: 10.96
-- max: 98.68
-- avg: 18.03
-- count: 56
+- last: 23.55
+- max: 46.70
+- avg: 20.19
+- count: 62

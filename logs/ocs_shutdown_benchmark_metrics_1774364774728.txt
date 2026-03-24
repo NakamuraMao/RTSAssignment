@@ -1,0 +1,24 @@
+# OCS shutdown snapshot
+# Safety recovery: spec < 200ms; abort if alert persists >= 190ms (constants in safety.rs)
+recovery_measured_last_ms=10
+recovery_measured_max_ms=10
+recovery_measured_avg_ms=6.00
+recovery_measured_count=2
+recovery_measured_over_abort_threshold_count=0
+thermal_sensor_max_jitter_ms=11
+thermal_sensor_fault_max_jitter_ms=2
+thermal_scheduling_drift_ms=13
+drift_max_ms=17
+drift_sum_ms=4426
+drift_count=4043
+drift_late_start_count=3026
+deadline_violations=5
+cpu_util_sum_active_ms=479
+cpu_util_sum_total_ms=59002
+e2e_latency_max_ms=6
+e2e_latency_avg_ms=0.06
+tx_queue_latency_max_ms=6
+tx_queue_latency_avg_ms=0.03
+peak_buffer_fill_rate_percent=1
+total_dropped_samples=0
+compression_overload_skip_count=0

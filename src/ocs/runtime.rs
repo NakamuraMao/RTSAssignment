@@ -6,6 +6,7 @@
 use std::marker::PhantomData;
 use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
+use std::thread::JoinHandle;
 use std::time::Duration;
 
 use tokio::sync::{mpsc, watch};
@@ -72,6 +73,7 @@ pub struct PreparedData {
     bench_metrics: Arc<Mutex<BenchmarkMetrics>>,
     sup: Supervisor,
     shutdown_handle: ShutdownHandle,
+    thermal_thread: Option<JoinHandle<()>>,
 }
 
 /// OCS runtime body. `S` is the current typestate.
@@ -99,6 +101,7 @@ impl OcsRuntime<RuntimeUninitialized> {
                 bench_metrics,
                 sup,
                 shutdown_handle,
+                thermal_thread: None,
             },
         }
     }
@@ -111,8 +114,10 @@ impl OcsRuntime<RuntimeRunning> {
             bench_metrics,
             mut sup,
             shutdown_handle,
+            mut thermal_thread,
         } = self.inner;
         let shutdown_ctrl_c = shutdown_handle.clone();
+        let thermal_thread_slot = Arc::new(Mutex::new(None::<JoinHandle<()>>));
 
         let on_shutdown_save = {
             let bench_metrics = Arc::clone(&bench_metrics);
@@ -135,6 +140,22 @@ impl OcsRuntime<RuntimeRunning> {
                         m.recovery_sum_duration_ms as f64 / m.recovery_count as f64
                     )
                 };
+                let e2e_latency_avg = if m.e2e_latency_count == 0 {
+                    "n/a".to_string()
+                } else {
+                    format!(
+                        "{:.2}",
+                        m.e2e_latency_sum_ms as f64 / m.e2e_latency_count as f64
+                    )
+                };
+                let tx_queue_latency_avg = if m.tx_queue_latency_count == 0 {
+                    "n/a".to_string()
+                } else {
+                    format!(
+                        "{:.2}",
+                        m.tx_queue_latency_sum_ms as f64 / m.tx_queue_latency_count as f64
+                    )
+                };
                 let snapshot = format!(
                     "# OCS shutdown snapshot\n\
                      # Safety recovery: spec < {}ms; abort if alert persists >= {}ms (constants in safety.rs)\n\
@@ -143,14 +164,23 @@ impl OcsRuntime<RuntimeRunning> {
                      recovery_measured_avg_ms={}\n\
                      recovery_measured_count={}\n\
                      recovery_measured_over_abort_threshold_count={}\n\
-                     thermal_max_jitter_ms={}\n\
+                     thermal_sensor_max_jitter_ms={}\n\
+                     thermal_sensor_fault_max_jitter_ms={}\n\
+                     thermal_scheduling_drift_ms={}\n\
                      drift_max_ms={}\n\
                      drift_sum_ms={}\n\
                      drift_count={}\n\
                      drift_late_start_count={}\n\
                      deadline_violations={}\n\
                      cpu_util_sum_active_ms={}\n\
-                     cpu_util_sum_total_ms={}\n",
+                     cpu_util_sum_total_ms={}\n\
+                     e2e_latency_max_ms={}\n\
+                     e2e_latency_avg_ms={}\n\
+                     tx_queue_latency_max_ms={}\n\
+                     tx_queue_latency_avg_ms={}\n\
+                     peak_buffer_fill_rate_percent={}\n\
+                     total_dropped_samples={}\n\
+                     compression_overload_skip_count={}\n",
                     safety::RECOVERY_SPEC_MAX_MS,
                     safety::RECOVERY_ABORT_THRESHOLD_MS,
                     recovery_last,
@@ -158,7 +188,9 @@ impl OcsRuntime<RuntimeRunning> {
                     recovery_avg,
                     m.recovery_count,
                     m.recovery_over_abort_threshold_count,
-                    m.thermal_max_jitter_ms,
+                    m.thermal_sensor_max_jitter_ms,
+                    m.thermal_sensor_fault_max_jitter_ms,
+                    m.thermal_scheduling_drift_ms,
                     m.drift_max_ms,
                     m.drift_sum_ms,
                     m.drift_count,
@@ -166,12 +198,21 @@ impl OcsRuntime<RuntimeRunning> {
                     m.deadline_violations,
                     m.cpu_util_sum_active_ms,
                     m.cpu_util_sum_total_ms,
+                    m.max_e2e_latency_ms,
+                    e2e_latency_avg,
+                    m.max_tx_queue_latency_ms,
+                    tx_queue_latency_avg,
+                    m.peak_buffer_fill_rate_percent,
+                    m.total_dropped_samples,
+                    m.compression_overload_skip_count,
                 );
                 save_text_snapshot("ocs_shutdown_benchmark_metrics", &snapshot);
             }
         };
 
-        let build_pipeline = move |sup: &mut Supervisor| {
+        let build_pipeline = {
+            let thermal_thread_slot = Arc::clone(&thermal_thread_slot);
+            move |sup: &mut Supervisor| {
             {
                 let mut m = bench_metrics.lock().expect("bench_metrics lock");
                 m.reset_all();
@@ -186,7 +227,7 @@ impl OcsRuntime<RuntimeRunning> {
             let (fault_tx, fault_rx) = watch::channel(FaultInjectionState::inactive());
             let (metrics_tx, metrics_rx) = mpsc::channel::<RecoveryTimeMetric>(8);
 
-            const DOWNLINK_CAPACITY: usize = 32;
+            const DOWNLINK_CAPACITY: usize = 64;
             let (downlink_tx, downlink_rx) = mpsc::channel::<DownlinkPacket>(DOWNLINK_CAPACITY);
             let downlink_queued = Arc::new(AtomicUsize::new(0));
 
@@ -200,8 +241,8 @@ impl OcsRuntime<RuntimeRunning> {
             let shutdown_tx = shutdown_handle.sender();
 
             let fault_rx_scheduling = fault_rx.clone();
-            let last_priority_drop_log_ms = Arc::new(Mutex::new(0u64));
-            sup.spawn(sensors::run_thermal_sensor(
+            let last_priority_drop_log_ms = Arc::new(AtomicU64::new(0));
+            let thermal_handle = spawn_thermal_isolated_thread(
                 sample_tx.clone(),
                 safety_tx.clone(),
                 drop_tx.clone(),
@@ -209,7 +250,12 @@ impl OcsRuntime<RuntimeRunning> {
                 buffer_sample_count.clone(),
                 SAMPLE_BUFFER_CAPACITY,
                 Arc::clone(&last_priority_drop_log_ms),
-            ));
+                bench_metrics.clone(),
+            );
+            {
+                let mut slot = thermal_thread_slot.lock().expect("thermal_thread_slot lock");
+                *slot = Some(thermal_handle);
+            }
             sup.spawn(sensors::run_imu_sensor(
                 sample_tx.clone(),
                 safety_tx.clone(),
@@ -234,6 +280,7 @@ impl OcsRuntime<RuntimeRunning> {
                 drop_tx,
                 safety_tx,
                 buffer_sample_count,
+                bench_metrics.clone(),
             ));
             sup.spawn(scheduling::run_scheduling(
                 buffer_rx,
@@ -250,6 +297,7 @@ impl OcsRuntime<RuntimeRunning> {
                 GCS_ADDR,
                 DOWNLINK_CAPACITY,
                 downlink_queued,
+                bench_metrics.clone(),
             ));
             sup.spawn(uplink::run_uplink_listener(OCS_UPLINK_BIND));
             sup.spawn(scheduling::run_cpu_logger(active_ms, bench_metrics.clone()));
@@ -266,6 +314,7 @@ impl OcsRuntime<RuntimeRunning> {
                 alert_rx_bench,
                 bench_metrics.clone(),
             ));
+            }
         };
 
         crate::ocs_ts_eprintln!("[runtime] ocs runtime started (supervisor-managed)");
@@ -282,12 +331,57 @@ impl OcsRuntime<RuntimeRunning> {
             _ = &mut supervisor_run => {}
         }
         supervisor_run.await;
+        if thermal_thread.is_none() {
+            thermal_thread = thermal_thread_slot
+                .lock()
+                .expect("thermal_thread_slot lock")
+                .take();
+        }
+        if let Some(handle) = thermal_thread {
+            if let Err(e) = handle.join() {
+                crate::ocs_ts_eprintln!(
+                    "[runtime] thermal isolated thread join failed: {:?}",
+                    e
+                );
+            }
+        }
 
         OcsRuntime {
             _state: PhantomData,
             inner: (),
         }
     }
+}
+
+fn spawn_thermal_isolated_thread(
+    sample_tx: mpsc::Sender<SensorSample>,
+    safety_tx: mpsc::Sender<SafetyEvent>,
+    drop_tx: mpsc::Sender<BufferDropEvent>,
+    fault_rx: watch::Receiver<FaultInjectionState>,
+    buffer_sample_count: Arc<AtomicUsize>,
+    buffer_capacity: usize,
+    last_priority_drop_log_ms: Arc<AtomicU64>,
+    bench_metrics: Arc<Mutex<BenchmarkMetrics>>,
+) -> JoinHandle<()> {
+    std::thread::Builder::new()
+        .name("ocs-thermal-critical".to_string())
+        .spawn(move || {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_time()
+                .build()
+                .expect("thermal runtime");
+            rt.block_on(sensors::run_thermal_sensor(
+                sample_tx,
+                safety_tx,
+                drop_tx,
+                fault_rx,
+                buffer_sample_count,
+                buffer_capacity,
+                last_priority_drop_log_ms,
+                bench_metrics,
+            ));
+        })
+        .expect("spawn thermal isolated thread")
 }
 
 impl OcsRuntime<RuntimeShuttingDown> {
@@ -329,6 +423,7 @@ async fn receiver_loop(
     drop_tx: mpsc::Sender<BufferDropEvent>,
     safety_tx: mpsc::Sender<SafetyEvent>,
     buffer_sample_count: Arc<AtomicUsize>,
+    bench_metrics: Arc<Mutex<BenchmarkMetrics>>,
 ) {
     let mut last_seen: [Option<u64>; 3] = [None, None, None];
 
@@ -354,12 +449,12 @@ async fn receiver_loop(
                         let idx = (sid.0 as usize).min(2);
                         let now = time::now_ms().0;
                         let e2e_latency_ms = now.saturating_sub(sample.read_at.0);
-                        crate::ocs_ts_eprintln!(
-                            "[receiver] e2e_latency_ms sensor_id={} latency_ms={} sample_read_at={}",
-                            sid.0,
-                            e2e_latency_ms,
-                            sample.read_at.0
-                        );
+                        if let Ok(mut m) = bench_metrics.try_lock() {
+                            m.max_e2e_latency_ms = m.max_e2e_latency_ms.max(e2e_latency_ms);
+                            m.e2e_latency_sum_ms =
+                                m.e2e_latency_sum_ms.saturating_add(e2e_latency_ms);
+                            m.e2e_latency_count = m.e2e_latency_count.saturating_add(1);
+                        }
                         let period = SENSOR_PERIOD_MS[idx];
 
                         // send Miss for the missed periods before reception (1 period = 1 Miss)
@@ -402,6 +497,10 @@ async fn receiver_loop(
                                     s.sensor_id.0,
                                     at.0
                                 );
+                                if let Ok(mut m) = bench_metrics.try_lock() {
+                                    m.total_dropped_samples =
+                                        m.total_dropped_samples.saturating_add(1);
+                                }
                             }
                             Err(mpsc::error::TrySendError::Closed(_)) => break,
                         }
