@@ -48,18 +48,18 @@ flowchart LR
 - `src/ocs/types.rs`: Common types such as `SensorId` / `TimestampMs` / `SafetyEvent` / `RecoveryTimeMetric` / `BenchmarkMetrics` / `DownlinkPacket`.
 - `src/ocs/sensors.rs`: Simulates Thermal/IMU/Power periodically and emits `SensorSample` and `SafetyEvent` (also supports Delayed fault injection via the fault watch).
 - `src/ocs/runtime.rs`: Implements typestate-based startup/shutdown and spawns the full pipeline (sensors/receiver_loop/scheduling/downlink/uplink/safety/benchmarking).
-- `src/ocs/scheduling.rs`: EDF task release/selection based on data priority and aggregates CPU/utilization, drift/jitter, and deadline violations (plus health integration).
+- `src/ocs/scheduling.rs`: EDF task release/selection with worker lanes, start/completion/prepare deadline checks, visibility-window constraints, overload skip/degraded keepalive handling, and benchmark metric aggregation.
 - `src/ocs/health.rs`: Health check that looks at the safety alert snapshot and logs `OK/NG`.
 - `src/ocs/safety.rs`: Turns 3 consecutive `Miss` events into an alert, measures recovery time until `Recovered` as `RecoveryTimeMetric`, and triggers mission abort on threshold violation.
-- `src/ocs/benchmarking.rs`: Every 60 seconds, injects a Delayed fault, waits for alert -> clears the fault -> measures recovery, then logs a one-line summary plus `OK/NG`.
+- `src/ocs/benchmarking.rs`: Every 60 seconds, logs a cumulative evaluation line, injects a Delayed fault, waits for alert -> clears the fault -> measures recovery, then logs `OK/NG`.
 - `src/ocs/downlink.rs`: Frames `DownlinkPacket` and sends it over UDP to GCS (queue/degraded mode/circuit breaker handling).
 - `src/ocs/uplink.rs`: Receives UDP command frames from GCS, validates sizes, and logs them (currently receive/validate-focused).
 
 ## How to read Benchmarking results (`src/ocs/benchmarking.rs`)
 The following messages are mainly printed to `stderr`.
 
-- `"[benchmarking] cycle=<n> eval jitter_max_ms=... drift_max_ms=... drift_avg_ms=... drift_late_starts=... deadline_violations=... cpu_util_avg=..."`
-  - Summary aggregated from `BenchmarkMetrics` for the evaluation cycle from 60 seconds ago (then `reset()` is called).
+- `"[benchmarking] cycle=<n> eval thermal_sensor_jitter_max_ms=... thermal_sensor_fault_jitter_max_ms=... thermal_task_jitter_max_ms=... compression_task_jitter_max_ms=... health_task_jitter_max_ms=... antenna_task_jitter_max_ms=... drift_max_ms=... drift_avg_ms=... drift_late_starts=... deadline_violations=... start_delay_violations=... completion_delay_violations=... prepare_deadline_violations=... visibility_prepare_deadline_violations=... critical_jitter_violations=... cpu_util_avg=... e2e_latency_max_ms=... e2e_latency_avg_ms=... tx_queue_latency_max_ms=... tx_queue_latency_avg_ms=... peak_buffer_fill_rate_percent=... dropped_samples=... compression_overload_skips=... degraded_mode_enter_count=... missed_communication_count=..."`
+  - Summary aggregated from current cumulative `BenchmarkMetrics` at cycle start (no per-cycle `reset()` is executed here).
 - `"[benchmarking] cycle=<n> fault injected sensor_id=<id> kind=Delayed"`
   - Indicates that this cycle injected a Delayed fault (send suppression).
 - `"[benchmarking] cycle=<n> fault cleared, waiting for recovery metric"`
@@ -72,8 +72,11 @@ The following messages are mainly printed to `stderr`.
 On shutdown, an execution-end snapshot is saved to `./logs/ocs_shutdown_benchmark_metrics_<timestamp>.txt`.
 Main fields:
 - `recovery_measured_last_ms / max_ms / avg_ms / count / recovery_measured_over_abort_threshold_count`
-- `thermal_max_jitter_ms / drift_max_ms / drift_sum_ms / drift_count / drift_late_start_count / deadline_violations`
+- `thermal_sensor_max_jitter_ms / thermal_sensor_fault_max_jitter_ms / thermal_task_jitter_max_ms / compression_task_jitter_max_ms / health_task_jitter_max_ms / antenna_task_jitter_max_ms`
+- `drift_max_ms / drift_sum_ms / drift_count / drift_late_start_count / deadline_violations / start_delay_violations / completion_delay_violations / prepare_deadline_violations / visibility_prepare_deadline_violations / critical_jitter_violation_count`
 - `cpu_util_sum_active_ms / cpu_util_sum_total_ms`
+- `e2e_latency_max_ms / e2e_latency_avg_ms / tx_queue_latency_max_ms / tx_queue_latency_avg_ms`
+- `peak_buffer_fill_rate_percent / total_dropped_samples / compression_overload_skip_count / degraded_mode_enter_count / missed_communication_count`
 
 ## How to read Safety results (`src/ocs/safety.rs`)
 The following messages are mainly printed to `stderr`.

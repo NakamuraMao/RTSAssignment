@@ -14,15 +14,15 @@ use tokio::time::timeout;
 
 use super::benchmarking;
 use super::downlink;
-use super::uplink;
 use super::safety;
 use super::scheduling;
 use super::sensors;
 use super::time;
 use super::types::{
-    BenchmarkMetrics, BufferDropEvent, DropReason, DownlinkPacket, FaultInjectionState,
+    BenchmarkMetrics, BufferDropEvent, DownlinkPacket, DropReason, FaultInjectionState,
     RecoveryTimeMetric, SafetyEvent, SafetyEventKind, SensorId, SensorSample,
 };
+use super::uplink;
 use crate::supervisor::{save_text_snapshot, ShutdownHandle, Supervisor};
 
 /// sensor→receiver mpsc capacity (match the buffer counter)
@@ -166,12 +166,20 @@ impl OcsRuntime<RuntimeRunning> {
                      recovery_measured_over_abort_threshold_count={}\n\
                      thermal_sensor_max_jitter_ms={}\n\
                      thermal_sensor_fault_max_jitter_ms={}\n\
-                     thermal_scheduling_drift_ms={}\n\
+                     thermal_task_jitter_max_ms={}\n\
+                     compression_task_jitter_max_ms={}\n\
+                     health_task_jitter_max_ms={}\n\
+                     antenna_task_jitter_max_ms={}\n\
                      drift_max_ms={}\n\
                      drift_sum_ms={}\n\
                      drift_count={}\n\
                      drift_late_start_count={}\n\
                      deadline_violations={}\n\
+                     start_delay_violations={}\n\
+                     completion_delay_violations={}\n\
+                     prepare_deadline_violations={}\n\
+                     visibility_prepare_deadline_violations={}\n\
+                     critical_jitter_violation_count={}\n\
                      cpu_util_sum_active_ms={}\n\
                      cpu_util_sum_total_ms={}\n\
                      e2e_latency_max_ms={}\n\
@@ -180,7 +188,9 @@ impl OcsRuntime<RuntimeRunning> {
                      tx_queue_latency_avg_ms={}\n\
                      peak_buffer_fill_rate_percent={}\n\
                      total_dropped_samples={}\n\
-                     compression_overload_skip_count={}\n",
+                     compression_overload_skip_count={}\n\
+                     degraded_mode_enter_count={}\n\
+                     missed_communication_count={}\n",
                     safety::RECOVERY_SPEC_MAX_MS,
                     safety::RECOVERY_ABORT_THRESHOLD_MS,
                     recovery_last,
@@ -190,12 +200,20 @@ impl OcsRuntime<RuntimeRunning> {
                     m.recovery_over_abort_threshold_count,
                     m.thermal_sensor_max_jitter_ms,
                     m.thermal_sensor_fault_max_jitter_ms,
-                    m.thermal_scheduling_drift_ms,
+                    m.thermal_task_jitter_max_ms,
+                    m.compression_task_jitter_max_ms,
+                    m.health_task_jitter_max_ms,
+                    m.antenna_task_jitter_max_ms,
                     m.drift_max_ms,
                     m.drift_sum_ms,
                     m.drift_count,
                     m.drift_late_start_count,
                     m.deadline_violations,
+                    m.start_delay_violations,
+                    m.completion_delay_violations,
+                    m.prepare_deadline_violations,
+                    m.visibility_prepare_deadline_violations,
+                    m.critical_jitter_violation_count,
                     m.cpu_util_sum_active_ms,
                     m.cpu_util_sum_total_ms,
                     m.max_e2e_latency_ms,
@@ -205,6 +223,8 @@ impl OcsRuntime<RuntimeRunning> {
                     m.peak_buffer_fill_rate_percent,
                     m.total_dropped_samples,
                     m.compression_overload_skip_count,
+                    m.degraded_mode_enter_count,
+                    m.missed_communication_count,
                 );
                 save_text_snapshot("ocs_shutdown_benchmark_metrics", &snapshot);
             }
@@ -213,107 +233,109 @@ impl OcsRuntime<RuntimeRunning> {
         let build_pipeline = {
             let thermal_thread_slot = Arc::clone(&thermal_thread_slot);
             move |sup: &mut Supervisor| {
-            {
-                let mut m = bench_metrics.lock().expect("bench_metrics lock");
-                m.reset_all();
-            }
+                {
+                    let mut m = bench_metrics.lock().expect("bench_metrics lock");
+                    m.reset_all();
+                }
 
-            let (sample_tx, sample_rx) = mpsc::channel(SAMPLE_BUFFER_CAPACITY);
-            let (buffer_tx, buffer_rx) = mpsc::channel(64);
-            let buffer_sample_count = Arc::new(AtomicUsize::new(0));
-            let (safety_tx, safety_rx) = mpsc::channel(32);
-            let (drop_tx, drop_rx) = mpsc::channel(32);
-            let (alert_tx, alert_rx) = watch::channel([false; 3]);
-            let (fault_tx, fault_rx) = watch::channel(FaultInjectionState::inactive());
-            let (metrics_tx, metrics_rx) = mpsc::channel::<RecoveryTimeMetric>(8);
+                let (sample_tx, sample_rx) = mpsc::channel(SAMPLE_BUFFER_CAPACITY);
+                let (buffer_tx, buffer_rx) = mpsc::channel(64);
+                let buffer_sample_count = Arc::new(AtomicUsize::new(0));
+                let (safety_tx, safety_rx) = mpsc::channel(32);
+                let (drop_tx, drop_rx) = mpsc::channel(32);
+                let (alert_tx, alert_rx) = watch::channel([false; 3]);
+                let (fault_tx, fault_rx) = watch::channel(FaultInjectionState::inactive());
+                let (metrics_tx, metrics_rx) = mpsc::channel::<RecoveryTimeMetric>(8);
 
-            const DOWNLINK_CAPACITY: usize = 64;
-            let (downlink_tx, downlink_rx) = mpsc::channel::<DownlinkPacket>(DOWNLINK_CAPACITY);
-            let downlink_queued = Arc::new(AtomicUsize::new(0));
+                const DOWNLINK_CAPACITY: usize = 64;
+                let (downlink_tx, downlink_rx) = mpsc::channel::<DownlinkPacket>(DOWNLINK_CAPACITY);
+                let downlink_queued = Arc::new(AtomicUsize::new(0));
 
-            const GCS_ADDR: &str = "127.0.0.1:9000";
-            const OCS_UPLINK_BIND: &str = "127.0.0.1:9001";
+                const GCS_ADDR: &str = "127.0.0.1:9000";
+                const OCS_UPLINK_BIND: &str = "127.0.0.1:9001";
 
-            let active_ms = Arc::new(AtomicU64::new(0));
+                let active_ms = Arc::new(AtomicU64::new(0));
 
-            let alert_rx_bench = alert_rx.clone();
+                let alert_rx_bench = alert_rx.clone();
 
-            let shutdown_tx = shutdown_handle.sender();
+                let shutdown_tx = shutdown_handle.sender();
 
-            let fault_rx_scheduling = fault_rx.clone();
-            let last_priority_drop_log_ms = Arc::new(AtomicU64::new(0));
-            let thermal_handle = spawn_thermal_isolated_thread(
-                sample_tx.clone(),
-                safety_tx.clone(),
-                drop_tx.clone(),
-                fault_rx.clone(),
-                buffer_sample_count.clone(),
-                SAMPLE_BUFFER_CAPACITY,
-                Arc::clone(&last_priority_drop_log_ms),
-                bench_metrics.clone(),
-            );
-            {
-                let mut slot = thermal_thread_slot.lock().expect("thermal_thread_slot lock");
-                *slot = Some(thermal_handle);
-            }
-            sup.spawn(sensors::run_imu_sensor(
-                sample_tx.clone(),
-                safety_tx.clone(),
-                drop_tx.clone(),
-                fault_rx.clone(),
-                buffer_sample_count.clone(),
-                SAMPLE_BUFFER_CAPACITY,
-                Arc::clone(&last_priority_drop_log_ms),
-            ));
-            sup.spawn(sensors::run_power_sensor(
-                sample_tx,
-                safety_tx.clone(),
-                drop_tx.clone(),
-                fault_rx,
-                buffer_sample_count.clone(),
-                SAMPLE_BUFFER_CAPACITY,
-                last_priority_drop_log_ms,
-            ));
-            sup.spawn(receiver_loop(
-                sample_rx,
-                buffer_tx,
-                drop_tx,
-                safety_tx,
-                buffer_sample_count,
-                bench_metrics.clone(),
-            ));
-            sup.spawn(scheduling::run_scheduling(
-                buffer_rx,
-                active_ms.clone(),
-                alert_rx,
-                downlink_tx,
-                downlink_queued.clone(),
-                DOWNLINK_CAPACITY,
-                bench_metrics.clone(),
-                fault_rx_scheduling,
-            ));
-            sup.spawn(downlink::run_downlink(
-                downlink_rx,
-                GCS_ADDR,
-                DOWNLINK_CAPACITY,
-                downlink_queued,
-                bench_metrics.clone(),
-            ));
-            sup.spawn(uplink::run_uplink_listener(OCS_UPLINK_BIND));
-            sup.spawn(scheduling::run_cpu_logger(active_ms, bench_metrics.clone()));
-            sup.spawn(drain_drop_rx(drop_rx));
-            sup.spawn(safety::run_safety(
-                safety_rx,
-                shutdown_tx,
-                alert_tx,
-                metrics_tx,
-            ));
-            sup.spawn(benchmarking::run_benchmarking(
-                fault_tx,
-                metrics_rx,
-                alert_rx_bench,
-                bench_metrics.clone(),
-            ));
+                let fault_rx_scheduling = fault_rx.clone();
+                let last_priority_drop_log_ms = Arc::new(AtomicU64::new(0));
+                let thermal_handle = spawn_thermal_isolated_thread(
+                    sample_tx.clone(),
+                    safety_tx.clone(),
+                    drop_tx.clone(),
+                    fault_rx.clone(),
+                    buffer_sample_count.clone(),
+                    SAMPLE_BUFFER_CAPACITY,
+                    Arc::clone(&last_priority_drop_log_ms),
+                    bench_metrics.clone(),
+                );
+                {
+                    let mut slot = thermal_thread_slot
+                        .lock()
+                        .expect("thermal_thread_slot lock");
+                    *slot = Some(thermal_handle);
+                }
+                sup.spawn(sensors::run_imu_sensor(
+                    sample_tx.clone(),
+                    safety_tx.clone(),
+                    drop_tx.clone(),
+                    fault_rx.clone(),
+                    buffer_sample_count.clone(),
+                    SAMPLE_BUFFER_CAPACITY,
+                    Arc::clone(&last_priority_drop_log_ms),
+                ));
+                sup.spawn(sensors::run_power_sensor(
+                    sample_tx,
+                    safety_tx.clone(),
+                    drop_tx.clone(),
+                    fault_rx,
+                    buffer_sample_count.clone(),
+                    SAMPLE_BUFFER_CAPACITY,
+                    last_priority_drop_log_ms,
+                ));
+                sup.spawn(receiver_loop(
+                    sample_rx,
+                    buffer_tx,
+                    drop_tx,
+                    safety_tx,
+                    buffer_sample_count,
+                    bench_metrics.clone(),
+                ));
+                sup.spawn(scheduling::run_scheduling(
+                    buffer_rx,
+                    active_ms.clone(),
+                    alert_rx,
+                    downlink_tx,
+                    downlink_queued.clone(),
+                    DOWNLINK_CAPACITY,
+                    bench_metrics.clone(),
+                    fault_rx_scheduling,
+                ));
+                sup.spawn(downlink::run_downlink(
+                    downlink_rx,
+                    GCS_ADDR,
+                    DOWNLINK_CAPACITY,
+                    downlink_queued,
+                    bench_metrics.clone(),
+                ));
+                sup.spawn(uplink::run_uplink_listener(OCS_UPLINK_BIND));
+                sup.spawn(scheduling::run_cpu_logger(active_ms, bench_metrics.clone()));
+                sup.spawn(drain_drop_rx(drop_rx));
+                sup.spawn(safety::run_safety(
+                    safety_rx,
+                    shutdown_tx,
+                    alert_tx,
+                    metrics_tx,
+                ));
+                sup.spawn(benchmarking::run_benchmarking(
+                    fault_tx,
+                    metrics_rx,
+                    alert_rx_bench,
+                    bench_metrics.clone(),
+                ));
             }
         };
 
@@ -339,10 +361,7 @@ impl OcsRuntime<RuntimeRunning> {
         }
         if let Some(handle) = thermal_thread {
             if let Err(e) = handle.join() {
-                crate::ocs_ts_eprintln!(
-                    "[runtime] thermal isolated thread join failed: {:?}",
-                    e
-                );
+                crate::ocs_ts_eprintln!("[runtime] thermal isolated thread join failed: {:?}", e);
             }
         }
 

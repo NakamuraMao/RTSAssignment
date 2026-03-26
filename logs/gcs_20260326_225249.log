@@ -1,0 +1,2366 @@
+   Compiling RTSassignment v0.1.0 (/Users/nakamuramao/RTSassignment)
+warning: fields `kind`, `deadline_abs_ms`, and `dispatched_at_ms` are never read
+   --> src/ocs/scheduling.rs:239:5
+    |
+238 | struct JobTrigger {
+    |        ---------- fields in this struct
+239 |     kind: TaskKind,
+    |     ^^^^
+...
+243 |     deadline_abs_ms: u64,
+    |     ^^^^^^^^^^^^^^^
+244 |     dispatched_at_ms: u64,
+    |     ^^^^^^^^^^^^^^^^
+    |
+    = note: `JobTrigger` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: multiple fields are never read
+   --> src/ocs/scheduling.rs:262:5
+    |
+261 | struct CompletionReport {
+    |        ---------------- fields in this struct
+262 |     kind: TaskKind,
+    |     ^^^^
+263 |     actual_start_ms: u64,
+    |     ^^^^^^^^^^^^^^^
+264 |     actual_end_ms: u64,
+    |     ^^^^^^^^^^^^^
+265 |     expected_completion_ms: u64,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+266 |     /// (optional) release information for better logs
+267 |     release_ms: u64,
+    |     ^^^^^^^^^^
+268 |     /// For `StartDelay` log context
+269 |     expected_start_ms: u64,
+    |     ^^^^^^^^^^^^^^^^^
+270 |     /// For visibility-window rule
+271 |     vis_window_start_ms: u64,
+    |     ^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `CompletionReport` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: crate `RTSassignment` should have a snake case name
+  |
+  = help: convert the identifier to snake case: `rtsassignment`
+  = note: `#[warn(non_snake_case)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: `RTSassignment` (lib) generated 3 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.54s
+     Running `target/debug/gcs`
+ts_ms=0 event=runtime_started mode=telemetry_and_fault
+ts_ms=0 event=downlink_listening addr=127.0.0.1:9000
+ts_ms=0 event=telemetry_waiting_first_packet acquisition_timeout_ms=20000
+# GCS Performance Metrics Snapshot (at_ms=0)
+
+## Uplink jitter (ms)
+- last: n/a
+- max: n/a
+- avg: n/a
+- count: 0
+
+## Telemetry backlog (unprocessed packets)
+- last: n/a
+- max: n/a
+
+## Scheduler drift (ms, actual_dispatch_at - execute_at)
+- last: n/a
+- max: n/a
+- abs_max: n/a
+- avg: n/a
+- count: 0
+
+## Missed deadlines
+- total: 0
+- last_command_id: n/a
+
+## Fault recovery
+- last_duration_ms: n/a
+- max_duration_ms: n/a
+- recovery_count: 0
+- recovery_over_100ms_count: 0
+
+## Interlock latency (ms, fault recv → state published to scheduler)
+- last: n/a
+- max: n/a
+- avg: n/a
+- count: 0
+
+## System load (%)
+- last: n/a
+- max: n/a
+- avg: n/a
+- count: 0
+
+ts_ms=206 event=monitoring_system_load load_percent=55.76 at_ms=0
+ts_ms=223 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=223 event=monitoring_telemetry_backlog queue_len=1 at_ms=223
+ts_ms=223 event=monitoring_telemetry_backlog queue_len=0 at_ms=223
+ts_ms=223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=223 event=telemetry_link_established seq=0
+ts_ms=223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=223 event=downlink_decoded seq=0 prepared_at_ms=27 payload_len=256
+ts_ms=223 event=fault_received at_ms=223 state=Degraded source=downlink detail="telemetry payload fault flag"
+ts_ms=224 event=fault_state_changed from=Nominal to=Degraded
+ts_ms=224 event=monitoring_interlock_latency at=224 latency_ms=1
+ts_ms=248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=248 event=monitoring_telemetry_backlog queue_len=1 at_ms=248
+ts_ms=248 event=monitoring_telemetry_backlog queue_len=0 at_ms=248
+ts_ms=248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=249 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=249 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=249 event=downlink_decoded seq=0 prepared_at_ms=53 payload_len=256
+ts_ms=273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=273 event=monitoring_telemetry_backlog queue_len=1 at_ms=273
+ts_ms=273 event=monitoring_telemetry_backlog queue_len=0 at_ms=273
+ts_ms=273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=273 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=273 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=273 event=downlink_decoded seq=0 prepared_at_ms=77 payload_len=256
+ts_ms=331 event=critical_alert_recovery_timeout fault_detected_at_ms=223 elapsed_ms=108
+ts_ms=331 event=monitoring_critical_alert_recovery_timeout fault_detected_at_ms=223 elapsed_ms=108
+ts_ms=501 event=fault_received at_ms=501 state=Degraded source=test_commands detail="degraded"
+ts_ms=637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=698 event=monitoring_telemetry_backlog queue_len=1 at_ms=698
+ts_ms=698 event=monitoring_telemetry_backlog queue_len=0 at_ms=698
+ts_ms=699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=699 event=telemetry_contact_restored
+ts_ms=699 event=monitoring_contact_restored
+ts_ms=699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=699 event=telemetry_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=699 event=monitoring_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=699 event=downlink_decoded seq=0 prepared_at_ms=503 payload_len=256
+ts_ms=723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=723 event=monitoring_telemetry_backlog queue_len=1 at_ms=723
+ts_ms=723 event=monitoring_telemetry_backlog queue_len=0 at_ms=723
+ts_ms=723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=724 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=724 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=724 event=downlink_decoded seq=0 prepared_at_ms=528 payload_len=256
+ts_ms=748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=748 event=monitoring_telemetry_backlog queue_len=1 at_ms=748
+ts_ms=748 event=monitoring_telemetry_backlog queue_len=0 at_ms=748
+ts_ms=748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=748 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=748 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=748 event=downlink_decoded seq=0 prepared_at_ms=552 payload_len=256
+ts_ms=774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=774 event=monitoring_telemetry_backlog queue_len=1 at_ms=774
+ts_ms=774 event=monitoring_telemetry_backlog queue_len=0 at_ms=774
+ts_ms=774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=774 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=774 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=774 event=downlink_decoded seq=0 prepared_at_ms=578 payload_len=256
+ts_ms=1137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=1137 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=1198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=1198 event=monitoring_telemetry_backlog queue_len=1 at_ms=1198
+ts_ms=1198 event=monitoring_telemetry_backlog queue_len=0 at_ms=1198
+ts_ms=1198 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=1198 event=telemetry_contact_restored
+ts_ms=1198 event=monitoring_contact_restored
+ts_ms=1198 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=1198 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=1198 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=424 drift_ms=-1
+ts_ms=1198 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=424 drift_ms=-1
+ts_ms=1198 event=downlink_decoded seq=0 prepared_at_ms=1003 payload_len=256
+ts_ms=1208 event=monitoring_system_load load_percent=14.74 at_ms=1001
+ts_ms=1222 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=1222 event=monitoring_telemetry_backlog queue_len=1 at_ms=1222
+ts_ms=1222 event=monitoring_telemetry_backlog queue_len=0 at_ms=1222
+ts_ms=1222 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=1222 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=1222 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=1222 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=1222 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=1222 event=downlink_decoded seq=0 prepared_at_ms=1026 payload_len=256
+ts_ms=1248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=1248 event=monitoring_telemetry_backlog queue_len=1 at_ms=1248
+ts_ms=1248 event=monitoring_telemetry_backlog queue_len=0 at_ms=1248
+ts_ms=1248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=1248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=1248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=1248 event=telemetry_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=1248 event=monitoring_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=1248 event=downlink_decoded seq=0 prepared_at_ms=1053 payload_len=256
+ts_ms=1272 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=1272 event=monitoring_telemetry_backlog queue_len=1 at_ms=1272
+ts_ms=1272 event=monitoring_telemetry_backlog queue_len=0 at_ms=1272
+ts_ms=1272 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=1272 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=1272 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=1272 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=1272 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=1272 event=downlink_decoded seq=0 prepared_at_ms=1076 payload_len=256
+ts_ms=1638 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=1638 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=1699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=1699 event=monitoring_telemetry_backlog queue_len=1 at_ms=1699
+ts_ms=1699 event=monitoring_telemetry_backlog queue_len=0 at_ms=1699
+ts_ms=1699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=1699 event=telemetry_contact_restored
+ts_ms=1699 event=monitoring_contact_restored
+ts_ms=1699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=1699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=1699 event=telemetry_rx_drift seq=0 expected_interval_ms=427 actual_interval_ms=427 drift_ms=0
+ts_ms=1699 event=monitoring_rx_drift seq=0 expected_interval_ms=427 actual_interval_ms=427 drift_ms=0
+ts_ms=1699 event=downlink_decoded seq=0 prepared_at_ms=1503 payload_len=256
+ts_ms=1723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=1723 event=monitoring_telemetry_backlog queue_len=1 at_ms=1723
+ts_ms=1723 event=monitoring_telemetry_backlog queue_len=0 at_ms=1723
+ts_ms=1723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=1723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=1723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=1724 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=1724 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=1724 event=downlink_decoded seq=0 prepared_at_ms=1528 payload_len=256
+ts_ms=1747 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=1747 event=monitoring_telemetry_backlog queue_len=1 at_ms=1747
+ts_ms=1748 event=monitoring_telemetry_backlog queue_len=0 at_ms=1748
+ts_ms=1748 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=1748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=1748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=1748 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=1748 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=1748 event=downlink_decoded seq=0 prepared_at_ms=1552 payload_len=256
+ts_ms=1772 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=1772 event=monitoring_telemetry_backlog queue_len=1 at_ms=1772
+ts_ms=1773 event=monitoring_telemetry_backlog queue_len=0 at_ms=1773
+ts_ms=1773 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=1773 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=1773 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=1773 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=1773 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=1773 event=downlink_decoded seq=0 prepared_at_ms=1577 payload_len=256
+ts_ms=2142 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=2142 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=2197 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=2198 event=monitoring_telemetry_backlog queue_len=1 at_ms=2198
+ts_ms=2198 event=monitoring_telemetry_backlog queue_len=0 at_ms=2198
+ts_ms=2198 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=2198 event=telemetry_contact_restored
+ts_ms=2198 event=monitoring_contact_restored
+ts_ms=2198 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=2198 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=2198 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=2198 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=2198 event=downlink_decoded seq=0 prepared_at_ms=2002 payload_len=256
+ts_ms=2207 event=monitoring_system_load load_percent=1.79 at_ms=2001
+ts_ms=2222 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=2222 event=monitoring_telemetry_backlog queue_len=1 at_ms=2222
+ts_ms=2222 event=monitoring_telemetry_backlog queue_len=0 at_ms=2222
+ts_ms=2222 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=2222 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=2222 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=2222 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=2223 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=2223 event=downlink_decoded seq=0 prepared_at_ms=2027 payload_len=256
+ts_ms=2248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=2248 event=monitoring_telemetry_backlog queue_len=1 at_ms=2248
+ts_ms=2248 event=monitoring_telemetry_backlog queue_len=0 at_ms=2248
+ts_ms=2248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=2248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=2248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=2248 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=2248 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=2248 event=downlink_decoded seq=0 prepared_at_ms=2052 payload_len=256
+ts_ms=2274 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=2274 event=monitoring_telemetry_backlog queue_len=1 at_ms=2274
+ts_ms=2274 event=monitoring_telemetry_backlog queue_len=0 at_ms=2274
+ts_ms=2274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=2274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=2274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=2274 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=2274 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=2274 event=downlink_decoded seq=0 prepared_at_ms=2078 payload_len=256
+ts_ms=2502 event=interlock_rejected command_id=1 name=execute state=Degraded reason=FaultActive(Degraded)
+ts_ms=2637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=2637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=2697 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=2697 event=monitoring_telemetry_backlog queue_len=1 at_ms=2697
+ts_ms=2698 event=monitoring_telemetry_backlog queue_len=0 at_ms=2698
+ts_ms=2698 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=2698 event=telemetry_contact_restored
+ts_ms=2698 event=monitoring_contact_restored
+ts_ms=2698 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=2698 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=2698 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=424 drift_ms=0
+ts_ms=2698 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=424 drift_ms=0
+ts_ms=2698 event=downlink_decoded seq=0 prepared_at_ms=2502 payload_len=256
+ts_ms=2723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=2723 event=monitoring_telemetry_backlog queue_len=1 at_ms=2723
+ts_ms=2723 event=monitoring_telemetry_backlog queue_len=0 at_ms=2723
+ts_ms=2723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=2723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=2723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=2723 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=2723 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=2723 event=downlink_decoded seq=0 prepared_at_ms=2527 payload_len=256
+ts_ms=2749 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=2749 event=monitoring_telemetry_backlog queue_len=1 at_ms=2749
+ts_ms=2749 event=monitoring_telemetry_backlog queue_len=0 at_ms=2749
+ts_ms=2749 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=2749 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=2749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=2749 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=2749 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=2749 event=downlink_decoded seq=0 prepared_at_ms=2553 payload_len=256
+ts_ms=2774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=2774 event=monitoring_telemetry_backlog queue_len=1 at_ms=2774
+ts_ms=2774 event=monitoring_telemetry_backlog queue_len=0 at_ms=2774
+ts_ms=2774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=2774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=2774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=2774 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=2774 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=2774 event=downlink_decoded seq=0 prepared_at_ms=2578 payload_len=256
+ts_ms=3147 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=3147 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=3199 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=3199 event=monitoring_telemetry_backlog queue_len=1 at_ms=3199
+ts_ms=3199 event=monitoring_telemetry_backlog queue_len=0 at_ms=3199
+ts_ms=3199 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=3199 event=telemetry_contact_restored
+ts_ms=3199 event=monitoring_contact_restored
+ts_ms=3199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=3199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=3199 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=3199 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=3200 event=downlink_decoded seq=0 prepared_at_ms=3003 payload_len=256
+ts_ms=3207 event=monitoring_system_load load_percent=4.32 at_ms=3001
+ts_ms=3224 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=3224 event=monitoring_telemetry_backlog queue_len=1 at_ms=3224
+ts_ms=3224 event=monitoring_telemetry_backlog queue_len=0 at_ms=3224
+ts_ms=3224 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=3224 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=3225 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=3225 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=3225 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=3225 event=downlink_decoded seq=0 prepared_at_ms=3029 payload_len=256
+ts_ms=3248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=3248 event=monitoring_telemetry_backlog queue_len=1 at_ms=3248
+ts_ms=3248 event=monitoring_telemetry_backlog queue_len=0 at_ms=3248
+ts_ms=3248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=3248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=3248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=3248 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=3248 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=3248 event=downlink_decoded seq=0 prepared_at_ms=3052 payload_len=256
+ts_ms=3274 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=3274 event=monitoring_telemetry_backlog queue_len=1 at_ms=3274
+ts_ms=3274 event=monitoring_telemetry_backlog queue_len=0 at_ms=3274
+ts_ms=3274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=3274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=3274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=3274 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=3274 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=3274 event=downlink_decoded seq=0 prepared_at_ms=3078 payload_len=256
+ts_ms=3637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=3637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=3699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=3699 event=monitoring_telemetry_backlog queue_len=1 at_ms=3699
+ts_ms=3699 event=monitoring_telemetry_backlog queue_len=0 at_ms=3699
+ts_ms=3699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=3699 event=telemetry_contact_restored
+ts_ms=3699 event=monitoring_contact_restored
+ts_ms=3699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=3699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=3699 event=telemetry_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=425 drift_ms=-1
+ts_ms=3700 event=monitoring_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=425 drift_ms=-1
+ts_ms=3700 event=downlink_decoded seq=0 prepared_at_ms=3504 payload_len=256
+ts_ms=3723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=3723 event=monitoring_telemetry_backlog queue_len=1 at_ms=3723
+ts_ms=3723 event=monitoring_telemetry_backlog queue_len=0 at_ms=3723
+ts_ms=3723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=3723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=3723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=3723 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=3723 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=3723 event=downlink_decoded seq=0 prepared_at_ms=3527 payload_len=256
+ts_ms=3749 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=3749 event=monitoring_telemetry_backlog queue_len=1 at_ms=3749
+ts_ms=3749 event=monitoring_telemetry_backlog queue_len=0 at_ms=3749
+ts_ms=3749 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=3749 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=3749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=3749 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=3749 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=3749 event=downlink_decoded seq=0 prepared_at_ms=3553 payload_len=256
+ts_ms=3773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=3773 event=monitoring_telemetry_backlog queue_len=1 at_ms=3773
+ts_ms=3773 event=monitoring_telemetry_backlog queue_len=0 at_ms=3773
+ts_ms=3773 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=3773 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=3773 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=3773 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=3773 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=3774 event=downlink_decoded seq=0 prepared_at_ms=3578 payload_len=256
+ts_ms=4141 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=4142 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=4198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=4198 event=monitoring_telemetry_backlog queue_len=1 at_ms=4198
+ts_ms=4198 event=monitoring_telemetry_backlog queue_len=0 at_ms=4198
+ts_ms=4198 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=4198 event=telemetry_contact_restored
+ts_ms=4198 event=monitoring_contact_restored
+ts_ms=4198 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=4198 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=4198 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=4198 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=4198 event=downlink_decoded seq=0 prepared_at_ms=4003 payload_len=256
+ts_ms=4204 event=monitoring_system_load load_percent=3.16 at_ms=4001
+ts_ms=4222 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=4222 event=monitoring_telemetry_backlog queue_len=1 at_ms=4222
+ts_ms=4222 event=monitoring_telemetry_backlog queue_len=0 at_ms=4222
+ts_ms=4222 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=4222 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=4222 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=4222 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=4222 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=4222 event=downlink_decoded seq=0 prepared_at_ms=4026 payload_len=256
+ts_ms=4248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=4248 event=monitoring_telemetry_backlog queue_len=1 at_ms=4248
+ts_ms=4248 event=monitoring_telemetry_backlog queue_len=0 at_ms=4248
+ts_ms=4248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=4248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=4248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=4248 event=telemetry_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=4248 event=monitoring_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=4248 event=downlink_decoded seq=0 prepared_at_ms=4053 payload_len=256
+ts_ms=4272 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=4272 event=monitoring_telemetry_backlog queue_len=1 at_ms=4272
+ts_ms=4272 event=monitoring_telemetry_backlog queue_len=0 at_ms=4272
+ts_ms=4272 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=4272 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=4272 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=4272 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=4272 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=4272 event=downlink_decoded seq=0 prepared_at_ms=4077 payload_len=256
+ts_ms=4503 event=fault_received at_ms=4503 state=Nominal source=test_commands detail="nominal"
+ts_ms=4503 event=fault_recovered duration_ms=4280
+ts_ms=4503 event=monitoring_recovery fault_at=223 recovered_at=4503 duration_ms=4280
+ts_ms=4503 event=fault_state_changed from=Degraded to=Nominal
+ts_ms=4637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=4637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=4698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=4698 event=monitoring_telemetry_backlog queue_len=1 at_ms=4698
+ts_ms=4698 event=monitoring_telemetry_backlog queue_len=0 at_ms=4698
+ts_ms=4698 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=4698 event=telemetry_contact_restored
+ts_ms=4698 event=monitoring_contact_restored
+ts_ms=4698 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=4698 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=4698 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=426 drift_ms=1
+ts_ms=4698 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=426 drift_ms=1
+ts_ms=4698 event=downlink_decoded seq=0 prepared_at_ms=4502 payload_len=256
+ts_ms=4724 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=4724 event=monitoring_telemetry_backlog queue_len=1 at_ms=4724
+ts_ms=4724 event=monitoring_telemetry_backlog queue_len=0 at_ms=4724
+ts_ms=4724 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=4724 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=4724 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=4724 event=telemetry_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=4725 event=monitoring_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=4725 event=downlink_decoded seq=0 prepared_at_ms=4529 payload_len=256
+ts_ms=4747 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=4748 event=monitoring_telemetry_backlog queue_len=1 at_ms=4748
+ts_ms=4748 event=monitoring_telemetry_backlog queue_len=0 at_ms=4748
+ts_ms=4748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=4748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=4748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=4748 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=4748 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=4748 event=downlink_decoded seq=0 prepared_at_ms=4552 payload_len=256
+ts_ms=4773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=4773 event=monitoring_telemetry_backlog queue_len=1 at_ms=4773
+ts_ms=4773 event=monitoring_telemetry_backlog queue_len=0 at_ms=4773
+ts_ms=4773 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=4773 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=4773 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=4773 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=4773 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=4774 event=downlink_decoded seq=0 prepared_at_ms=4577 payload_len=256
+ts_ms=5142 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=5142 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=5199 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=5200 event=monitoring_telemetry_backlog queue_len=1 at_ms=5200
+ts_ms=5200 event=monitoring_telemetry_backlog queue_len=0 at_ms=5200
+ts_ms=5200 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=5200 event=telemetry_contact_restored
+ts_ms=5200 event=monitoring_contact_restored
+ts_ms=5200 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=5200 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=5200 event=telemetry_rx_drift seq=0 expected_interval_ms=427 actual_interval_ms=427 drift_ms=0
+ts_ms=5200 event=monitoring_rx_drift seq=0 expected_interval_ms=427 actual_interval_ms=427 drift_ms=0
+ts_ms=5200 event=downlink_decoded seq=0 prepared_at_ms=5004 payload_len=256
+ts_ms=5208 event=monitoring_system_load load_percent=9.11 at_ms=5001
+ts_ms=5223 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=5223 event=monitoring_telemetry_backlog queue_len=1 at_ms=5223
+ts_ms=5223 event=monitoring_telemetry_backlog queue_len=0 at_ms=5223
+ts_ms=5223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=5223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=5223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=5223 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=23 drift_ms=-1
+ts_ms=5224 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=23 drift_ms=-1
+ts_ms=5224 event=downlink_decoded seq=0 prepared_at_ms=5028 payload_len=256
+ts_ms=5248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=5248 event=monitoring_telemetry_backlog queue_len=1 at_ms=5248
+ts_ms=5248 event=monitoring_telemetry_backlog queue_len=0 at_ms=5248
+ts_ms=5249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=5249 event=telemetry_rx_latency seq=0 latency_ms=1
+ts_ms=5249 event=monitoring_rx_latency seq=0 latency_ms=1
+ts_ms=5249 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=26 drift_ms=2
+ts_ms=5249 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=26 drift_ms=2
+ts_ms=5249 event=downlink_decoded seq=0 prepared_at_ms=5052 payload_len=256
+ts_ms=5273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=5273 event=monitoring_telemetry_backlog queue_len=1 at_ms=5273
+ts_ms=5274 event=monitoring_telemetry_backlog queue_len=0 at_ms=5274
+ts_ms=5274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=5274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=5274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=5274 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=5274 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=5274 event=downlink_decoded seq=0 prepared_at_ms=5078 payload_len=256
+ts_ms=5638 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=5638 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=5698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=5698 event=monitoring_telemetry_backlog queue_len=1 at_ms=5698
+ts_ms=5698 event=monitoring_telemetry_backlog queue_len=0 at_ms=5698
+ts_ms=5699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=5699 event=telemetry_contact_restored
+ts_ms=5699 event=monitoring_contact_restored
+ts_ms=5699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=5699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=5699 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=5699 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=5699 event=downlink_decoded seq=0 prepared_at_ms=5503 payload_len=256
+ts_ms=5724 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=5724 event=monitoring_telemetry_backlog queue_len=1 at_ms=5724
+ts_ms=5724 event=monitoring_telemetry_backlog queue_len=0 at_ms=5724
+ts_ms=5724 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=5724 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=5724 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=5725 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=5725 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=5725 event=downlink_decoded seq=0 prepared_at_ms=5529 payload_len=256
+ts_ms=5749 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=5749 event=monitoring_telemetry_backlog queue_len=1 at_ms=5749
+ts_ms=5749 event=monitoring_telemetry_backlog queue_len=0 at_ms=5749
+ts_ms=5749 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=5749 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=5749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=5749 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=5749 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=5749 event=downlink_decoded seq=0 prepared_at_ms=5553 payload_len=256
+ts_ms=5774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=5774 event=monitoring_telemetry_backlog queue_len=1 at_ms=5774
+ts_ms=5775 event=monitoring_telemetry_backlog queue_len=0 at_ms=5775
+ts_ms=5775 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=5775 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=5775 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=5775 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=5776 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=5776 event=downlink_decoded seq=0 prepared_at_ms=5579 payload_len=256
+ts_ms=6137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=6137 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=6198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=6198 event=monitoring_telemetry_backlog queue_len=1 at_ms=6198
+ts_ms=6198 event=monitoring_telemetry_backlog queue_len=0 at_ms=6198
+ts_ms=6198 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=6198 event=telemetry_contact_restored
+ts_ms=6198 event=monitoring_contact_restored
+ts_ms=6198 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=6198 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=6199 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=423 drift_ms=-1
+ts_ms=6199 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=423 drift_ms=-1
+ts_ms=6199 event=downlink_decoded seq=0 prepared_at_ms=6003 payload_len=256
+ts_ms=6207 event=monitoring_system_load load_percent=4.94 at_ms=6001
+ts_ms=6224 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=6224 event=monitoring_telemetry_backlog queue_len=1 at_ms=6224
+ts_ms=6224 event=monitoring_telemetry_backlog queue_len=0 at_ms=6224
+ts_ms=6224 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=6224 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=6224 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=6224 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=6225 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=6225 event=downlink_decoded seq=0 prepared_at_ms=6029 payload_len=256
+ts_ms=6248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=6248 event=monitoring_telemetry_backlog queue_len=1 at_ms=6248
+ts_ms=6248 event=monitoring_telemetry_backlog queue_len=0 at_ms=6248
+ts_ms=6248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=6248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=6248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=6248 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=6248 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=6248 event=downlink_decoded seq=0 prepared_at_ms=6052 payload_len=256
+ts_ms=6273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=6273 event=monitoring_telemetry_backlog queue_len=1 at_ms=6273
+ts_ms=6273 event=monitoring_telemetry_backlog queue_len=0 at_ms=6273
+ts_ms=6273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=6273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=6273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=6273 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=6273 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=6273 event=downlink_decoded seq=0 prepared_at_ms=6077 payload_len=256
+ts_ms=6506 event=monitoring_uplink_dispatch command_id=2 execute_at_ms=6505 actual_dispatch_at_ms=6505
+ts_ms=6506 event=monitoring_scheduling_drift execute_at_ms=6505 actual_dispatch_at_ms=6505 drift_ms=0
+ts_ms=6506 event=uplink_send_ok command_id=2 execute_at=6505 deadline=6507 actual_dispatch_at=6505 drift_ms=0 missed=false
+ts_ms=6641 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=6641 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=6698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=6698 event=monitoring_telemetry_backlog queue_len=1 at_ms=6698
+ts_ms=6698 event=monitoring_telemetry_backlog queue_len=0 at_ms=6698
+ts_ms=6698 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=6698 event=telemetry_contact_restored
+ts_ms=6698 event=monitoring_contact_restored
+ts_ms=6698 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=6698 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=6698 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=6699 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=6699 event=downlink_decoded seq=0 prepared_at_ms=6502 payload_len=256
+ts_ms=6723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=6723 event=monitoring_telemetry_backlog queue_len=1 at_ms=6723
+ts_ms=6723 event=monitoring_telemetry_backlog queue_len=0 at_ms=6723
+ts_ms=6723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=6723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=6723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=6723 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=6723 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=6723 event=downlink_decoded seq=0 prepared_at_ms=6527 payload_len=256
+ts_ms=6748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=6748 event=monitoring_telemetry_backlog queue_len=1 at_ms=6748
+ts_ms=6748 event=monitoring_telemetry_backlog queue_len=0 at_ms=6748
+ts_ms=6748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=6748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=6748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=6748 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=6748 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=6748 event=downlink_decoded seq=0 prepared_at_ms=6552 payload_len=256
+ts_ms=6773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=6773 event=monitoring_telemetry_backlog queue_len=1 at_ms=6773
+ts_ms=6773 event=monitoring_telemetry_backlog queue_len=0 at_ms=6773
+ts_ms=6773 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=6773 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=6773 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=6773 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=6773 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=6773 event=downlink_decoded seq=0 prepared_at_ms=6578 payload_len=256
+ts_ms=7142 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=7142 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=7199 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=7199 event=monitoring_telemetry_backlog queue_len=1 at_ms=7199
+ts_ms=7199 event=monitoring_telemetry_backlog queue_len=0 at_ms=7199
+ts_ms=7199 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=7199 event=telemetry_contact_restored
+ts_ms=7199 event=monitoring_contact_restored
+ts_ms=7199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=7199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=7199 event=telemetry_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=7200 event=monitoring_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=7200 event=downlink_decoded seq=0 prepared_at_ms=7004 payload_len=256
+ts_ms=7208 event=monitoring_system_load load_percent=1.22 at_ms=7002
+ts_ms=7223 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=7223 event=monitoring_telemetry_backlog queue_len=1 at_ms=7223
+ts_ms=7223 event=monitoring_telemetry_backlog queue_len=0 at_ms=7223
+ts_ms=7223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=7223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=7223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=7223 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=7223 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=7223 event=downlink_decoded seq=0 prepared_at_ms=7027 payload_len=256
+ts_ms=7248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=7248 event=monitoring_telemetry_backlog queue_len=1 at_ms=7248
+ts_ms=7248 event=monitoring_telemetry_backlog queue_len=0 at_ms=7248
+ts_ms=7248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=7248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=7248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=7248 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=7248 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=7249 event=downlink_decoded seq=0 prepared_at_ms=7053 payload_len=256
+ts_ms=7273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=7273 event=monitoring_telemetry_backlog queue_len=1 at_ms=7273
+ts_ms=7273 event=monitoring_telemetry_backlog queue_len=0 at_ms=7273
+ts_ms=7273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=7274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=7274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=7274 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=7274 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=7274 event=downlink_decoded seq=0 prepared_at_ms=7078 payload_len=256
+ts_ms=7637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=7637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=7699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=7699 event=monitoring_telemetry_backlog queue_len=1 at_ms=7699
+ts_ms=7699 event=monitoring_telemetry_backlog queue_len=0 at_ms=7699
+ts_ms=7699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=7699 event=telemetry_contact_restored
+ts_ms=7699 event=monitoring_contact_restored
+ts_ms=7699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=7699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=7699 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=7699 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=7699 event=downlink_decoded seq=0 prepared_at_ms=7503 payload_len=256
+ts_ms=7723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=7723 event=monitoring_telemetry_backlog queue_len=1 at_ms=7723
+ts_ms=7724 event=monitoring_telemetry_backlog queue_len=0 at_ms=7724
+ts_ms=7724 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=7724 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=7724 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=7724 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=7724 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=7724 event=downlink_decoded seq=0 prepared_at_ms=7528 payload_len=256
+ts_ms=7747 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=7747 event=monitoring_telemetry_backlog queue_len=1 at_ms=7747
+ts_ms=7747 event=monitoring_telemetry_backlog queue_len=0 at_ms=7747
+ts_ms=7747 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=7747 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=7747 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=7748 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=23 drift_ms=-1
+ts_ms=7748 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=23 drift_ms=-1
+ts_ms=7748 event=downlink_decoded seq=0 prepared_at_ms=7552 payload_len=256
+ts_ms=7773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=7773 event=monitoring_telemetry_backlog queue_len=1 at_ms=7773
+ts_ms=7773 event=monitoring_telemetry_backlog queue_len=0 at_ms=7773
+ts_ms=7773 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=7773 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=7773 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=7773 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=7773 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=7773 event=downlink_decoded seq=0 prepared_at_ms=7577 payload_len=256
+ts_ms=8137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=8137 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=8198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=8198 event=monitoring_telemetry_backlog queue_len=1 at_ms=8198
+ts_ms=8198 event=monitoring_telemetry_backlog queue_len=0 at_ms=8198
+ts_ms=8198 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=8198 event=telemetry_contact_restored
+ts_ms=8198 event=monitoring_contact_restored
+ts_ms=8198 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=8198 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=8198 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=8198 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=8198 event=downlink_decoded seq=0 prepared_at_ms=8002 payload_len=256
+ts_ms=8207 event=monitoring_system_load load_percent=11.99 at_ms=8001
+ts_ms=8223 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=8223 event=monitoring_telemetry_backlog queue_len=1 at_ms=8223
+ts_ms=8223 event=monitoring_telemetry_backlog queue_len=0 at_ms=8223
+ts_ms=8223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=8223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=8223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=8223 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=8223 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=8223 event=downlink_decoded seq=0 prepared_at_ms=8027 payload_len=256
+ts_ms=8248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=8248 event=monitoring_telemetry_backlog queue_len=1 at_ms=8248
+ts_ms=8248 event=monitoring_telemetry_backlog queue_len=0 at_ms=8248
+ts_ms=8248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=8248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=8248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=8248 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=8248 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=8248 event=downlink_decoded seq=0 prepared_at_ms=8052 payload_len=256
+ts_ms=8274 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=8274 event=monitoring_telemetry_backlog queue_len=1 at_ms=8274
+ts_ms=8274 event=monitoring_telemetry_backlog queue_len=0 at_ms=8274
+ts_ms=8274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=8274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=8275 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=8275 event=telemetry_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=8275 event=monitoring_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=8275 event=downlink_decoded seq=0 prepared_at_ms=8079 payload_len=256
+ts_ms=8506 event=monitoring_uplink_dispatch command_id=3 execute_at_ms=8506 actual_dispatch_at_ms=8506
+ts_ms=8506 event=monitoring_scheduling_drift execute_at_ms=8506 actual_dispatch_at_ms=8506 drift_ms=0
+ts_ms=8506 event=uplink_send_ok command_id=3 execute_at=8506 deadline=8516 actual_dispatch_at=8506 drift_ms=0 missed=false
+ts_ms=8637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=8637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=8699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=8699 event=monitoring_telemetry_backlog queue_len=1 at_ms=8699
+ts_ms=8699 event=monitoring_telemetry_backlog queue_len=0 at_ms=8699
+ts_ms=8699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=8699 event=telemetry_contact_restored
+ts_ms=8699 event=monitoring_contact_restored
+ts_ms=8699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=8699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=8699 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=8699 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=8699 event=downlink_decoded seq=0 prepared_at_ms=8503 payload_len=256
+ts_ms=8724 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=8724 event=monitoring_telemetry_backlog queue_len=1 at_ms=8724
+ts_ms=8724 event=monitoring_telemetry_backlog queue_len=0 at_ms=8724
+ts_ms=8724 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=8724 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=8724 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=8724 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=8724 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=8724 event=downlink_decoded seq=0 prepared_at_ms=8528 payload_len=256
+ts_ms=8748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=8748 event=monitoring_telemetry_backlog queue_len=1 at_ms=8748
+ts_ms=8748 event=monitoring_telemetry_backlog queue_len=0 at_ms=8748
+ts_ms=8748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=8748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=8748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=8748 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=8748 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=8748 event=downlink_decoded seq=0 prepared_at_ms=8552 payload_len=256
+ts_ms=8773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=8773 event=monitoring_telemetry_backlog queue_len=1 at_ms=8773
+ts_ms=8773 event=monitoring_telemetry_backlog queue_len=0 at_ms=8773
+ts_ms=8774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=8774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=8774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=8774 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=8774 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=8774 event=downlink_decoded seq=0 prepared_at_ms=8578 payload_len=256
+ts_ms=9137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=9137 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=9199 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=9199 event=monitoring_telemetry_backlog queue_len=1 at_ms=9199
+ts_ms=9200 event=monitoring_telemetry_backlog queue_len=0 at_ms=9200
+ts_ms=9200 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=9200 event=telemetry_contact_restored
+ts_ms=9200 event=monitoring_contact_restored
+ts_ms=9200 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=9200 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=9200 event=telemetry_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=9200 event=monitoring_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=9200 event=downlink_decoded seq=0 prepared_at_ms=9004 payload_len=256
+ts_ms=9207 event=monitoring_system_load load_percent=13.47 at_ms=9001
+ts_ms=9223 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=9223 event=monitoring_telemetry_backlog queue_len=1 at_ms=9223
+ts_ms=9223 event=monitoring_telemetry_backlog queue_len=0 at_ms=9223
+ts_ms=9223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=9223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=9223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=9223 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=9223 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=9223 event=downlink_decoded seq=0 prepared_at_ms=9027 payload_len=256
+ts_ms=9248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=9248 event=monitoring_telemetry_backlog queue_len=1 at_ms=9248
+ts_ms=9248 event=monitoring_telemetry_backlog queue_len=0 at_ms=9248
+ts_ms=9248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=9248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=9248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=9248 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=9248 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=9248 event=downlink_decoded seq=0 prepared_at_ms=9052 payload_len=256
+ts_ms=9273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=9273 event=monitoring_telemetry_backlog queue_len=1 at_ms=9273
+ts_ms=9273 event=monitoring_telemetry_backlog queue_len=0 at_ms=9273
+ts_ms=9273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=9273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=9273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=9273 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=9273 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=9273 event=downlink_decoded seq=0 prepared_at_ms=9078 payload_len=256
+ts_ms=9642 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=9642 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=9698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=9698 event=monitoring_telemetry_backlog queue_len=1 at_ms=9698
+ts_ms=9698 event=monitoring_telemetry_backlog queue_len=0 at_ms=9698
+ts_ms=9698 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=9698 event=telemetry_contact_restored
+ts_ms=9698 event=monitoring_contact_restored
+ts_ms=9698 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=9698 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=9698 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=9698 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=9699 event=downlink_decoded seq=0 prepared_at_ms=9502 payload_len=256
+ts_ms=9723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=9723 event=monitoring_telemetry_backlog queue_len=1 at_ms=9723
+ts_ms=9723 event=monitoring_telemetry_backlog queue_len=0 at_ms=9723
+ts_ms=9723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=9723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=9723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=9723 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=9723 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=9723 event=downlink_decoded seq=0 prepared_at_ms=9527 payload_len=256
+ts_ms=9749 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=9749 event=monitoring_telemetry_backlog queue_len=1 at_ms=9749
+ts_ms=9749 event=monitoring_telemetry_backlog queue_len=0 at_ms=9749
+ts_ms=9749 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=9749 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=9749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=9749 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=9749 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=9749 event=downlink_decoded seq=0 prepared_at_ms=9553 payload_len=256
+ts_ms=9773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=9774 event=monitoring_telemetry_backlog queue_len=1 at_ms=9774
+ts_ms=9774 event=monitoring_telemetry_backlog queue_len=0 at_ms=9774
+ts_ms=9774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=9774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=9774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=9774 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=9774 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=9774 event=downlink_decoded seq=0 prepared_at_ms=9578 payload_len=256
+# GCS Performance Metrics Snapshot (at_ms=10002)
+
+## Uplink jitter (ms)
+- last: 0
+- max: 0
+- avg: 0.00
+- count: 1
+
+## Telemetry backlog (unprocessed packets)
+- last: 0
+- max: 1
+
+## Scheduler drift (ms, actual_dispatch_at - execute_at)
+- last: 0
+- max: 0
+- abs_max: 0
+- avg: 0.00
+- count: 2
+
+## Missed deadlines
+- total: 0
+- last_command_id: n/a
+
+## Fault recovery
+- last_duration_ms: 4280
+- max_duration_ms: 4280
+- recovery_count: 1
+- recovery_over_100ms_count: 2
+
+## Interlock latency (ms, fault recv → state published to scheduler)
+- last: 1
+- max: 1
+- avg: 1.00
+- count: 1
+
+## System load (%)
+- last: 13.47
+- max: 55.76
+- avg: 12.05
+- count: 10
+
+ts_ms=10141 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=10142 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=10198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=10198 event=monitoring_telemetry_backlog queue_len=1 at_ms=10198
+ts_ms=10198 event=monitoring_telemetry_backlog queue_len=0 at_ms=10198
+ts_ms=10199 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=10199 event=telemetry_contact_restored
+ts_ms=10199 event=monitoring_contact_restored
+ts_ms=10199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=10199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=10199 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=10199 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=10199 event=downlink_decoded seq=0 prepared_at_ms=10003 payload_len=256
+ts_ms=10207 event=monitoring_system_load load_percent=13.64 at_ms=10002
+ts_ms=10224 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=10224 event=monitoring_telemetry_backlog queue_len=1 at_ms=10224
+ts_ms=10225 event=monitoring_telemetry_backlog queue_len=0 at_ms=10225
+ts_ms=10225 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=10225 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=10225 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=10225 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=10225 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=10225 event=downlink_decoded seq=0 prepared_at_ms=10029 payload_len=256
+ts_ms=10247 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=10247 event=monitoring_telemetry_backlog queue_len=1 at_ms=10247
+ts_ms=10247 event=monitoring_telemetry_backlog queue_len=0 at_ms=10247
+ts_ms=10247 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=10247 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=10247 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=10247 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=22 drift_ms=-1
+ts_ms=10248 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=22 drift_ms=-1
+ts_ms=10248 event=downlink_decoded seq=0 prepared_at_ms=10052 payload_len=256
+ts_ms=10273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=10273 event=monitoring_telemetry_backlog queue_len=1 at_ms=10273
+ts_ms=10273 event=monitoring_telemetry_backlog queue_len=0 at_ms=10273
+ts_ms=10273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=10273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=10273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=10274 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=10274 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=10274 event=downlink_decoded seq=0 prepared_at_ms=10078 payload_len=256
+ts_ms=10641 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=10641 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=10698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=10698 event=monitoring_telemetry_backlog queue_len=1 at_ms=10698
+ts_ms=10698 event=monitoring_telemetry_backlog queue_len=0 at_ms=10698
+ts_ms=10698 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=10698 event=telemetry_contact_restored
+ts_ms=10698 event=monitoring_contact_restored
+ts_ms=10698 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=10698 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=10698 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=10699 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=10699 event=downlink_decoded seq=0 prepared_at_ms=10502 payload_len=256
+ts_ms=10725 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=10725 event=monitoring_telemetry_backlog queue_len=1 at_ms=10725
+ts_ms=10725 event=monitoring_telemetry_backlog queue_len=0 at_ms=10725
+ts_ms=10725 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=10725 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=10725 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=10725 event=telemetry_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=27 drift_ms=0
+ts_ms=10725 event=monitoring_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=27 drift_ms=0
+ts_ms=10725 event=downlink_decoded seq=0 prepared_at_ms=10529 payload_len=256
+ts_ms=10748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=10748 event=monitoring_telemetry_backlog queue_len=1 at_ms=10748
+ts_ms=10748 event=monitoring_telemetry_backlog queue_len=0 at_ms=10748
+ts_ms=10748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=10748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=10749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=10749 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=10749 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=10749 event=downlink_decoded seq=0 prepared_at_ms=10552 payload_len=256
+ts_ms=10774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=10774 event=monitoring_telemetry_backlog queue_len=1 at_ms=10774
+ts_ms=10774 event=monitoring_telemetry_backlog queue_len=0 at_ms=10774
+ts_ms=10774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=10774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=10774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=10774 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=10774 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=10774 event=downlink_decoded seq=0 prepared_at_ms=10578 payload_len=256
+ts_ms=11141 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=11142 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=11198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=11198 event=monitoring_telemetry_backlog queue_len=1 at_ms=11198
+ts_ms=11199 event=monitoring_telemetry_backlog queue_len=0 at_ms=11199
+ts_ms=11199 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=11199 event=telemetry_contact_restored
+ts_ms=11199 event=monitoring_contact_restored
+ts_ms=11199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=11199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=11199 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=11199 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=11199 event=downlink_decoded seq=0 prepared_at_ms=11003 payload_len=256
+ts_ms=11208 event=monitoring_system_load load_percent=15.21 at_ms=11002
+ts_ms=11222 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=11222 event=monitoring_telemetry_backlog queue_len=1 at_ms=11222
+ts_ms=11223 event=monitoring_telemetry_backlog queue_len=0 at_ms=11223
+ts_ms=11223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=11223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=11223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=11223 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=11223 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=11223 event=downlink_decoded seq=0 prepared_at_ms=11027 payload_len=256
+ts_ms=11248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=11248 event=monitoring_telemetry_backlog queue_len=1 at_ms=11248
+ts_ms=11248 event=monitoring_telemetry_backlog queue_len=0 at_ms=11248
+ts_ms=11248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=11249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=11249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=11249 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=11249 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=11249 event=downlink_decoded seq=0 prepared_at_ms=11053 payload_len=256
+ts_ms=11273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=11273 event=monitoring_telemetry_backlog queue_len=1 at_ms=11273
+ts_ms=11273 event=monitoring_telemetry_backlog queue_len=0 at_ms=11273
+ts_ms=11273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=11273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=11273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=11273 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=11273 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=11273 event=downlink_decoded seq=0 prepared_at_ms=11077 payload_len=256
+ts_ms=11638 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=11638 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=11699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=11699 event=monitoring_telemetry_backlog queue_len=1 at_ms=11699
+ts_ms=11699 event=monitoring_telemetry_backlog queue_len=0 at_ms=11699
+ts_ms=11700 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=11700 event=telemetry_contact_restored
+ts_ms=11700 event=monitoring_contact_restored
+ts_ms=11700 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=11700 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=11700 event=telemetry_rx_drift seq=0 expected_interval_ms=427 actual_interval_ms=427 drift_ms=0
+ts_ms=11700 event=monitoring_rx_drift seq=0 expected_interval_ms=427 actual_interval_ms=427 drift_ms=0
+ts_ms=11700 event=downlink_decoded seq=0 prepared_at_ms=11504 payload_len=256
+ts_ms=11723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=11723 event=monitoring_telemetry_backlog queue_len=1 at_ms=11723
+ts_ms=11723 event=monitoring_telemetry_backlog queue_len=0 at_ms=11723
+ts_ms=11723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=11723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=11723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=11723 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=11723 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=11723 event=downlink_decoded seq=0 prepared_at_ms=11527 payload_len=256
+ts_ms=11748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=11749 event=monitoring_telemetry_backlog queue_len=1 at_ms=11749
+ts_ms=11749 event=monitoring_telemetry_backlog queue_len=0 at_ms=11749
+ts_ms=11749 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=11749 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=11749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=11749 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=11749 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=11749 event=downlink_decoded seq=0 prepared_at_ms=11553 payload_len=256
+ts_ms=11773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=11773 event=monitoring_telemetry_backlog queue_len=1 at_ms=11773
+ts_ms=11773 event=monitoring_telemetry_backlog queue_len=0 at_ms=11773
+ts_ms=11774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=11774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=11774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=11774 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=11774 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=11774 event=downlink_decoded seq=0 prepared_at_ms=11578 payload_len=256
+ts_ms=12138 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=12138 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=12199 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=12199 event=monitoring_telemetry_backlog queue_len=1 at_ms=12199
+ts_ms=12199 event=monitoring_telemetry_backlog queue_len=0 at_ms=12199
+ts_ms=12199 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=12199 event=telemetry_contact_restored
+ts_ms=12199 event=monitoring_contact_restored
+ts_ms=12199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=12199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=12199 event=telemetry_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=425 drift_ms=-1
+ts_ms=12200 event=monitoring_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=425 drift_ms=-1
+ts_ms=12200 event=downlink_decoded seq=0 prepared_at_ms=12004 payload_len=256
+ts_ms=12207 event=monitoring_system_load load_percent=1.22 at_ms=12002
+ts_ms=12222 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=12222 event=monitoring_telemetry_backlog queue_len=1 at_ms=12222
+ts_ms=12223 event=monitoring_telemetry_backlog queue_len=0 at_ms=12223
+ts_ms=12223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=12223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=12223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=12223 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=12223 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=12223 event=downlink_decoded seq=0 prepared_at_ms=12027 payload_len=256
+ts_ms=12248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=12248 event=monitoring_telemetry_backlog queue_len=1 at_ms=12248
+ts_ms=12249 event=monitoring_telemetry_backlog queue_len=0 at_ms=12249
+ts_ms=12249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=12249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=12249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=12249 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=12249 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=12249 event=downlink_decoded seq=0 prepared_at_ms=12053 payload_len=256
+ts_ms=12272 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=12272 event=monitoring_telemetry_backlog queue_len=1 at_ms=12272
+ts_ms=12273 event=monitoring_telemetry_backlog queue_len=0 at_ms=12273
+ts_ms=12273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=12273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=12273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=12273 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=12273 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=12273 event=downlink_decoded seq=0 prepared_at_ms=12077 payload_len=256
+ts_ms=12638 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=12638 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=12698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=12698 event=monitoring_telemetry_backlog queue_len=1 at_ms=12698
+ts_ms=12698 event=monitoring_telemetry_backlog queue_len=0 at_ms=12698
+ts_ms=12698 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=12698 event=telemetry_contact_restored
+ts_ms=12698 event=monitoring_contact_restored
+ts_ms=12698 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=12698 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=12698 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=12698 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=12699 event=downlink_decoded seq=0 prepared_at_ms=12502 payload_len=256
+ts_ms=12723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=12723 event=monitoring_telemetry_backlog queue_len=1 at_ms=12723
+ts_ms=12723 event=monitoring_telemetry_backlog queue_len=0 at_ms=12723
+ts_ms=12723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=12723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=12723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=12723 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=12723 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=12723 event=downlink_decoded seq=0 prepared_at_ms=12527 payload_len=256
+ts_ms=12748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=12748 event=monitoring_telemetry_backlog queue_len=1 at_ms=12748
+ts_ms=12748 event=monitoring_telemetry_backlog queue_len=0 at_ms=12748
+ts_ms=12748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=12748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=12748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=12748 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=12748 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=12748 event=downlink_decoded seq=0 prepared_at_ms=12552 payload_len=256
+ts_ms=12773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=12773 event=monitoring_telemetry_backlog queue_len=1 at_ms=12773
+ts_ms=12773 event=monitoring_telemetry_backlog queue_len=0 at_ms=12773
+ts_ms=12773 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=12773 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=12773 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=12773 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=12773 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=12773 event=downlink_decoded seq=0 prepared_at_ms=12578 payload_len=256
+ts_ms=13137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=13137 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=13199 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=13199 event=monitoring_telemetry_backlog queue_len=1 at_ms=13199
+ts_ms=13199 event=monitoring_telemetry_backlog queue_len=0 at_ms=13199
+ts_ms=13199 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=13199 event=telemetry_contact_restored
+ts_ms=13199 event=monitoring_contact_restored
+ts_ms=13199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=13199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=13199 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=426 drift_ms=1
+ts_ms=13199 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=426 drift_ms=1
+ts_ms=13199 event=downlink_decoded seq=0 prepared_at_ms=13003 payload_len=256
+ts_ms=13204 event=monitoring_system_load load_percent=6.32 at_ms=13001
+ts_ms=13223 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=13223 event=monitoring_telemetry_backlog queue_len=1 at_ms=13223
+ts_ms=13223 event=monitoring_telemetry_backlog queue_len=0 at_ms=13223
+ts_ms=13224 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=13224 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=13224 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=13224 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=13224 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=13224 event=downlink_decoded seq=0 prepared_at_ms=13028 payload_len=256
+ts_ms=13248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=13248 event=monitoring_telemetry_backlog queue_len=1 at_ms=13248
+ts_ms=13248 event=monitoring_telemetry_backlog queue_len=0 at_ms=13248
+ts_ms=13248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=13248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=13248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=13248 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=13248 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=13248 event=downlink_decoded seq=0 prepared_at_ms=13053 payload_len=256
+ts_ms=13274 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=13274 event=monitoring_telemetry_backlog queue_len=1 at_ms=13274
+ts_ms=13274 event=monitoring_telemetry_backlog queue_len=0 at_ms=13274
+ts_ms=13274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=13274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=13274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=13274 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=13274 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=13274 event=downlink_decoded seq=0 prepared_at_ms=13078 payload_len=256
+ts_ms=13642 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=13642 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=13699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=13699 event=monitoring_telemetry_backlog queue_len=1 at_ms=13699
+ts_ms=13699 event=monitoring_telemetry_backlog queue_len=0 at_ms=13699
+ts_ms=13699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=13699 event=telemetry_contact_restored
+ts_ms=13699 event=monitoring_contact_restored
+ts_ms=13699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=13699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=13699 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=13699 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=13699 event=downlink_decoded seq=0 prepared_at_ms=13503 payload_len=256
+ts_ms=13724 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=13724 event=monitoring_telemetry_backlog queue_len=1 at_ms=13724
+ts_ms=13724 event=monitoring_telemetry_backlog queue_len=0 at_ms=13724
+ts_ms=13725 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=13725 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=13725 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=13725 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=13725 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=13725 event=downlink_decoded seq=0 prepared_at_ms=13529 payload_len=256
+ts_ms=13748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=13748 event=monitoring_telemetry_backlog queue_len=1 at_ms=13748
+ts_ms=13748 event=monitoring_telemetry_backlog queue_len=0 at_ms=13748
+ts_ms=13748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=13748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=13748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=13749 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=13749 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=13749 event=downlink_decoded seq=0 prepared_at_ms=13552 payload_len=256
+ts_ms=13773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=13773 event=monitoring_telemetry_backlog queue_len=1 at_ms=13773
+ts_ms=13774 event=monitoring_telemetry_backlog queue_len=0 at_ms=13774
+ts_ms=13774 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=13774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=13774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=13774 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=13774 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=13774 event=downlink_decoded seq=0 prepared_at_ms=13578 payload_len=256
+ts_ms=14137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=14137 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=14199 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=14199 event=monitoring_telemetry_backlog queue_len=1 at_ms=14199
+ts_ms=14199 event=monitoring_telemetry_backlog queue_len=0 at_ms=14199
+ts_ms=14199 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=14199 event=telemetry_contact_restored
+ts_ms=14199 event=monitoring_contact_restored
+ts_ms=14199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=14200 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=14200 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=14200 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=14200 event=downlink_decoded seq=0 prepared_at_ms=14003 payload_len=256
+ts_ms=14207 event=monitoring_system_load load_percent=13.87 at_ms=14001
+ts_ms=14223 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=14223 event=monitoring_telemetry_backlog queue_len=1 at_ms=14223
+ts_ms=14223 event=monitoring_telemetry_backlog queue_len=0 at_ms=14223
+ts_ms=14223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=14223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=14223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=14223 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=14224 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=14224 event=downlink_decoded seq=0 prepared_at_ms=14028 payload_len=256
+ts_ms=14249 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=14249 event=monitoring_telemetry_backlog queue_len=1 at_ms=14249
+ts_ms=14249 event=monitoring_telemetry_backlog queue_len=0 at_ms=14249
+ts_ms=14249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=14249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=14249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=14249 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=14249 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=14249 event=downlink_decoded seq=0 prepared_at_ms=14053 payload_len=256
+ts_ms=14273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=14273 event=monitoring_telemetry_backlog queue_len=1 at_ms=14273
+ts_ms=14273 event=monitoring_telemetry_backlog queue_len=0 at_ms=14273
+ts_ms=14273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=14273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=14273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=14273 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=14273 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=14273 event=downlink_decoded seq=0 prepared_at_ms=14077 payload_len=256
+ts_ms=14638 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=14638 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=14698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=14698 event=monitoring_telemetry_backlog queue_len=1 at_ms=14698
+ts_ms=14698 event=monitoring_telemetry_backlog queue_len=0 at_ms=14698
+ts_ms=14698 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=14698 event=telemetry_contact_restored
+ts_ms=14698 event=monitoring_contact_restored
+ts_ms=14698 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=14698 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=14698 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=14699 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=14699 event=downlink_decoded seq=0 prepared_at_ms=14502 payload_len=256
+ts_ms=14724 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=14724 event=monitoring_telemetry_backlog queue_len=1 at_ms=14724
+ts_ms=14724 event=monitoring_telemetry_backlog queue_len=0 at_ms=14724
+ts_ms=14724 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=14724 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=14724 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=14724 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=14724 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=14724 event=downlink_decoded seq=0 prepared_at_ms=14528 payload_len=256
+ts_ms=14748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=14748 event=monitoring_telemetry_backlog queue_len=1 at_ms=14748
+ts_ms=14748 event=monitoring_telemetry_backlog queue_len=0 at_ms=14748
+ts_ms=14748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=14748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=14748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=14748 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=14748 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=14748 event=downlink_decoded seq=0 prepared_at_ms=14552 payload_len=256
+ts_ms=14774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=14774 event=monitoring_telemetry_backlog queue_len=1 at_ms=14774
+ts_ms=14774 event=monitoring_telemetry_backlog queue_len=0 at_ms=14774
+ts_ms=14774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=14774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=14775 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=14775 event=telemetry_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=14775 event=monitoring_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=14775 event=downlink_decoded seq=0 prepared_at_ms=14579 payload_len=256
+ts_ms=15137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=15137 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=15198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=15198 event=monitoring_telemetry_backlog queue_len=1 at_ms=15198
+ts_ms=15199 event=monitoring_telemetry_backlog queue_len=0 at_ms=15199
+ts_ms=15199 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=15199 event=telemetry_contact_restored
+ts_ms=15199 event=monitoring_contact_restored
+ts_ms=15199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=15199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=15199 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=15199 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=15199 event=downlink_decoded seq=0 prepared_at_ms=15003 payload_len=256
+ts_ms=15202 event=monitoring_system_load load_percent=4.94 at_ms=15001
+ts_ms=15223 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=15223 event=monitoring_telemetry_backlog queue_len=1 at_ms=15223
+ts_ms=15223 event=monitoring_telemetry_backlog queue_len=0 at_ms=15223
+ts_ms=15223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=15223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=15223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=15224 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=15224 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=15224 event=downlink_decoded seq=0 prepared_at_ms=15028 payload_len=256
+ts_ms=15249 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=15249 event=monitoring_telemetry_backlog queue_len=1 at_ms=15249
+ts_ms=15249 event=monitoring_telemetry_backlog queue_len=0 at_ms=15249
+ts_ms=15249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=15249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=15249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=15249 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=15249 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=15249 event=downlink_decoded seq=0 prepared_at_ms=15053 payload_len=256
+ts_ms=15273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=15273 event=monitoring_telemetry_backlog queue_len=1 at_ms=15273
+ts_ms=15273 event=monitoring_telemetry_backlog queue_len=0 at_ms=15273
+ts_ms=15273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=15273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=15273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=15273 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=15273 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=15273 event=downlink_decoded seq=0 prepared_at_ms=15077 payload_len=256
+ts_ms=15637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=15637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=15697 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=15697 event=monitoring_telemetry_backlog queue_len=1 at_ms=15697
+ts_ms=15698 event=monitoring_telemetry_backlog queue_len=0 at_ms=15698
+ts_ms=15698 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=15698 event=telemetry_contact_restored
+ts_ms=15698 event=monitoring_contact_restored
+ts_ms=15698 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=15698 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=15698 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=15698 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=15698 event=downlink_decoded seq=0 prepared_at_ms=15502 payload_len=256
+ts_ms=15723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=15723 event=monitoring_telemetry_backlog queue_len=1 at_ms=15723
+ts_ms=15723 event=monitoring_telemetry_backlog queue_len=0 at_ms=15723
+ts_ms=15723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=15723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=15724 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=15724 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=15724 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=15724 event=downlink_decoded seq=0 prepared_at_ms=15528 payload_len=256
+ts_ms=15749 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=15749 event=monitoring_telemetry_backlog queue_len=1 at_ms=15749
+ts_ms=15749 event=monitoring_telemetry_backlog queue_len=0 at_ms=15749
+ts_ms=15749 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=15749 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=15749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=15749 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=15749 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=15749 event=downlink_decoded seq=0 prepared_at_ms=15553 payload_len=256
+ts_ms=15774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=15774 event=monitoring_telemetry_backlog queue_len=1 at_ms=15774
+ts_ms=15774 event=monitoring_telemetry_backlog queue_len=0 at_ms=15774
+ts_ms=15774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=15774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=15774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=15774 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=15775 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=15775 event=downlink_decoded seq=0 prepared_at_ms=15579 payload_len=256
+ts_ms=16142 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=16142 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=16198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=16198 event=monitoring_telemetry_backlog queue_len=1 at_ms=16198
+ts_ms=16199 event=monitoring_telemetry_backlog queue_len=0 at_ms=16199
+ts_ms=16199 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=16199 event=telemetry_contact_restored
+ts_ms=16199 event=monitoring_contact_restored
+ts_ms=16199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=16199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=16199 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=16199 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=16199 event=downlink_decoded seq=0 prepared_at_ms=16003 payload_len=256
+ts_ms=16208 event=monitoring_system_load load_percent=8.67 at_ms=16001
+ts_ms=16224 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=16224 event=monitoring_telemetry_backlog queue_len=1 at_ms=16224
+ts_ms=16224 event=monitoring_telemetry_backlog queue_len=0 at_ms=16224
+ts_ms=16224 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=16224 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=16224 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=16224 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=16224 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=16225 event=downlink_decoded seq=0 prepared_at_ms=16029 payload_len=256
+ts_ms=16249 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=16249 event=monitoring_telemetry_backlog queue_len=1 at_ms=16249
+ts_ms=16249 event=monitoring_telemetry_backlog queue_len=0 at_ms=16249
+ts_ms=16249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=16249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=16249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=16249 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=16250 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=16250 event=downlink_decoded seq=0 prepared_at_ms=16053 payload_len=256
+ts_ms=16274 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=16274 event=monitoring_telemetry_backlog queue_len=1 at_ms=16274
+ts_ms=16274 event=monitoring_telemetry_backlog queue_len=0 at_ms=16274
+ts_ms=16274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=16274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=16274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=16274 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=16274 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=16274 event=downlink_decoded seq=0 prepared_at_ms=16078 payload_len=256
+ts_ms=16642 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=16642 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=16699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=16699 event=monitoring_telemetry_backlog queue_len=1 at_ms=16699
+ts_ms=16699 event=monitoring_telemetry_backlog queue_len=0 at_ms=16699
+ts_ms=16699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=16699 event=telemetry_contact_restored
+ts_ms=16699 event=monitoring_contact_restored
+ts_ms=16699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=16699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=16699 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=16699 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=16700 event=downlink_decoded seq=0 prepared_at_ms=16503 payload_len=256
+ts_ms=16724 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=16724 event=monitoring_telemetry_backlog queue_len=1 at_ms=16724
+ts_ms=16724 event=monitoring_telemetry_backlog queue_len=0 at_ms=16724
+ts_ms=16724 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=16724 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=16725 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=16725 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=16725 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=16725 event=downlink_decoded seq=0 prepared_at_ms=16529 payload_len=256
+ts_ms=16748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=16748 event=monitoring_telemetry_backlog queue_len=1 at_ms=16748
+ts_ms=16748 event=monitoring_telemetry_backlog queue_len=0 at_ms=16748
+ts_ms=16748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=16748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=16748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=16748 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=16748 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=24 drift_ms=1
+ts_ms=16748 event=downlink_decoded seq=0 prepared_at_ms=16552 payload_len=256
+ts_ms=16774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=16774 event=monitoring_telemetry_backlog queue_len=1 at_ms=16774
+ts_ms=16774 event=monitoring_telemetry_backlog queue_len=0 at_ms=16774
+ts_ms=16774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=16774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=16774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=16774 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=16774 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=16774 event=downlink_decoded seq=0 prepared_at_ms=16578 payload_len=256
+ts_ms=17138 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=17138 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=17198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=17198 event=monitoring_telemetry_backlog queue_len=1 at_ms=17198
+ts_ms=17198 event=monitoring_telemetry_backlog queue_len=0 at_ms=17198
+ts_ms=17198 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=17198 event=telemetry_contact_restored
+ts_ms=17198 event=monitoring_contact_restored
+ts_ms=17198 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=17198 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=17198 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=424 drift_ms=0
+ts_ms=17198 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=424 drift_ms=0
+ts_ms=17199 event=downlink_decoded seq=0 prepared_at_ms=17002 payload_len=256
+ts_ms=17207 event=monitoring_system_load load_percent=3.60 at_ms=17001
+ts_ms=17224 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=17224 event=monitoring_telemetry_backlog queue_len=1 at_ms=17224
+ts_ms=17224 event=monitoring_telemetry_backlog queue_len=0 at_ms=17224
+ts_ms=17224 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=17224 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=17224 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=17224 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=17224 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=17224 event=downlink_decoded seq=0 prepared_at_ms=17028 payload_len=256
+ts_ms=17249 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=17249 event=monitoring_telemetry_backlog queue_len=1 at_ms=17249
+ts_ms=17249 event=monitoring_telemetry_backlog queue_len=0 at_ms=17249
+ts_ms=17249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=17249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=17249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=17249 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=17249 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=17249 event=downlink_decoded seq=0 prepared_at_ms=17053 payload_len=256
+ts_ms=17273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=17273 event=monitoring_telemetry_backlog queue_len=1 at_ms=17273
+ts_ms=17273 event=monitoring_telemetry_backlog queue_len=0 at_ms=17273
+ts_ms=17274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=17274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=17274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=17274 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=17274 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=17274 event=downlink_decoded seq=0 prepared_at_ms=17078 payload_len=256
+ts_ms=17642 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=17642 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=17701 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=17701 event=monitoring_telemetry_backlog queue_len=1 at_ms=17701
+ts_ms=17702 event=monitoring_telemetry_backlog queue_len=0 at_ms=17702
+ts_ms=17702 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=17702 event=telemetry_contact_restored
+ts_ms=17702 event=monitoring_contact_restored
+ts_ms=17702 event=telemetry_rx_latency seq=0 latency_ms=1
+ts_ms=17702 event=monitoring_rx_latency seq=0 latency_ms=1
+ts_ms=17703 event=telemetry_rx_drift seq=0 expected_interval_ms=427 actual_interval_ms=428 drift_ms=1
+ts_ms=17703 event=monitoring_rx_drift seq=0 expected_interval_ms=427 actual_interval_ms=428 drift_ms=1
+ts_ms=17703 event=downlink_decoded seq=0 prepared_at_ms=17505 payload_len=256
+ts_ms=17724 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=17724 event=monitoring_telemetry_backlog queue_len=1 at_ms=17724
+ts_ms=17724 event=monitoring_telemetry_backlog queue_len=0 at_ms=17724
+ts_ms=17724 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=17724 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=17724 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=17724 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=22 drift_ms=-1
+ts_ms=17725 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=22 drift_ms=-1
+ts_ms=17725 event=downlink_decoded seq=0 prepared_at_ms=17528 payload_len=256
+ts_ms=17748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=17748 event=monitoring_telemetry_backlog queue_len=1 at_ms=17748
+ts_ms=17748 event=monitoring_telemetry_backlog queue_len=0 at_ms=17748
+ts_ms=17748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=17748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=17748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=17748 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=17748 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=17748 event=downlink_decoded seq=0 prepared_at_ms=17552 payload_len=256
+ts_ms=17774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=17774 event=monitoring_telemetry_backlog queue_len=1 at_ms=17774
+ts_ms=17774 event=monitoring_telemetry_backlog queue_len=0 at_ms=17774
+ts_ms=17774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=17774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=17774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=17774 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=17774 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=17774 event=downlink_decoded seq=0 prepared_at_ms=17578 payload_len=256
+ts_ms=18137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=18137 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=18198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=18198 event=monitoring_telemetry_backlog queue_len=1 at_ms=18198
+ts_ms=18199 event=monitoring_telemetry_backlog queue_len=0 at_ms=18199
+ts_ms=18199 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=18199 event=telemetry_contact_restored
+ts_ms=18199 event=monitoring_contact_restored
+ts_ms=18199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=18199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=18199 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=18199 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=18199 event=downlink_decoded seq=0 prepared_at_ms=18003 payload_len=256
+ts_ms=18207 event=monitoring_system_load load_percent=2.92 at_ms=18001
+ts_ms=18222 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=18223 event=monitoring_telemetry_backlog queue_len=1 at_ms=18223
+ts_ms=18223 event=monitoring_telemetry_backlog queue_len=0 at_ms=18223
+ts_ms=18223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=18223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=18223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=18223 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=18223 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=18223 event=downlink_decoded seq=0 prepared_at_ms=18027 payload_len=256
+ts_ms=18248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=18249 event=monitoring_telemetry_backlog queue_len=1 at_ms=18249
+ts_ms=18249 event=monitoring_telemetry_backlog queue_len=0 at_ms=18249
+ts_ms=18249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=18249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=18249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=18249 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=18249 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=18249 event=downlink_decoded seq=0 prepared_at_ms=18053 payload_len=256
+ts_ms=18273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=18273 event=monitoring_telemetry_backlog queue_len=1 at_ms=18273
+ts_ms=18273 event=monitoring_telemetry_backlog queue_len=0 at_ms=18273
+ts_ms=18273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=18273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=18273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=18273 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=18274 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=18274 event=downlink_decoded seq=0 prepared_at_ms=18078 payload_len=256
+ts_ms=18642 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=18642 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=18698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=18698 event=monitoring_telemetry_backlog queue_len=1 at_ms=18698
+ts_ms=18698 event=monitoring_telemetry_backlog queue_len=0 at_ms=18698
+ts_ms=18699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=18699 event=telemetry_contact_restored
+ts_ms=18699 event=monitoring_contact_restored
+ts_ms=18699 event=telemetry_rx_latency seq=0 latency_ms=1
+ts_ms=18699 event=monitoring_rx_latency seq=0 latency_ms=1
+ts_ms=18699 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=426 drift_ms=2
+ts_ms=18699 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=426 drift_ms=2
+ts_ms=18699 event=downlink_decoded seq=0 prepared_at_ms=18502 payload_len=256
+ts_ms=18723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=18723 event=monitoring_telemetry_backlog queue_len=1 at_ms=18723
+ts_ms=18723 event=monitoring_telemetry_backlog queue_len=0 at_ms=18723
+ts_ms=18723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=18723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=18723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=18723 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=18723 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=18723 event=downlink_decoded seq=0 prepared_at_ms=18527 payload_len=256
+ts_ms=18748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=18748 event=monitoring_telemetry_backlog queue_len=1 at_ms=18748
+ts_ms=18748 event=monitoring_telemetry_backlog queue_len=0 at_ms=18748
+ts_ms=18748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=18748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=18748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=18748 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=18749 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=18749 event=downlink_decoded seq=0 prepared_at_ms=18552 payload_len=256
+ts_ms=18773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=18773 event=monitoring_telemetry_backlog queue_len=1 at_ms=18773
+ts_ms=18774 event=monitoring_telemetry_backlog queue_len=0 at_ms=18774
+ts_ms=18774 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=18774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=18774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=18774 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=18774 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=18774 event=downlink_decoded seq=0 prepared_at_ms=18578 payload_len=256
+ts_ms=19142 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=19142 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=19198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=19198 event=monitoring_telemetry_backlog queue_len=1 at_ms=19198
+ts_ms=19199 event=monitoring_telemetry_backlog queue_len=0 at_ms=19199
+ts_ms=19199 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=19199 event=telemetry_contact_restored
+ts_ms=19199 event=monitoring_contact_restored
+ts_ms=19199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=19199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=19199 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=19199 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=19199 event=downlink_decoded seq=0 prepared_at_ms=19003 payload_len=256
+ts_ms=19207 event=monitoring_system_load load_percent=7.92 at_ms=19002
+ts_ms=19222 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=19222 event=monitoring_telemetry_backlog queue_len=1 at_ms=19222
+ts_ms=19222 event=monitoring_telemetry_backlog queue_len=0 at_ms=19222
+ts_ms=19222 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=19222 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=19222 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=19222 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=19223 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=19223 event=downlink_decoded seq=0 prepared_at_ms=19026 payload_len=256
+ts_ms=19248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=19248 event=monitoring_telemetry_backlog queue_len=1 at_ms=19248
+ts_ms=19248 event=monitoring_telemetry_backlog queue_len=0 at_ms=19248
+ts_ms=19248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=19248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=19248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=19248 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=19249 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=19249 event=downlink_decoded seq=0 prepared_at_ms=19052 payload_len=256
+ts_ms=19274 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=19274 event=monitoring_telemetry_backlog queue_len=1 at_ms=19274
+ts_ms=19274 event=monitoring_telemetry_backlog queue_len=0 at_ms=19274
+ts_ms=19274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=19274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=19275 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=19275 event=telemetry_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=19275 event=monitoring_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=26 drift_ms=-1
+ts_ms=19275 event=downlink_decoded seq=0 prepared_at_ms=19079 payload_len=256
+ts_ms=19642 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=19642 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=19699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=19699 event=monitoring_telemetry_backlog queue_len=1 at_ms=19699
+ts_ms=19699 event=monitoring_telemetry_backlog queue_len=0 at_ms=19699
+ts_ms=19699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=19699 event=telemetry_contact_restored
+ts_ms=19699 event=monitoring_contact_restored
+ts_ms=19699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=19699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=19699 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=19699 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=19699 event=downlink_decoded seq=0 prepared_at_ms=19503 payload_len=256
+ts_ms=19722 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=19722 event=monitoring_telemetry_backlog queue_len=1 at_ms=19722
+ts_ms=19722 event=monitoring_telemetry_backlog queue_len=0 at_ms=19722
+ts_ms=19722 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=19722 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=19722 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=19722 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=23 drift_ms=-1
+ts_ms=19723 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=23 drift_ms=-1
+ts_ms=19723 event=downlink_decoded seq=0 prepared_at_ms=19527 payload_len=256
+ts_ms=19748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=19748 event=monitoring_telemetry_backlog queue_len=1 at_ms=19748
+ts_ms=19748 event=monitoring_telemetry_backlog queue_len=0 at_ms=19748
+ts_ms=19748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=19748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=19748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=19748 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=19748 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=26 drift_ms=1
+ts_ms=19748 event=downlink_decoded seq=0 prepared_at_ms=19552 payload_len=256
+ts_ms=19773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=19773 event=monitoring_telemetry_backlog queue_len=1 at_ms=19773
+ts_ms=19773 event=monitoring_telemetry_backlog queue_len=0 at_ms=19773
+ts_ms=19773 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=19773 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=19773 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=19773 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=19773 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=19773 event=downlink_decoded seq=0 prepared_at_ms=19577 payload_len=256
+# GCS Performance Metrics Snapshot (at_ms=20001)
+
+## Uplink jitter (ms)
+- last: 0
+- max: 0
+- avg: 0.00
+- count: 1
+
+## Telemetry backlog (unprocessed packets)
+- last: 0
+- max: 1
+
+## Scheduler drift (ms, actual_dispatch_at - execute_at)
+- last: 0
+- max: 0
+- abs_max: 0
+- avg: 0.00
+- count: 2
+
+## Missed deadlines
+- total: 0
+- last_command_id: n/a
+
+## Fault recovery
+- last_duration_ms: 4280
+- max_duration_ms: 4280
+- recovery_count: 1
+- recovery_over_100ms_count: 2
+
+## Interlock latency (ms, fault recv → state published to scheduler)
+- last: 1
+- max: 1
+- avg: 1.00
+- count: 1
+
+## System load (%)
+- last: 7.92
+- max: 55.76
+- avg: 9.94
+- count: 20
+
+ts_ms=20138 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=20138 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=20198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=20198 event=monitoring_telemetry_backlog queue_len=1 at_ms=20198
+ts_ms=20198 event=monitoring_telemetry_backlog queue_len=0 at_ms=20198
+ts_ms=20198 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=20198 event=telemetry_contact_restored
+ts_ms=20198 event=monitoring_contact_restored
+ts_ms=20198 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=20198 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=20198 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=20199 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=20199 event=downlink_decoded seq=0 prepared_at_ms=20002 payload_len=256
+ts_ms=20208 event=monitoring_system_load load_percent=1.82 at_ms=20001
+ts_ms=20224 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=20224 event=monitoring_telemetry_backlog queue_len=1 at_ms=20224
+ts_ms=20224 event=monitoring_telemetry_backlog queue_len=0 at_ms=20224
+ts_ms=20224 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=20224 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=20224 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=20224 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=20224 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=20224 event=downlink_decoded seq=0 prepared_at_ms=20028 payload_len=256
+ts_ms=20249 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=20249 event=monitoring_telemetry_backlog queue_len=1 at_ms=20249
+ts_ms=20249 event=monitoring_telemetry_backlog queue_len=0 at_ms=20249
+ts_ms=20249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=20249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=20249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=20250 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=20250 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=20250 event=downlink_decoded seq=0 prepared_at_ms=20053 payload_len=256
+ts_ms=20274 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=20274 event=monitoring_telemetry_backlog queue_len=1 at_ms=20274
+ts_ms=20274 event=monitoring_telemetry_backlog queue_len=0 at_ms=20274
+ts_ms=20274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=20274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=20274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=20274 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=20274 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=20274 event=downlink_decoded seq=0 prepared_at_ms=20078 payload_len=256
+ts_ms=20642 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=20642 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=20699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=20699 event=monitoring_telemetry_backlog queue_len=1 at_ms=20699
+ts_ms=20699 event=monitoring_telemetry_backlog queue_len=0 at_ms=20699
+ts_ms=20699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=20699 event=telemetry_contact_restored
+ts_ms=20699 event=monitoring_contact_restored
+ts_ms=20699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=20699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=20699 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=20699 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=20700 event=downlink_decoded seq=0 prepared_at_ms=20503 payload_len=256
+ts_ms=20724 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=20724 event=monitoring_telemetry_backlog queue_len=1 at_ms=20724
+ts_ms=20724 event=monitoring_telemetry_backlog queue_len=0 at_ms=20724
+ts_ms=20724 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=20724 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=20724 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=20724 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=20724 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=20724 event=downlink_decoded seq=0 prepared_at_ms=20528 payload_len=256
+ts_ms=20748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=20749 event=monitoring_telemetry_backlog queue_len=1 at_ms=20749
+ts_ms=20749 event=monitoring_telemetry_backlog queue_len=0 at_ms=20749
+ts_ms=20749 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=20749 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=20749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=20749 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=20749 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=20749 event=downlink_decoded seq=0 prepared_at_ms=20553 payload_len=256
+ts_ms=20774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=20774 event=monitoring_telemetry_backlog queue_len=1 at_ms=20774
+ts_ms=20774 event=monitoring_telemetry_backlog queue_len=0 at_ms=20774
+ts_ms=20774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=20774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=20774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=20774 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=20774 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=20774 event=downlink_decoded seq=0 prepared_at_ms=20579 payload_len=256
+ts_ms=21138 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=21138 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=21199 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=21199 event=monitoring_telemetry_backlog queue_len=1 at_ms=21199
+ts_ms=21199 event=monitoring_telemetry_backlog queue_len=0 at_ms=21199
+ts_ms=21199 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=21199 event=telemetry_contact_restored
+ts_ms=21199 event=monitoring_contact_restored
+ts_ms=21199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=21199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=21199 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=21199 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=21200 event=downlink_decoded seq=0 prepared_at_ms=21003 payload_len=256
+ts_ms=21208 event=monitoring_system_load load_percent=4.79 at_ms=21001
+ts_ms=21224 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=21224 event=monitoring_telemetry_backlog queue_len=1 at_ms=21224
+ts_ms=21224 event=monitoring_telemetry_backlog queue_len=0 at_ms=21224
+ts_ms=21225 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=21225 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=21225 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=21225 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=21225 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=21225 event=downlink_decoded seq=0 prepared_at_ms=21029 payload_len=256
+ts_ms=21247 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=21247 event=monitoring_telemetry_backlog queue_len=1 at_ms=21247
+ts_ms=21247 event=monitoring_telemetry_backlog queue_len=0 at_ms=21247
+ts_ms=21247 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=21247 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=21247 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=21247 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=22 drift_ms=-1
+ts_ms=21248 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=22 drift_ms=-1
+ts_ms=21248 event=downlink_decoded seq=0 prepared_at_ms=21052 payload_len=256
+ts_ms=21273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=21273 event=monitoring_telemetry_backlog queue_len=1 at_ms=21273
+ts_ms=21273 event=monitoring_telemetry_backlog queue_len=0 at_ms=21273
+ts_ms=21273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=21273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=21273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=21273 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=21273 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=21274 event=downlink_decoded seq=0 prepared_at_ms=21078 payload_len=256
+ts_ms=21637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=21637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=21697 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=21697 event=monitoring_telemetry_backlog queue_len=1 at_ms=21697
+ts_ms=21698 event=monitoring_telemetry_backlog queue_len=0 at_ms=21698
+ts_ms=21698 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=21698 event=telemetry_contact_restored
+ts_ms=21698 event=monitoring_contact_restored
+ts_ms=21698 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=21698 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=21698 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=21698 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=425 drift_ms=1
+ts_ms=21698 event=downlink_decoded seq=0 prepared_at_ms=21502 payload_len=256
+ts_ms=21722 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=21722 event=monitoring_telemetry_backlog queue_len=1 at_ms=21722
+ts_ms=21722 event=monitoring_telemetry_backlog queue_len=0 at_ms=21722
+ts_ms=21722 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=21722 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=21722 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=21722 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=21723 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=21723 event=downlink_decoded seq=0 prepared_at_ms=21527 payload_len=256
+ts_ms=21748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=21748 event=monitoring_telemetry_backlog queue_len=1 at_ms=21748
+ts_ms=21748 event=monitoring_telemetry_backlog queue_len=0 at_ms=21748
+ts_ms=21748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=21749 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=21749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=21749 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=27 drift_ms=1
+ts_ms=21749 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=27 drift_ms=1
+ts_ms=21749 event=downlink_decoded seq=0 prepared_at_ms=21553 payload_len=256
+ts_ms=21773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=21773 event=monitoring_telemetry_backlog queue_len=1 at_ms=21773
+ts_ms=21773 event=monitoring_telemetry_backlog queue_len=0 at_ms=21773
+ts_ms=21773 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=21773 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=21773 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=21773 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=21773 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=21773 event=downlink_decoded seq=0 prepared_at_ms=21577 payload_len=256
+ts_ms=22137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=22138 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=22198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=22198 event=monitoring_telemetry_backlog queue_len=1 at_ms=22198
+ts_ms=22199 event=monitoring_telemetry_backlog queue_len=0 at_ms=22199
+ts_ms=22199 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=22199 event=telemetry_contact_restored
+ts_ms=22199 event=monitoring_contact_restored
+ts_ms=22199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=22199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=22199 event=telemetry_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=22199 event=monitoring_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=22199 event=downlink_decoded seq=0 prepared_at_ms=22003 payload_len=256
+ts_ms=22207 event=monitoring_system_load load_percent=4.20 at_ms=22001
+ts_ms=22223 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=22223 event=monitoring_telemetry_backlog queue_len=1 at_ms=22223
+ts_ms=22223 event=monitoring_telemetry_backlog queue_len=0 at_ms=22223
+ts_ms=22223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=22223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=22223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=22223 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=22223 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=22223 event=downlink_decoded seq=0 prepared_at_ms=22027 payload_len=256
+ts_ms=22248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=22248 event=monitoring_telemetry_backlog queue_len=1 at_ms=22248
+ts_ms=22248 event=monitoring_telemetry_backlog queue_len=0 at_ms=22248
+ts_ms=22248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=22248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=22248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=22248 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=22248 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=22248 event=downlink_decoded seq=0 prepared_at_ms=22052 payload_len=256
+ts_ms=22274 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=22274 event=monitoring_telemetry_backlog queue_len=1 at_ms=22274
+ts_ms=22274 event=monitoring_telemetry_backlog queue_len=0 at_ms=22274
+ts_ms=22274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=22274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=22274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=22274 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=22274 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=22274 event=downlink_decoded seq=0 prepared_at_ms=22078 payload_len=256
+ts_ms=22638 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=22638 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=22699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=22699 event=monitoring_telemetry_backlog queue_len=1 at_ms=22699
+ts_ms=22699 event=monitoring_telemetry_backlog queue_len=0 at_ms=22699
+ts_ms=22699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=22699 event=telemetry_contact_restored
+ts_ms=22699 event=monitoring_contact_restored
+ts_ms=22699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=22699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=22699 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=22699 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=22699 event=downlink_decoded seq=0 prepared_at_ms=22503 payload_len=256
+ts_ms=22724 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=22724 event=monitoring_telemetry_backlog queue_len=1 at_ms=22724
+ts_ms=22724 event=monitoring_telemetry_backlog queue_len=0 at_ms=22724
+ts_ms=22724 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=22724 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=22724 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=22724 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=22724 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=22724 event=downlink_decoded seq=0 prepared_at_ms=22528 payload_len=256
+ts_ms=22748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=22748 event=monitoring_telemetry_backlog queue_len=1 at_ms=22748
+ts_ms=22748 event=monitoring_telemetry_backlog queue_len=0 at_ms=22748
+ts_ms=22749 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=22749 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=22749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=22749 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=22749 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=22749 event=downlink_decoded seq=0 prepared_at_ms=22553 payload_len=256
+ts_ms=22772 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=22772 event=monitoring_telemetry_backlog queue_len=1 at_ms=22772
+ts_ms=22772 event=monitoring_telemetry_backlog queue_len=0 at_ms=22772
+ts_ms=22772 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=22772 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=22772 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=22772 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=23 drift_ms=-1
+ts_ms=22772 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=23 drift_ms=-1
+ts_ms=22772 event=downlink_decoded seq=0 prepared_at_ms=22577 payload_len=256
+ts_ms=23142 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=23142 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=23198 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=23198 event=monitoring_telemetry_backlog queue_len=1 at_ms=23198
+ts_ms=23199 event=monitoring_telemetry_backlog queue_len=0 at_ms=23199
+ts_ms=23199 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=23199 event=telemetry_contact_restored
+ts_ms=23199 event=monitoring_contact_restored
+ts_ms=23199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=23199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=23199 event=telemetry_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=427 drift_ms=1
+ts_ms=23199 event=monitoring_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=427 drift_ms=1
+ts_ms=23199 event=downlink_decoded seq=0 prepared_at_ms=23003 payload_len=256
+ts_ms=23207 event=monitoring_system_load load_percent=26.22 at_ms=23001
+ts_ms=23222 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=23222 event=monitoring_telemetry_backlog queue_len=1 at_ms=23222
+ts_ms=23223 event=monitoring_telemetry_backlog queue_len=0 at_ms=23223
+ts_ms=23223 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=23223 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=23223 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=23223 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=23223 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=23223 event=downlink_decoded seq=0 prepared_at_ms=23027 payload_len=256
+ts_ms=23249 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=23249 event=monitoring_telemetry_backlog queue_len=1 at_ms=23249
+ts_ms=23249 event=monitoring_telemetry_backlog queue_len=0 at_ms=23249
+ts_ms=23249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=23249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=23249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=23249 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=23249 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=23249 event=downlink_decoded seq=0 prepared_at_ms=23053 payload_len=256
+ts_ms=23275 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=23275 event=monitoring_telemetry_backlog queue_len=1 at_ms=23275
+ts_ms=23275 event=monitoring_telemetry_backlog queue_len=0 at_ms=23275
+ts_ms=23275 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=23275 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=23275 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=23275 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=23275 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=23275 event=downlink_decoded seq=0 prepared_at_ms=23079 payload_len=256
+ts_ms=23637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=23637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=23698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=23699 event=monitoring_telemetry_backlog queue_len=1 at_ms=23699
+ts_ms=23699 event=monitoring_telemetry_backlog queue_len=0 at_ms=23699
+ts_ms=23699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=23699 event=telemetry_contact_restored
+ts_ms=23699 event=monitoring_contact_restored
+ts_ms=23699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=23699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=23699 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=424 drift_ms=0
+ts_ms=23699 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=424 drift_ms=0
+ts_ms=23699 event=downlink_decoded seq=0 prepared_at_ms=23503 payload_len=256
+ts_ms=23722 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=23722 event=monitoring_telemetry_backlog queue_len=1 at_ms=23722
+ts_ms=23724 event=monitoring_telemetry_backlog queue_len=0 at_ms=23724
+ts_ms=23724 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=23724 event=telemetry_rx_latency seq=0 latency_ms=1
+ts_ms=23724 event=monitoring_rx_latency seq=0 latency_ms=1
+ts_ms=23724 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=23724 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=23724 event=downlink_decoded seq=0 prepared_at_ms=23527 payload_len=256
+ts_ms=23749 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=23749 event=monitoring_telemetry_backlog queue_len=1 at_ms=23749
+ts_ms=23749 event=monitoring_telemetry_backlog queue_len=0 at_ms=23749
+ts_ms=23749 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=23749 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=23749 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=23749 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=23749 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=23749 event=downlink_decoded seq=0 prepared_at_ms=23553 payload_len=256
+ts_ms=23774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=23774 event=monitoring_telemetry_backlog queue_len=1 at_ms=23774
+ts_ms=23775 event=monitoring_telemetry_backlog queue_len=0 at_ms=23775
+ts_ms=23775 event=telemetry_decode_timing elapsed_ms=1
+ts_ms=23775 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=23775 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=23775 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=23775 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=23775 event=downlink_decoded seq=0 prepared_at_ms=23579 payload_len=256
+ts_ms=24137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=24137 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=24197 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=24197 event=monitoring_telemetry_backlog queue_len=1 at_ms=24197
+ts_ms=24197 event=monitoring_telemetry_backlog queue_len=0 at_ms=24197
+ts_ms=24197 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=24197 event=telemetry_contact_restored
+ts_ms=24198 event=monitoring_contact_restored
+ts_ms=24198 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=24198 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=24198 event=telemetry_rx_drift seq=0 expected_interval_ms=423 actual_interval_ms=423 drift_ms=0
+ts_ms=24198 event=monitoring_rx_drift seq=0 expected_interval_ms=423 actual_interval_ms=423 drift_ms=0
+ts_ms=24198 event=downlink_decoded seq=0 prepared_at_ms=24002 payload_len=256
+ts_ms=24204 event=monitoring_system_load load_percent=15.16 at_ms=24000
+ts_ms=24224 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=24224 event=monitoring_telemetry_backlog queue_len=1 at_ms=24224
+ts_ms=24224 event=monitoring_telemetry_backlog queue_len=0 at_ms=24224
+ts_ms=24224 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=24224 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=24224 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=24224 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=24224 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=24224 event=downlink_decoded seq=0 prepared_at_ms=24028 payload_len=256
+ts_ms=24249 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=24249 event=monitoring_telemetry_backlog queue_len=1 at_ms=24249
+ts_ms=24249 event=monitoring_telemetry_backlog queue_len=0 at_ms=24249
+ts_ms=24249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=24249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=24249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=24249 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=24249 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=24249 event=downlink_decoded seq=0 prepared_at_ms=24053 payload_len=256
+ts_ms=24274 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=24274 event=monitoring_telemetry_backlog queue_len=1 at_ms=24274
+ts_ms=24274 event=monitoring_telemetry_backlog queue_len=0 at_ms=24274
+ts_ms=24274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=24274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=24274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=24274 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=24274 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=24274 event=downlink_decoded seq=0 prepared_at_ms=24078 payload_len=256
+ts_ms=24637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=24637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=24698 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=24698 event=monitoring_telemetry_backlog queue_len=1 at_ms=24698
+ts_ms=24698 event=monitoring_telemetry_backlog queue_len=0 at_ms=24698
+ts_ms=24698 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=24698 event=telemetry_contact_restored
+ts_ms=24698 event=monitoring_contact_restored
+ts_ms=24698 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=24699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=24699 event=telemetry_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=424 drift_ms=0
+ts_ms=24699 event=monitoring_rx_drift seq=0 expected_interval_ms=424 actual_interval_ms=424 drift_ms=0
+ts_ms=24700 event=downlink_decoded seq=0 prepared_at_ms=24502 payload_len=256
+ts_ms=24723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=24723 event=monitoring_telemetry_backlog queue_len=1 at_ms=24723
+ts_ms=24723 event=monitoring_telemetry_backlog queue_len=0 at_ms=24723
+ts_ms=24723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=24723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=24723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=24723 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=24723 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=24723 event=downlink_decoded seq=0 prepared_at_ms=24527 payload_len=256
+ts_ms=24748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=24748 event=monitoring_telemetry_backlog queue_len=1 at_ms=24748
+ts_ms=24748 event=monitoring_telemetry_backlog queue_len=0 at_ms=24748
+ts_ms=24748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=24748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=24748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=24748 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=24748 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=25 drift_ms=-1
+ts_ms=24748 event=downlink_decoded seq=0 prepared_at_ms=24553 payload_len=256
+ts_ms=24772 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=24772 event=monitoring_telemetry_backlog queue_len=1 at_ms=24772
+ts_ms=24772 event=monitoring_telemetry_backlog queue_len=0 at_ms=24772
+ts_ms=24773 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=24773 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=24773 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=24773 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=24773 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=25 drift_ms=1
+ts_ms=24773 event=downlink_decoded seq=0 prepared_at_ms=24577 payload_len=256
+ts_ms=25137 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=25137 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=25199 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=25199 event=monitoring_telemetry_backlog queue_len=1 at_ms=25199
+ts_ms=25199 event=monitoring_telemetry_backlog queue_len=0 at_ms=25199
+ts_ms=25199 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=25199 event=telemetry_contact_restored
+ts_ms=25199 event=monitoring_contact_restored
+ts_ms=25199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=25199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=25199 event=telemetry_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=25199 event=monitoring_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=25199 event=downlink_decoded seq=0 prepared_at_ms=25003 payload_len=256
+ts_ms=25204 event=monitoring_system_load load_percent=10.95 at_ms=25001
+ts_ms=25223 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=25224 event=monitoring_telemetry_backlog queue_len=1 at_ms=25224
+ts_ms=25224 event=monitoring_telemetry_backlog queue_len=0 at_ms=25224
+ts_ms=25224 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=25224 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=25224 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=25224 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=25224 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=25224 event=downlink_decoded seq=0 prepared_at_ms=25028 payload_len=256
+ts_ms=25248 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=25248 event=monitoring_telemetry_backlog queue_len=1 at_ms=25248
+ts_ms=25248 event=monitoring_telemetry_backlog queue_len=0 at_ms=25248
+ts_ms=25248 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=25248 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=25248 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=25248 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=25248 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=24 drift_ms=-1
+ts_ms=25248 event=downlink_decoded seq=0 prepared_at_ms=25053 payload_len=256
+ts_ms=25273 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=25273 event=monitoring_telemetry_backlog queue_len=1 at_ms=25273
+ts_ms=25273 event=monitoring_telemetry_backlog queue_len=0 at_ms=25273
+ts_ms=25273 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=25273 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=25273 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=25273 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=25274 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=25274 event=downlink_decoded seq=0 prepared_at_ms=25078 payload_len=256
+ts_ms=25642 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=25642 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=25699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=25699 event=monitoring_telemetry_backlog queue_len=1 at_ms=25699
+ts_ms=25699 event=monitoring_telemetry_backlog queue_len=0 at_ms=25699
+ts_ms=25699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=25699 event=telemetry_contact_restored
+ts_ms=25699 event=monitoring_contact_restored
+ts_ms=25699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=25699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=25699 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=426 drift_ms=1
+ts_ms=25699 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=426 drift_ms=1
+ts_ms=25699 event=downlink_decoded seq=0 prepared_at_ms=25503 payload_len=256
+ts_ms=25723 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=25723 event=monitoring_telemetry_backlog queue_len=1 at_ms=25723
+ts_ms=25723 event=monitoring_telemetry_backlog queue_len=0 at_ms=25723
+ts_ms=25723 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=25723 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=25723 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=25723 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=25723 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=25724 event=downlink_decoded seq=0 prepared_at_ms=25527 payload_len=256
+ts_ms=25749 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=25749 event=monitoring_telemetry_backlog queue_len=1 at_ms=25749
+ts_ms=25750 event=monitoring_telemetry_backlog queue_len=0 at_ms=25750
+ts_ms=25750 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=25750 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=25750 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=25750 event=telemetry_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=27 drift_ms=0
+ts_ms=25750 event=monitoring_rx_drift seq=0 expected_interval_ms=27 actual_interval_ms=27 drift_ms=0
+ts_ms=25750 event=downlink_decoded seq=0 prepared_at_ms=25554 payload_len=256
+ts_ms=25773 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=25773 event=monitoring_telemetry_backlog queue_len=1 at_ms=25773
+ts_ms=25773 event=monitoring_telemetry_backlog queue_len=0 at_ms=25773
+ts_ms=25773 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=25773 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=25773 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=25773 event=telemetry_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=25773 event=monitoring_rx_drift seq=0 expected_interval_ms=23 actual_interval_ms=23 drift_ms=0
+ts_ms=25773 event=downlink_decoded seq=0 prepared_at_ms=25577 payload_len=256
+ts_ms=26142 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=26142 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=26199 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=26199 event=monitoring_telemetry_backlog queue_len=1 at_ms=26199
+ts_ms=26199 event=monitoring_telemetry_backlog queue_len=0 at_ms=26199
+ts_ms=26199 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=26199 event=telemetry_contact_restored
+ts_ms=26199 event=monitoring_contact_restored
+ts_ms=26199 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=26199 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=26199 event=telemetry_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=26199 event=monitoring_rx_drift seq=0 expected_interval_ms=426 actual_interval_ms=426 drift_ms=0
+ts_ms=26199 event=downlink_decoded seq=0 prepared_at_ms=26003 payload_len=256
+ts_ms=26206 event=monitoring_system_load load_percent=13.37 at_ms=26001
+ts_ms=26224 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=26224 event=monitoring_telemetry_backlog queue_len=1 at_ms=26224
+ts_ms=26224 event=monitoring_telemetry_backlog queue_len=0 at_ms=26224
+ts_ms=26224 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=26224 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=26224 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=26224 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=26224 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=26224 event=downlink_decoded seq=0 prepared_at_ms=26028 payload_len=256
+ts_ms=26249 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=26249 event=monitoring_telemetry_backlog queue_len=1 at_ms=26249
+ts_ms=26249 event=monitoring_telemetry_backlog queue_len=0 at_ms=26249
+ts_ms=26249 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=26249 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=26249 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=26249 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=26249 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=26250 event=downlink_decoded seq=0 prepared_at_ms=26053 payload_len=256
+ts_ms=26274 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=26274 event=monitoring_telemetry_backlog queue_len=1 at_ms=26274
+ts_ms=26274 event=monitoring_telemetry_backlog queue_len=0 at_ms=26274
+ts_ms=26274 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=26274 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=26274 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=26274 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=26274 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=26274 event=downlink_decoded seq=0 prepared_at_ms=26078 payload_len=256
+ts_ms=26637 event=telemetry_contact_lost consecutive_failures=3
+ts_ms=26637 event=monitoring_contact_lost consecutive_failures=3
+ts_ms=26699 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=26699 event=monitoring_telemetry_backlog queue_len=1 at_ms=26699
+ts_ms=26699 event=monitoring_telemetry_backlog queue_len=0 at_ms=26699
+ts_ms=26699 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=26699 event=telemetry_contact_restored
+ts_ms=26699 event=monitoring_contact_restored
+ts_ms=26699 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=26699 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=26699 event=telemetry_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=26699 event=monitoring_rx_drift seq=0 expected_interval_ms=425 actual_interval_ms=425 drift_ms=0
+ts_ms=26699 event=downlink_decoded seq=0 prepared_at_ms=26503 payload_len=256
+ts_ms=26724 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=26724 event=monitoring_telemetry_backlog queue_len=1 at_ms=26724
+ts_ms=26724 event=monitoring_telemetry_backlog queue_len=0 at_ms=26724
+ts_ms=26724 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=26724 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=26724 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=26724 event=telemetry_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=26724 event=monitoring_rx_drift seq=0 expected_interval_ms=25 actual_interval_ms=25 drift_ms=0
+ts_ms=26724 event=downlink_decoded seq=0 prepared_at_ms=26528 payload_len=256
+ts_ms=26748 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=26748 event=monitoring_telemetry_backlog queue_len=1 at_ms=26748
+ts_ms=26748 event=monitoring_telemetry_backlog queue_len=0 at_ms=26748
+ts_ms=26748 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=26748 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=26748 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=26748 event=telemetry_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=26748 event=monitoring_rx_drift seq=0 expected_interval_ms=24 actual_interval_ms=24 drift_ms=0
+ts_ms=26748 event=downlink_decoded seq=0 prepared_at_ms=26552 payload_len=256
+ts_ms=26774 event=downlink_accepted peer=127.0.0.1:59049
+ts_ms=26774 event=monitoring_telemetry_backlog queue_len=1 at_ms=26774
+ts_ms=26774 event=monitoring_telemetry_backlog queue_len=0 at_ms=26774
+ts_ms=26774 event=telemetry_decode_timing elapsed_ms=0
+ts_ms=26774 event=telemetry_rx_latency seq=0 latency_ms=0
+ts_ms=26774 event=monitoring_rx_latency seq=0 latency_ms=0
+ts_ms=26774 event=telemetry_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=26774 event=monitoring_rx_drift seq=0 expected_interval_ms=26 actual_interval_ms=26 drift_ms=0
+ts_ms=26774 event=downlink_decoded seq=0 prepared_at_ms=26578 payload_len=256

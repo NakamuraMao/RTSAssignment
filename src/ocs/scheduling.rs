@@ -39,10 +39,20 @@ const CPU_WINDOW_MS: u64 = 1000;
 
 const PREPARE_DEADLINE_MS: u64 = 30;
 const COMPRESSION_OVERLOAD_SKIP_LATE_MS: u64 = 10;
+const THERMAL_START_DELAY_BUDGET_MS: i64 = 3;
+const NONCRITICAL_START_DELAY_BUDGET_MS: i64 = 5;
+/// OCS-internal visibility window schedule (strict-from-start).
+/// Prepare (produce `prepared_at`) must be within 30ms from `window_start`.
+const VIS_WINDOW_PERIOD_MS: u64 = ANTENNA_PERIOD_MS;
+const VIS_WINDOW_DURATION_MS: u64 = 100;
 // Coarser cooperative preemption: reduce excessive context-switch overhead
 // while still giving high-priority tasks regular chances to run.
 const SCHED_LOOP_JOB_BUDGET: usize = 128;
 const SCHED_LOOP_STALE_SKIP_BUDGET: usize = 64;
+/// Worker -> metrics aggregator report channel capacity (bounded, drop-on-full via `try_send`).
+const METRICS_REPORT_CAPACITY: usize = 100;
+/// Per-lane trigger queue capacity (bounded, dispatcher uses `try_send`).
+const LANE_TRIGGER_CAPACITY: usize = 32;
 
 fn data_priority_rank(p: DataPriority) -> u8 {
     match p {
@@ -50,6 +60,15 @@ fn data_priority_rank(p: DataPriority) -> u8 {
         DataPriority::High => 3,
         DataPriority::Normal => 2,
         DataPriority::Low => 1,
+    }
+}
+
+fn start_delay_budget_ms(kind: TaskKind) -> i64 {
+    match kind {
+        TaskKind::Thermal => THERMAL_START_DELAY_BUDGET_MS,
+        TaskKind::Compression | TaskKind::Health | TaskKind::Antenna => {
+            NONCRITICAL_START_DELAY_BUDGET_MS
+        }
     }
 }
 
@@ -137,13 +156,14 @@ fn record_task_start(
     deadline_ms: u64,
     state: &mut TaskState,
     metrics: &Arc<Mutex<BenchmarkMetrics>>,
-) -> (TimestampMs, u64) {
+) -> (TimestampMs, u64, u64) {
     let t_start = time::now_ms();
     let actual_ms = t_start.0;
 
     if state.expected_start_ms.is_none() {
         state.expected_start_ms = Some(actual_ms);
     }
+    let expected_start_ms = state.expected_start_ms.unwrap_or(actual_ms);
     let expected_completion_ms = state
         .expected_start_ms
         .unwrap_or(actual_ms)
@@ -165,45 +185,29 @@ fn record_task_start(
             if drift_ms > 0 {
                 m.drift_late_start_count = m.drift_late_start_count.saturating_add(1);
             }
-            if kind == TaskKind::Thermal {
-                if let Some(jitter_ms) = jitter_ms_opt {
-                    m.thermal_scheduling_drift_ms =
-                        m.thermal_scheduling_drift_ms.max(jitter_ms);
-                }
+            if let Some(jitter_ms) = jitter_ms_opt {
+                m.record_task_jitter(kind, jitter_ms);
             }
         }
     }
 
     state.run_count += 1;
     state.last_start_ms = Some(actual_ms);
-    (t_start, expected_completion_ms)
+    (t_start, expected_start_ms, expected_completion_ms)
 }
 
-fn record_task_end(
-    kind: TaskKind,
-    period_ms: u64,
-    expected_completion_ms: u64,
-    state: &mut TaskState,
-    metrics: &Arc<Mutex<BenchmarkMetrics>>,
-) -> TimestampMs {
-    let t_end = time::now_ms();
-    if t_end.0 > expected_completion_ms {
-        crate::ocs_ts_eprintln!(
-            "[scheduling] deadline_violation kind=CompletionDelay task_kind={:?} at={} expected_completion={}",
-            kind,
-            t_end.0,
-            expected_completion_ms
-        );
-        if let Ok(mut m) = metrics.try_lock() {
-            m.deadline_violations = m.deadline_violations.saturating_add(1);
-        }
-    }
-    let next_expected = state.expected_start_ms.unwrap_or(0).saturating_add(period_ms);
+fn advance_expected_start(period_ms: u64, state: &mut TaskState) {
+    let next_expected = state
+        .expected_start_ms
+        .unwrap_or(0)
+        .saturating_add(period_ms);
     state.expected_start_ms = Some(next_expected);
-    t_end
 }
 
-fn sample_to_payload(sample: &SensorSample, fault: &FaultInjectionState) -> ([u8; MAX_PAYLOAD_LEN], usize) {
+fn sample_to_payload(
+    sample: &SensorSample,
+    fault: &FaultInjectionState,
+) -> ([u8; MAX_PAYLOAD_LEN], usize) {
     let mut payload = [0u8; MAX_PAYLOAD_LEN];
     let fault_byte: u8 = if fault.active && fault.sensor_id == Some(sample.sensor_id) {
         1
@@ -241,10 +245,330 @@ fn dummy_load() {
     let _ = x;
 }
 
-async fn run_thermal_control_lane(mut thermal_rx: mpsc::Receiver<()>) {
-    while let Some(()) = thermal_rx.recv().await {
+#[derive(Clone, Debug)]
+struct JobTrigger {
+    kind: TaskKind,
+    release_ms: u64,
+    expected_start_ms: u64,
+    expected_completion_ms: u64,
+    deadline_abs_ms: u64,
+    dispatched_at_ms: u64,
+    vis_window_start_ms: u64,
+}
+
+#[derive(Clone, Debug)]
+struct CompressionTrigger {
+    base: JobTrigger,
+    sample: Option<SensorSample>,
+    fault: FaultInjectionState,
+}
+
+#[derive(Clone, Debug)]
+struct SimpleTrigger {
+    base: JobTrigger,
+}
+
+#[derive(Clone, Debug)]
+struct CompletionReport {
+    kind: TaskKind,
+    actual_start_ms: u64,
+    actual_end_ms: u64,
+    expected_completion_ms: u64,
+    /// (optional) release information for better logs
+    release_ms: u64,
+    /// For `StartDelay` log context
+    expected_start_ms: u64,
+    /// For visibility-window rule
+    vis_window_start_ms: u64,
+    /// Whether this completion is a violation
+    completion_delay_violation: bool,
+    /// Whether visibility-window prepare deadline was violated (Compression only)
+    visibility_prepare_violation: bool,
+    /// Whether the internal prepare deadline (release+30ms) was violated (Compression only)
+    prepare_deadline_violation: bool,
+    exec_time_ms: u64,
+}
+
+async fn run_simple_lane(
+    kind: TaskKind,
+    mut rx: mpsc::Receiver<SimpleTrigger>,
+    report_tx: mpsc::Sender<CompletionReport>,
+) {
+    while let Some(trig) = rx.recv().await {
+        let t0 = time::now_ms().0;
+        // Simulated work; keep as blocking to model load.
         if tokio::task::spawn_blocking(dummy_load).await.is_err() {
-            crate::ocs_ts_eprintln!("[scheduling] thermal_lane_spawn_blocking_join_err");
+            crate::ocs_ts_eprintln!(
+                "[scheduling] lane_spawn_blocking_join_err task_kind={:?}",
+                kind
+            );
+        }
+        let t1 = time::now_ms().0;
+        let completion_delay_violation = t1 > trig.base.expected_completion_ms;
+        if completion_delay_violation {
+            crate::ocs_ts_eprintln!(
+                "[scheduling] deadline_violation kind=CompletionDelay task_kind={:?} at={} expected_completion={}",
+                kind,
+                t1,
+                trig.base.expected_completion_ms
+            );
+        }
+        let rep = CompletionReport {
+            kind,
+            actual_start_ms: t0,
+            actual_end_ms: t1,
+            expected_completion_ms: trig.base.expected_completion_ms,
+            release_ms: trig.base.release_ms,
+            expected_start_ms: trig.base.expected_start_ms,
+            vis_window_start_ms: trig.base.vis_window_start_ms,
+            completion_delay_violation,
+            visibility_prepare_violation: false,
+            prepare_deadline_violation: false,
+            exec_time_ms: t1.saturating_sub(t0),
+        };
+        if report_tx.try_send(rep).is_err() {
+            // Observability plane: drop-on-full (Backpressure).
+            crate::ocs_ts_eprintln!(
+                "[scheduling] metrics_report_drop kind={:?} at={}",
+                kind,
+                time::now_ms().0
+            );
+        }
+    }
+}
+
+async fn run_compression_lane(
+    mut rx: mpsc::Receiver<CompressionTrigger>,
+    downlink_tx: mpsc::Sender<DownlinkPacket>,
+    downlink_queued: Arc<AtomicUsize>,
+    report_tx: mpsc::Sender<CompletionReport>,
+) {
+    let mut prev_in_visibility_window: Option<bool> = None;
+    while let Some(trig) = rx.recv().await {
+        let t_start_ms = time::now_ms().0;
+        let mut visibility_prepare_violation = false;
+        let prepare_deadline_violation = false;
+
+        // Overload protection: if started too late, skip expensive compression and send degraded keepalive.
+        let completion_late_ms = t_start_ms.saturating_sub(trig.base.expected_completion_ms);
+        if completion_late_ms >= COMPRESSION_OVERLOAD_SKIP_LATE_MS {
+            crate::ocs_ts_eprintln!(
+                "[scheduling] compression_overload_skip release_ms={} started_at={} completion_late_ms={}",
+                trig.base.release_ms,
+                t_start_ms,
+                completion_late_ms
+            );
+            let degraded_seq = 0_u64;
+            let (payload, payload_len) = degraded_health_payload(&trig.fault);
+            let degraded_packet = DownlinkPacket {
+                sequence: degraded_seq,
+                payload,
+                payload_len,
+                prepared_at: time::now_ms(),
+            };
+            match downlink_tx.try_send(degraded_packet) {
+                Ok(()) => {
+                    downlink_queued.fetch_add(1, AtomicOrdering::Relaxed);
+                    crate::ocs_ts_eprintln!(
+                        "[scheduling] degraded_keepalive_enqueued sequence={} release_ms={}",
+                        degraded_seq,
+                        trig.base.release_ms
+                    );
+                }
+                Err(mpsc::error::TrySendError::Full(p)) => {
+                    crate::ocs_ts_eprintln!(
+                        "[scheduling] degraded_keepalive_drop_downlink_full sequence={} at={}",
+                        p.sequence,
+                        p.prepared_at.0
+                    );
+                }
+                Err(mpsc::error::TrySendError::Closed(_)) => return,
+            }
+
+            let t_end_ms = time::now_ms().0;
+            let completion_delay_violation = t_end_ms > trig.base.expected_completion_ms;
+            if completion_delay_violation {
+                crate::ocs_ts_eprintln!(
+                    "[scheduling] deadline_violation kind=CompletionDelay task_kind={:?} at={} expected_completion={}",
+                    TaskKind::Compression,
+                    t_end_ms,
+                    trig.base.expected_completion_ms
+                );
+            }
+            let rep = CompletionReport {
+                kind: TaskKind::Compression,
+                actual_start_ms: t_start_ms,
+                actual_end_ms: t_end_ms,
+                expected_completion_ms: trig.base.expected_completion_ms,
+                release_ms: trig.base.release_ms,
+                expected_start_ms: trig.base.expected_start_ms,
+                vis_window_start_ms: trig.base.vis_window_start_ms,
+                completion_delay_violation,
+                visibility_prepare_violation,
+                prepare_deadline_violation,
+                exec_time_ms: t_end_ms.saturating_sub(t_start_ms),
+            };
+            if report_tx.try_send(rep).is_err() {
+                crate::ocs_ts_eprintln!(
+                    "[scheduling] metrics_report_drop kind=Compression at={}",
+                    time::now_ms().0
+                );
+            }
+            continue;
+        }
+
+        let Some(sample) = trig.sample else {
+            crate::ocs_ts_eprintln!("[scheduling] compression_skip no_sample_after_drain");
+            let t_end_ms = time::now_ms().0;
+            let completion_delay_violation = t_end_ms > trig.base.expected_completion_ms;
+            if completion_delay_violation {
+                crate::ocs_ts_eprintln!(
+                    "[scheduling] deadline_violation kind=CompletionDelay task_kind={:?} at={} expected_completion={}",
+                    TaskKind::Compression,
+                    t_end_ms,
+                    trig.base.expected_completion_ms
+                );
+            }
+            let rep = CompletionReport {
+                kind: TaskKind::Compression,
+                actual_start_ms: t_start_ms,
+                actual_end_ms: t_end_ms,
+                expected_completion_ms: trig.base.expected_completion_ms,
+                release_ms: trig.base.release_ms,
+                expected_start_ms: trig.base.expected_start_ms,
+                vis_window_start_ms: trig.base.vis_window_start_ms,
+                completion_delay_violation,
+                visibility_prepare_violation,
+                prepare_deadline_violation,
+                exec_time_ms: t_end_ms.saturating_sub(t_start_ms),
+            };
+            let _ = report_tx.try_send(rep);
+            continue;
+        };
+
+        // CPU-intensive payload generation.
+        let fault = trig.fault;
+        let compress_result =
+            tokio::task::spawn_blocking(move || sample_to_payload(&sample, &fault)).await;
+        let (payload, payload_len) = match compress_result {
+            Ok(t) => t,
+            Err(e) => {
+                crate::ocs_ts_eprintln!(
+                    "[scheduling] compression_spawn_blocking_join_err kind={:?} err={}",
+                    TaskKind::Compression,
+                    e
+                );
+                let t_end_ms = time::now_ms().0;
+                let completion_delay_violation = t_end_ms > trig.base.expected_completion_ms;
+                if completion_delay_violation {
+                    crate::ocs_ts_eprintln!(
+                        "[scheduling] deadline_violation kind=CompletionDelay task_kind={:?} at={} expected_completion={}",
+                        TaskKind::Compression,
+                        t_end_ms,
+                        trig.base.expected_completion_ms
+                    );
+                }
+                let rep = CompletionReport {
+                    kind: TaskKind::Compression,
+                    actual_start_ms: t_start_ms,
+                    actual_end_ms: t_end_ms,
+                    expected_completion_ms: trig.base.expected_completion_ms,
+                    release_ms: trig.base.release_ms,
+                    expected_start_ms: trig.base.expected_start_ms,
+                    vis_window_start_ms: trig.base.vis_window_start_ms,
+                    completion_delay_violation,
+                    visibility_prepare_violation,
+                    prepare_deadline_violation,
+                    exec_time_ms: t_end_ms.saturating_sub(t_start_ms),
+                };
+                let _ = report_tx.try_send(rep);
+                continue;
+            }
+        };
+
+        let prepared_at = time::now_ms();
+        let vis_window_start_ms = trig.base.vis_window_start_ms;
+        let vis_window_end_ms = vis_window_start_ms.saturating_add(VIS_WINDOW_DURATION_MS);
+        let in_visibility_window =
+            prepared_at.0 >= vis_window_start_ms && prepared_at.0 < vis_window_end_ms;
+
+        if prev_in_visibility_window != Some(in_visibility_window) {
+            crate::ocs_ts_eprintln!(
+                "[scheduling] visibility_window_transition state={} window_start_ms={} window_end_ms={} at_ms={}",
+                if in_visibility_window { "open" } else { "closed" },
+                vis_window_start_ms,
+                vis_window_end_ms,
+                prepared_at.0
+            );
+            prev_in_visibility_window = Some(in_visibility_window);
+        }
+
+        // Prepare deadline (RTS latency): once released, the packet must be prepared within 30ms.
+        // This rule is only applied when we are within the visibility window.
+        let prepare_deadline = trig.base.release_ms.saturating_add(PREPARE_DEADLINE_MS);
+        if in_visibility_window && prepared_at.0 > prepare_deadline {
+            visibility_prepare_violation = true;
+            crate::ocs_ts_eprintln!(
+                "[scheduling] deadline_violation kind=VisibilityPrepareDeadline skip_send release_ms={} window_start_ms={} deadline_ms={} prepared_at={} latency_ms={} over_ms={}",
+                trig.base.release_ms,
+                vis_window_start_ms,
+                prepare_deadline,
+                prepared_at.0,
+                prepared_at.0.saturating_sub(trig.base.release_ms),
+                prepared_at.0.saturating_sub(prepare_deadline)
+            );
+        }
+
+        if !(visibility_prepare_violation || prepare_deadline_violation) {
+            let packet = DownlinkPacket {
+                sequence: 0_u64,
+                payload,
+                payload_len,
+                prepared_at,
+            };
+            match downlink_tx.try_send(packet) {
+                Ok(()) => {
+                    downlink_queued.fetch_add(1, AtomicOrdering::Relaxed);
+                }
+                Err(mpsc::error::TrySendError::Full(p)) => {
+                    crate::ocs_ts_eprintln!(
+                        "[scheduling] downlink_full drop sequence={} at={}",
+                        p.sequence,
+                        prepared_at.0
+                    );
+                }
+                Err(mpsc::error::TrySendError::Closed(_)) => return,
+            }
+        }
+
+        let t_end_ms = time::now_ms().0;
+        let completion_delay_violation = t_end_ms > trig.base.expected_completion_ms;
+        if completion_delay_violation {
+            crate::ocs_ts_eprintln!(
+                "[scheduling] deadline_violation kind=CompletionDelay task_kind={:?} at={} expected_completion={}",
+                TaskKind::Compression,
+                t_end_ms,
+                trig.base.expected_completion_ms
+            );
+        }
+        let rep = CompletionReport {
+            kind: TaskKind::Compression,
+            actual_start_ms: t_start_ms,
+            actual_end_ms: t_end_ms,
+            expected_completion_ms: trig.base.expected_completion_ms,
+            release_ms: trig.base.release_ms,
+            expected_start_ms: trig.base.expected_start_ms,
+            vis_window_start_ms: trig.base.vis_window_start_ms,
+            completion_delay_violation,
+            visibility_prepare_violation,
+            prepare_deadline_violation,
+            exec_time_ms: t_end_ms.saturating_sub(t_start_ms),
+        };
+        if report_tx.try_send(rep).is_err() {
+            crate::ocs_ts_eprintln!(
+                "[scheduling] metrics_report_drop kind=Compression at={}",
+                time::now_ms().0
+            );
         }
     }
 }
@@ -345,17 +669,11 @@ pub async fn run_cpu_logger(active_ms: Arc<AtomicU64>, metrics: Arc<Mutex<Benchm
         let active = active_ms.swap(0, AtomicOrdering::Relaxed);
         if total_ms > 0 {
             let util = (active as f64 / total_ms as f64) * 100.0;
-            let metric = CpuUtilizationMetric {
+            let _metric = CpuUtilizationMetric {
                 active_ms: active,
                 total_ms,
                 utilization_percent: util,
             };
-            crate::ocs_ts_eprintln!(
-                "[scheduling] cpu_util active_ms={} total_ms={} util={:.1}%",
-                metric.active_ms,
-                metric.total_ms,
-                metric.utilization_percent
-            );
             if let Ok(mut m) = metrics.try_lock() {
                 m.cpu_util_sum_active_ms = m.cpu_util_sum_active_ms.saturating_add(active);
                 m.cpu_util_sum_total_ms = m.cpu_util_sum_total_ms.saturating_add(total_ms);
@@ -379,8 +697,66 @@ pub async fn run_scheduling(
     metrics: Arc<Mutex<BenchmarkMetrics>>,
     fault_rx: watch::Receiver<FaultInjectionState>,
 ) {
-    let (thermal_tx, thermal_rx) = mpsc::channel::<()>(32);
-    tokio::spawn(run_thermal_control_lane(thermal_rx));
+    // Observability plane: bounded completion/metrics reports; drop-on-full.
+    let (report_tx, mut report_rx) = mpsc::channel::<CompletionReport>(METRICS_REPORT_CAPACITY);
+
+    // Worker lanes (dispatcher -> workers). Bounded; dispatcher uses `try_send`.
+    let (compression_tx, compression_rx) =
+        mpsc::channel::<CompressionTrigger>(LANE_TRIGGER_CAPACITY);
+    let (health_tx, health_rx) = mpsc::channel::<SimpleTrigger>(LANE_TRIGGER_CAPACITY);
+    let (antenna_tx, antenna_rx) = mpsc::channel::<SimpleTrigger>(LANE_TRIGGER_CAPACITY);
+    let (thermal_tx, thermal_rx) = mpsc::channel::<SimpleTrigger>(LANE_TRIGGER_CAPACITY);
+
+    // Spawn workers (they may await/compute; dispatcher must not).
+    tokio::spawn(run_compression_lane(
+        compression_rx,
+        downlink_tx.clone(),
+        downlink_queued.clone(),
+        report_tx.clone(),
+    ));
+    tokio::spawn(run_simple_lane(
+        TaskKind::Health,
+        health_rx,
+        report_tx.clone(),
+    ));
+    tokio::spawn(run_simple_lane(
+        TaskKind::Antenna,
+        antenna_rx,
+        report_tx.clone(),
+    ));
+    tokio::spawn(run_simple_lane(
+        TaskKind::Thermal,
+        thermal_rx,
+        report_tx.clone(),
+    ));
+
+    // Metrics aggregator: updates shared metrics and active time based on completion reports.
+    {
+        let metrics = Arc::clone(&metrics);
+        let active_ms = Arc::clone(&active_ms);
+        tokio::spawn(async move {
+            while let Some(rep) = report_rx.recv().await {
+                active_ms.fetch_add(rep.exec_time_ms, AtomicOrdering::Relaxed);
+                if let Ok(mut m) = metrics.try_lock() {
+                    if rep.completion_delay_violation {
+                        m.deadline_violations = m.deadline_violations.saturating_add(1);
+                        m.completion_delay_violations =
+                            m.completion_delay_violations.saturating_add(1);
+                    }
+                    if rep.prepare_deadline_violation {
+                        m.deadline_violations = m.deadline_violations.saturating_add(1);
+                        m.prepare_deadline_violations =
+                            m.prepare_deadline_violations.saturating_add(1);
+                    }
+                    if rep.visibility_prepare_violation {
+                        m.deadline_violations = m.deadline_violations.saturating_add(1);
+                        m.visibility_prepare_deadline_violations =
+                            m.visibility_prepare_deadline_violations.saturating_add(1);
+                    }
+                }
+            }
+        });
+    }
 
     let t0 = time::now_ms().0;
     let mut thermal = Periodic {
@@ -408,7 +784,7 @@ pub async fn run_scheduling(
     let mut compression_state = TaskState::new();
     let mut health_state = TaskState::new();
     let mut antenna_state = TaskState::new();
-    let mut compression_seq: u64 = 0;
+    let _compression_seq: u64 = 0;
 
     let mut heap: EdfHeap = BinaryHeap::new();
     let mut compression_gen_counter: u64 = 0;
@@ -416,8 +792,16 @@ pub async fn run_scheduling(
     let mut antenna_ticket_in_heap = false;
     let mut antenna_merged_skipped_releases: u64 = 0;
 
+    // OCS-internal visibility window (strict-from-start).
+    let mut vis_window_start_ms: u64 = t0;
+    let _vis_window_end_ms: u64 = vis_window_start_ms.saturating_add(VIS_WINDOW_DURATION_MS);
+
     loop {
         let now_ms = time::now_ms().0;
+        // Advance visibility window schedule.
+        while now_ms >= vis_window_start_ms.saturating_add(VIS_WINDOW_PERIOD_MS) {
+            vis_window_start_ms = vis_window_start_ms.saturating_add(VIS_WINDOW_PERIOD_MS);
+        }
         release_due_jobs(
             now_ms,
             &mut thermal,
@@ -457,173 +841,52 @@ pub async fn run_scheduling(
                         }
                         continue;
                     }
-                    let (t_start, expected_completion) = record_task_start(
+                    let (t_start, expected_start, expected_completion) = record_task_start(
                         TaskKind::Compression,
                         COMPRESSION_PERIOD_MS,
                         COMPRESSION_DEADLINE_MS,
                         &mut compression_state,
                         &metrics,
                     );
-                    let compression_release_ms = job.release_ms;
-                    let completion_late_ms = t_start.0.saturating_sub(expected_completion);
-                    if completion_late_ms >= COMPRESSION_OVERLOAD_SKIP_LATE_MS {
+                    // StartDelay explicit violation log (any positive drift).
+                    let drift_ms = t_start.0 as i64 - expected_start as i64;
+                    let budget_ms = start_delay_budget_ms(TaskKind::Compression);
+                    if drift_ms > budget_ms {
                         crate::ocs_ts_eprintln!(
-                            "[scheduling] compression_overload_skip release_ms={} started_at={} completion_late_ms={}",
-                            compression_release_ms,
-                            t_start.0,
-                            completion_late_ms
-                        );
-                        if let Ok(mut m) = metrics.try_lock() {
-                            m.deadline_violations = m.deadline_violations.saturating_add(1);
-                            m.compression_overload_skip_count =
-                                m.compression_overload_skip_count.saturating_add(1);
-                        }
-                        compression_seq = compression_seq.wrapping_add(1);
-                        let degraded_seq = compression_seq;
-                        let degraded_fault = *fault_rx.borrow();
-                        let (payload, payload_len) = degraded_health_payload(&degraded_fault);
-                        let degraded_packet = DownlinkPacket {
-                            sequence: degraded_seq,
-                            payload,
-                            payload_len,
-                            prepared_at: time::now_ms(),
-                        };
-                        match downlink_tx.try_send(degraded_packet) {
-                            Ok(()) => {
-                                downlink_queued.fetch_add(1, AtomicOrdering::Relaxed);
-                                crate::ocs_ts_eprintln!(
-                                    "[scheduling] degraded_keepalive_enqueued sequence={} release_ms={}",
-                                    degraded_seq,
-                                    compression_release_ms
-                                );
-                            }
-                            Err(mpsc::error::TrySendError::Full(p)) => {
-                                crate::ocs_ts_eprintln!(
-                                    "[scheduling] degraded_keepalive_drop_downlink_full sequence={} at={}",
-                                    p.sequence,
-                                    p.prepared_at.0
-                                );
-                            }
-                            Err(mpsc::error::TrySendError::Closed(_)) => return,
-                        }
-                        let t_end = record_task_end(
+                            "[scheduling] deadline_violation kind=StartDelay task_kind={:?} at={} expected_start={} drift_ms={} budget_ms={}",
                             TaskKind::Compression,
-                            COMPRESSION_PERIOD_MS,
-                            expected_completion,
-                            &mut compression_state,
-                            &metrics,
-                        );
-                        active_ms.fetch_add(
-                            t_end.0.saturating_sub(t_start.0),
-                            AtomicOrdering::Relaxed,
-                        );
-                        executed = true;
-                        break;
-                    }
-
-                    let sample = match drain_buffer_latest_per_sensor_pick_one(&mut buffer_rx) {
-                        Some(s) => s,
-                        None => {
-                            crate::ocs_ts_eprintln!(
-                                "[scheduling] compression_skip no_sample_after_drain"
-                            );
-                            let t_end = record_task_end(
-                                TaskKind::Compression,
-                                COMPRESSION_PERIOD_MS,
-                                expected_completion,
-                                &mut compression_state,
-                                &metrics,
-                            );
-                            active_ms.fetch_add(
-                                t_end.0.saturating_sub(t_start.0),
-                                AtomicOrdering::Relaxed,
-                            );
-                            executed = true;
-                            break;
-                        }
-                    };
-
-                    compression_seq = compression_seq.wrapping_add(1);
-                    let seq = compression_seq;
-                    let fault = *fault_rx.borrow();
-
-                    let compress_result = tokio::task::spawn_blocking(move || {
-                        sample_to_payload(&sample, &fault)
-                    })
-                    .await;
-
-                    let (payload, payload_len) = match compress_result {
-                        Ok(t) => t,
-                        Err(e) => {
-                            crate::ocs_ts_eprintln!(
-                                "[scheduling] compression_spawn_blocking_join_err kind={:?} err={}",
-                                TaskKind::Compression,
-                                e
-                            );
-                            let t_end = record_task_end(
-                                TaskKind::Compression,
-                                COMPRESSION_PERIOD_MS,
-                                expected_completion,
-                                &mut compression_state,
-                                &metrics,
-                            );
-                            active_ms.fetch_add(
-                                t_end.0.saturating_sub(t_start.0),
-                                AtomicOrdering::Relaxed,
-                            );
-                            executed = true;
-                            break;
-                        }
-                    };
-
-                    let prepared_at = time::now_ms();
-                    let packet = DownlinkPacket {
-                        sequence: seq,
-                        payload,
-                        payload_len,
-                        prepared_at,
-                    };
-                    let prepare_deadline = compression_release_ms.saturating_add(PREPARE_DEADLINE_MS);
-                    if prepared_at.0 > prepare_deadline {
-                        let over_ms = prepared_at.0.saturating_sub(prepare_deadline);
-                        crate::ocs_ts_eprintln!(
-                            "[scheduling] deadline_violation kind=PrepareDeadline skip_send sequence={} release_ms={} deadline_ms={} prepared_at={} over_ms={}",
-                            packet.sequence,
-                            compression_release_ms,
-                            prepare_deadline,
-                            prepared_at.0,
-                            over_ms
+                            t_start.0,
+                            expected_start,
+                            drift_ms,
+                            budget_ms
                         );
                         if let Ok(mut m) = metrics.try_lock() {
                             m.deadline_violations = m.deadline_violations.saturating_add(1);
-                        }
-                    } else {
-                        match downlink_tx.try_send(packet) {
-                            Ok(()) => {
-                                downlink_queued.fetch_add(1, AtomicOrdering::Relaxed);
-                            }
-                            Err(mpsc::error::TrySendError::Full(p)) => {
-                                crate::ocs_ts_eprintln!(
-                                    "[scheduling] downlink_full drop sequence={} at={}",
-                                    p.sequence,
-                                    prepared_at.0
-                                );
-                            }
-                            Err(mpsc::error::TrySendError::Closed(_)) => return,
+                            m.start_delay_violations = m.start_delay_violations.saturating_add(1);
                         }
                     }
-
-                    let t_end = record_task_end(
-                        TaskKind::Compression,
-                        COMPRESSION_PERIOD_MS,
-                        expected_completion,
-                        &mut compression_state,
-                        &metrics,
-                    );
-                    active_ms.fetch_add(
-                        t_end.0.saturating_sub(t_start.0),
-                        AtomicOrdering::Relaxed,
-                    );
+                    let sample = drain_buffer_latest_per_sensor_pick_one(&mut buffer_rx);
+                    let fault = *fault_rx.borrow();
+                    let trig = CompressionTrigger {
+                        base: JobTrigger {
+                            kind: TaskKind::Compression,
+                            release_ms: job.release_ms,
+                            expected_start_ms: expected_start,
+                            expected_completion_ms: expected_completion,
+                            deadline_abs_ms: job.deadline_abs_ms,
+                            dispatched_at_ms: time::now_ms().0,
+                            vis_window_start_ms,
+                        },
+                        sample,
+                        fault,
+                    };
+                    if compression_tx.try_send(trig).is_err() {
+                        crate::ocs_ts_eprintln!(
+                            "[scheduling] lane_full skip_tick task_kind=Compression at={}",
+                            time::now_ms().0
+                        );
+                    }
+                    advance_expected_start(COMPRESSION_PERIOD_MS, &mut compression_state);
                     executed = true;
                     break;
                 }
@@ -637,60 +900,96 @@ pub async fn run_scheduling(
                             merged
                         );
                     }
-                    let (t_start, expected_completion) = record_task_start(
+                    let (t_start, expected_start, expected_completion) = record_task_start(
                         TaskKind::Antenna,
                         ANTENNA_PERIOD_MS,
                         ANTENNA_DEADLINE_MS,
                         &mut antenna_state,
                         &metrics,
                     );
-                    if tokio::task::spawn_blocking(|| dummy_load()).await.is_err() {
+                    let drift_ms = t_start.0 as i64 - expected_start as i64;
+                    let budget_ms = start_delay_budget_ms(TaskKind::Antenna);
+                    if drift_ms > budget_ms {
                         crate::ocs_ts_eprintln!(
-                            "[scheduling] antenna_spawn_blocking_join_err"
+                            "[scheduling] deadline_violation kind=StartDelay task_kind={:?} at={} expected_start={} drift_ms={} budget_ms={}",
+                            TaskKind::Antenna,
+                            t_start.0,
+                            expected_start,
+                            drift_ms,
+                            budget_ms
+                        );
+                        if let Ok(mut m) = metrics.try_lock() {
+                            m.deadline_violations = m.deadline_violations.saturating_add(1);
+                            m.start_delay_violations = m.start_delay_violations.saturating_add(1);
+                        }
+                    }
+                    let trig = SimpleTrigger {
+                        base: JobTrigger {
+                            kind: TaskKind::Antenna,
+                            release_ms: job.release_ms,
+                            expected_start_ms: expected_start,
+                            expected_completion_ms: expected_completion,
+                            deadline_abs_ms: job.deadline_abs_ms,
+                            dispatched_at_ms: time::now_ms().0,
+                            vis_window_start_ms,
+                        },
+                    };
+                    if antenna_tx.try_send(trig).is_err() {
+                        crate::ocs_ts_eprintln!(
+                            "[scheduling] lane_full skip_tick task_kind=Antenna at={}",
+                            time::now_ms().0
                         );
                     }
-                    let t_end = record_task_end(
-                        TaskKind::Antenna,
-                        ANTENNA_PERIOD_MS,
-                        expected_completion,
-                        &mut antenna_state,
-                        &metrics,
-                    );
-                    active_ms.fetch_add(
-                        t_end.0.saturating_sub(t_start.0),
-                        AtomicOrdering::Relaxed,
-                    );
+                    advance_expected_start(ANTENNA_PERIOD_MS, &mut antenna_state);
                     executed = true;
                     break;
                 }
                 TaskKind::Thermal => {
-                    let (t_start, expected_completion) = record_task_start(
+                    let (t_start, expected_start, expected_completion) = record_task_start(
                         TaskKind::Thermal,
                         THERMAL_PERIOD_MS,
                         THERMAL_DEADLINE_MS,
                         &mut thermal_state,
                         &metrics,
                     );
-                    if thermal_tx.try_send(()).is_err() {
-                        crate::ocs_ts_eprintln!("[scheduling] thermal_lane_full skip_tick");
+                    let drift_ms = t_start.0 as i64 - expected_start as i64;
+                    let budget_ms = start_delay_budget_ms(TaskKind::Thermal);
+                    if drift_ms > budget_ms {
+                        crate::ocs_ts_eprintln!(
+                            "[scheduling] deadline_violation kind=StartDelay task_kind={:?} at={} expected_start={} drift_ms={} budget_ms={}",
+                            TaskKind::Thermal,
+                            t_start.0,
+                            expected_start,
+                            drift_ms,
+                            budget_ms
+                        );
+                        if let Ok(mut m) = metrics.try_lock() {
+                            m.deadline_violations = m.deadline_violations.saturating_add(1);
+                            m.start_delay_violations = m.start_delay_violations.saturating_add(1);
+                        }
                     }
-                    tokio::task::yield_now().await;
-                    let t_end = record_task_end(
-                        TaskKind::Thermal,
-                        THERMAL_PERIOD_MS,
-                        expected_completion,
-                        &mut thermal_state,
-                        &metrics,
-                    );
-                    active_ms.fetch_add(
-                        t_end.0.saturating_sub(t_start.0),
-                        AtomicOrdering::Relaxed,
-                    );
+                    let trig = SimpleTrigger {
+                        base: JobTrigger {
+                            kind: TaskKind::Thermal,
+                            release_ms: job.release_ms,
+                            expected_start_ms: expected_start,
+                            expected_completion_ms: expected_completion,
+                            deadline_abs_ms: job.deadline_abs_ms,
+                            dispatched_at_ms: time::now_ms().0,
+                            vis_window_start_ms,
+                        },
+                    };
+                    if thermal_tx.try_send(trig).is_err() {
+                        crate::ocs_ts_eprintln!(
+                            "[scheduling] lane_full skip_tick task_kind=Thermal"
+                        );
+                    }
+                    advance_expected_start(THERMAL_PERIOD_MS, &mut thermal_state);
                     executed = true;
                     break;
                 }
                 TaskKind::Health => {
-                    let (t_start, expected_completion) = record_task_start(
+                    let (t_start, expected_start, expected_completion) = record_task_start(
                         TaskKind::Health,
                         HEALTH_PERIOD_MS,
                         HEALTH_DEADLINE_MS,
@@ -699,22 +998,40 @@ pub async fn run_scheduling(
                     );
                     let alert_snapshot = *alert_rx.borrow();
                     let _ = health::check(alert_snapshot);
-                    if tokio::task::spawn_blocking(|| dummy_load()).await.is_err() {
+                    let drift_ms = t_start.0 as i64 - expected_start as i64;
+                    let budget_ms = start_delay_budget_ms(TaskKind::Health);
+                    if drift_ms > budget_ms {
                         crate::ocs_ts_eprintln!(
-                            "[scheduling] health_spawn_blocking_join_err"
+                            "[scheduling] deadline_violation kind=StartDelay task_kind={:?} at={} expected_start={} drift_ms={} budget_ms={}",
+                            TaskKind::Health,
+                            t_start.0,
+                            expected_start,
+                            drift_ms,
+                            budget_ms
+                        );
+                        if let Ok(mut m) = metrics.try_lock() {
+                            m.deadline_violations = m.deadline_violations.saturating_add(1);
+                            m.start_delay_violations = m.start_delay_violations.saturating_add(1);
+                        }
+                    }
+                    let trig = SimpleTrigger {
+                        base: JobTrigger {
+                            kind: TaskKind::Health,
+                            release_ms: job.release_ms,
+                            expected_start_ms: expected_start,
+                            expected_completion_ms: expected_completion,
+                            deadline_abs_ms: job.deadline_abs_ms,
+                            dispatched_at_ms: time::now_ms().0,
+                            vis_window_start_ms,
+                        },
+                    };
+                    if health_tx.try_send(trig).is_err() {
+                        crate::ocs_ts_eprintln!(
+                            "[scheduling] lane_full skip_tick task_kind=Health at={}",
+                            time::now_ms().0
                         );
                     }
-                    let t_end = record_task_end(
-                        TaskKind::Health,
-                        HEALTH_PERIOD_MS,
-                        expected_completion,
-                        &mut health_state,
-                        &metrics,
-                    );
-                    active_ms.fetch_add(
-                        t_end.0.saturating_sub(t_start.0),
-                        AtomicOrdering::Relaxed,
-                    );
+                    advance_expected_start(HEALTH_PERIOD_MS, &mut health_state);
                     executed = true;
                     break;
                 }
@@ -727,12 +1044,7 @@ pub async fn run_scheduling(
         }
 
         if !executed {
-            let next_wake = min_next_release([
-                &thermal,
-                &compression,
-                &health,
-                &antenna,
-            ]);
+            let next_wake = min_next_release([&thermal, &compression, &health, &antenna]);
             let sleep_ms = next_wake.saturating_sub(time::now_ms().0);
             if sleep_ms == 0 {
                 tokio::task::yield_now().await;

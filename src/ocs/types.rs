@@ -161,17 +161,30 @@ pub struct CpuUtilizationMetric {
 pub struct BenchmarkMetrics {
     /// Thermal sensor-side (10ms period) max jitter.
     pub thermal_sensor_max_jitter_ms: i64,
+    /// Strict requirement counter: critical sensor jitter violation (`abs(interval-period) >= 1ms`).
+    pub critical_jitter_violation_count: u64,
     /// Thermal sensor jitter observed while fault injection is active for the sensor.
     pub thermal_sensor_fault_max_jitter_ms: i64,
-    /// Thermal scheduling-side (50ms period) max interval deviation.
-    pub thermal_scheduling_drift_ms: i64,
+    /// Scheduler-side (task period) jitter maxima (ms). Jitter = actual_interval - nominal_period.
+    pub thermal_task_jitter_max_ms: i64,
+    pub compression_task_jitter_max_ms: i64,
+    pub health_task_jitter_max_ms: i64,
+    pub antenna_task_jitter_max_ms: i64,
     pub drift_max_ms: i64,
     pub drift_sum_ms: i64,
     pub drift_count: u64,
     /// number of starts delayed from the scheduled start (drift_ms > 0). separate from deadline violation.
     pub drift_late_start_count: u64,
-    /// relative deadline exceeded only: completion delay + prepare exceeded (start drift size is not included).
+    /// relative deadline exceeded only: completion delay + prepare exceeded (+ start delay where explicitly logged).
     pub deadline_violations: u64,
+    /// explicit StartDelay violation count (logged at dispatcher).
+    pub start_delay_violations: u64,
+    /// explicit CompletionDelay violation count (logged at worker lanes).
+    pub completion_delay_violations: u64,
+    /// internal prepare deadline (release+30ms) violation count (Compression).
+    pub prepare_deadline_violations: u64,
+    /// visibility-window based prepare deadline (window_start+30ms) violation count (Compression).
+    pub visibility_prepare_deadline_violations: u64,
     pub cpu_util_sum_active_ms: u64,
     pub cpu_util_sum_total_ms: u64,
     /// max sensor read-to-receiver latency.
@@ -188,6 +201,10 @@ pub struct BenchmarkMetrics {
     pub total_dropped_samples: u64,
     /// intentional compression skips under overload protection.
     pub compression_overload_skip_count: u64,
+    /// number of transitions into degraded mode (downlink queue usage >= 80%).
+    pub degraded_mode_enter_count: u64,
+    /// number of downlink init timeouts (missed communication).
+    pub missed_communication_count: u64,
     /// last observed recovery time (ms) in the fault injection cycle.
     pub recovery_last_duration_ms: Option<u64>,
     /// maximum observed recovery time (ms). not used when `recovery_count == 0`.
@@ -202,13 +219,21 @@ impl Default for BenchmarkMetrics {
     fn default() -> Self {
         Self {
             thermal_sensor_max_jitter_ms: i64::MIN,
+            critical_jitter_violation_count: 0,
             thermal_sensor_fault_max_jitter_ms: i64::MIN,
-            thermal_scheduling_drift_ms: i64::MIN,
+            thermal_task_jitter_max_ms: i64::MIN,
+            compression_task_jitter_max_ms: i64::MIN,
+            health_task_jitter_max_ms: i64::MIN,
+            antenna_task_jitter_max_ms: i64::MIN,
             drift_max_ms: i64::MIN,
             drift_sum_ms: 0,
             drift_count: 0,
             drift_late_start_count: 0,
             deadline_violations: 0,
+            start_delay_violations: 0,
+            completion_delay_violations: 0,
+            prepare_deadline_violations: 0,
+            visibility_prepare_deadline_violations: 0,
             cpu_util_sum_active_ms: 0,
             cpu_util_sum_total_ms: 0,
             max_e2e_latency_ms: 0,
@@ -220,6 +245,8 @@ impl Default for BenchmarkMetrics {
             peak_buffer_fill_rate_percent: 0,
             total_dropped_samples: 0,
             compression_overload_skip_count: 0,
+            degraded_mode_enter_count: 0,
+            missed_communication_count: 0,
             recovery_last_duration_ms: None,
             recovery_max_duration_ms: 0,
             recovery_sum_duration_ms: 0,
@@ -233,13 +260,21 @@ impl BenchmarkMetrics {
     /// reset only jitter / drift / deadline / CPU. recovery totals are retained.
     pub fn reset(&mut self) {
         self.thermal_sensor_max_jitter_ms = i64::MIN;
+        self.critical_jitter_violation_count = 0;
         self.thermal_sensor_fault_max_jitter_ms = i64::MIN;
-        self.thermal_scheduling_drift_ms = i64::MIN;
+        self.thermal_task_jitter_max_ms = i64::MIN;
+        self.compression_task_jitter_max_ms = i64::MIN;
+        self.health_task_jitter_max_ms = i64::MIN;
+        self.antenna_task_jitter_max_ms = i64::MIN;
         self.drift_max_ms = i64::MIN;
         self.drift_sum_ms = 0;
         self.drift_count = 0;
         self.drift_late_start_count = 0;
         self.deadline_violations = 0;
+        self.start_delay_violations = 0;
+        self.completion_delay_violations = 0;
+        self.prepare_deadline_violations = 0;
+        self.visibility_prepare_deadline_violations = 0;
         self.cpu_util_sum_active_ms = 0;
         self.cpu_util_sum_total_ms = 0;
         self.max_e2e_latency_ms = 0;
@@ -251,11 +286,31 @@ impl BenchmarkMetrics {
         self.peak_buffer_fill_rate_percent = 0;
         self.total_dropped_samples = 0;
         self.compression_overload_skip_count = 0;
+        self.degraded_mode_enter_count = 0;
+        self.missed_communication_count = 0;
     }
 
     /// when pipeline starts: initialize all fields including recovery totals.
     pub fn reset_all(&mut self) {
         *self = Self::default();
+    }
+
+    pub fn record_task_jitter(&mut self, kind: TaskKind, jitter_ms: i64) {
+        match kind {
+            TaskKind::Thermal => {
+                self.thermal_task_jitter_max_ms = self.thermal_task_jitter_max_ms.max(jitter_ms);
+            }
+            TaskKind::Compression => {
+                self.compression_task_jitter_max_ms =
+                    self.compression_task_jitter_max_ms.max(jitter_ms);
+            }
+            TaskKind::Health => {
+                self.health_task_jitter_max_ms = self.health_task_jitter_max_ms.max(jitter_ms);
+            }
+            TaskKind::Antenna => {
+                self.antenna_task_jitter_max_ms = self.antenna_task_jitter_max_ms.max(jitter_ms);
+            }
+        }
     }
 }
 
@@ -266,7 +321,7 @@ impl BenchmarkMetrics {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum SafetyEventKind {
     Miss,
-    Recovered,      // normal sample re-received (recovery)
+    Recovered, // normal sample re-received (recovery)
     Drop,
     Delay,          // measured_value_ms = actual delay ms
     JitterExceeded, // measured_value_ms = actual jitter ms

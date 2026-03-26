@@ -76,11 +76,13 @@ pub async fn run_downlink(
     let mut setup_fail_count: u32 = 0;
 
     'packets: while let Some(packet) = downlink_rx.recv().await {
-        let prev = queued.fetch_update(
-            Ordering::Relaxed,
-            Ordering::Relaxed,
-            |v| if v > 0 { Some(v - 1) } else { None },
-        );
+        let prev = queued.fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| {
+            if v > 0 {
+                Some(v - 1)
+            } else {
+                None
+            }
+        });
         if prev.is_err() {
             queued.store(0, Ordering::Relaxed);
         }
@@ -102,23 +104,15 @@ pub async fn run_downlink(
         if usage_pct >= DEGRADED_THRESHOLD_PERCENT {
             if !degraded {
                 degraded = true;
-                crate::ocs_ts_eprintln!(
-                    "[downlink] degraded_enter usage_pct={}%",
-                    usage_pct
-                );
+                if let Ok(mut m) = bench_metrics.try_lock() {
+                    m.degraded_mode_enter_count = m.degraded_mode_enter_count.saturating_add(1);
+                }
+                crate::ocs_ts_eprintln!("[downlink] degraded_enter usage_pct={}%", usage_pct);
             }
-            crate::ocs_ts_eprintln!(
-                "[downlink] degraded_skip sequence={} prepared_at={}",
-                packet.sequence,
-                now.0
-            );
             continue;
         } else if degraded {
             degraded = false;
-            crate::ocs_ts_eprintln!(
-                "[downlink] degraded_exit usage_pct={}%",
-                usage_pct
-            );
+            crate::ocs_ts_eprintln!("[downlink] degraded_exit usage_pct={}%", usage_pct);
         }
 
         if socket.is_none() {
@@ -178,6 +172,10 @@ pub async fn run_downlink(
                         DOWNLINK_INIT_TIMEOUT_MS,
                         gcs_addr
                     );
+                    if let Ok(mut m) = bench_metrics.try_lock() {
+                        m.missed_communication_count =
+                            m.missed_communication_count.saturating_add(1);
+                    }
                     setup_fail_count = setup_fail_count.saturating_add(1);
                     circuit.on_failure(now_ms);
                     debug_log_ndjson(

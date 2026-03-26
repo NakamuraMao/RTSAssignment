@@ -1,12 +1,12 @@
 // OCS (Onboard Control System) - module root
 
-pub mod time;
-pub mod types;
-pub mod sensors;
-pub mod scheduling;
-pub mod health;
+pub mod benchmarking;
 pub mod downlink;
-pub mod uplink;
+pub mod health;
 pub mod runtime;
 pub mod safety;
-pub mod benchmarking;
+pub mod scheduling;
+pub mod sensors;
+pub mod time;
+pub mod types;
+pub mod uplink;

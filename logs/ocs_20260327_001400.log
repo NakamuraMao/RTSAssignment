@@ -1,0 +1,1411 @@
+warning: fields `kind`, `deadline_abs_ms`, and `dispatched_at_ms` are never read
+   --> src/ocs/scheduling.rs:250:5
+    |
+249 | struct JobTrigger {
+    |        ---------- fields in this struct
+250 |     kind: TaskKind,
+    |     ^^^^
+...
+254 |     deadline_abs_ms: u64,
+    |     ^^^^^^^^^^^^^^^
+255 |     dispatched_at_ms: u64,
+    |     ^^^^^^^^^^^^^^^^
+    |
+    = note: `JobTrigger` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: multiple fields are never read
+   --> src/ocs/scheduling.rs:273:5
+    |
+272 | struct CompletionReport {
+    |        ---------------- fields in this struct
+273 |     kind: TaskKind,
+    |     ^^^^
+274 |     actual_start_ms: u64,
+    |     ^^^^^^^^^^^^^^^
+275 |     actual_end_ms: u64,
+    |     ^^^^^^^^^^^^^
+276 |     expected_completion_ms: u64,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+277 |     /// (optional) release information for better logs
+278 |     release_ms: u64,
+    |     ^^^^^^^^^^
+279 |     /// For `StartDelay` log context
+280 |     expected_start_ms: u64,
+    |     ^^^^^^^^^^^^^^^^^
+281 |     /// For visibility-window rule
+282 |     vis_window_start_ms: u64,
+    |     ^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `CompletionReport` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: crate `RTSassignment` should have a snake case name
+  |
+  = help: convert the identifier to snake case: `rtsassignment`
+  = note: `#[warn(non_snake_case)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: `RTSassignment` (lib) generated 3 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running `target/debug/ocs`
+ts_ms=0 [runtime] ocs runtime started (supervisor-managed)
+ts_ms=1 [uplink] listening udp addr=127.0.0.1:9001
+ts_ms=1 [benchmarking] cycle=1 eval thermal_sensor_jitter_max_ms=n/a thermal_sensor_fault_jitter_max_ms=n/a thermal_task_jitter_max_ms=n/a compression_task_jitter_max_ms=n/a health_task_jitter_max_ms=n/a antenna_task_jitter_max_ms=n/a drift_max_ms=n/a drift_avg_ms=0.00 drift_late_starts=0 deadline_violations=0 start_delay_violations=0 completion_delay_violations=0 prepare_deadline_violations=0 visibility_prepare_deadline_violations=0 cpu_util_avg=0.0% e2e_latency_max_ms=0 e2e_latency_avg_ms=0.00 tx_queue_latency_max_ms=0 tx_queue_latency_avg_ms=0.00 peak_buffer_fill_rate_percent=0 dropped_samples=0 compression_overload_skips=0 degraded_mode_enter_count=0 missed_communication_count=0
+ts_ms=1 [benchmarking] cycle=1 fault injected sensor_id=0 kind=Delayed
+ts_ms=28 [scheduling] visibility_window_transition state=open window_start_ms=1 window_end_ms=101 at_ms=28
+ts_ms=103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=103 expected_start=102 drift_ms=1 budget_ms=1
+ts_ms=103 [scheduling] visibility_window_transition state=closed window_start_ms=1 window_end_ms=101 at_ms=103
+ts_ms=202 [health] ok event_at=202 alerts=[false, false, false]
+ts_ms=303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=303 expected_start=302 drift_ms=1 budget_ms=1
+ts_ms=402 [health] ok event_at=402 alerts=[false, false, false]
+ts_ms=502 [scheduling] visibility_window_transition state=open window_start_ms=501 window_end_ms=601 at_ms=502
+ts_ms=603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=603 expected_start=602 drift_ms=1 budget_ms=1
+ts_ms=603 [health] ok event_at=603 alerts=[false, false, false]
+ts_ms=604 [scheduling] visibility_window_transition state=closed window_start_ms=501 window_end_ms=601 at_ms=604
+ts_ms=802 [health] ok event_at=802 alerts=[false, false, false]
+ts_ms=853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=853 expected_start=852 drift_ms=1 budget_ms=1
+ts_ms=1003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=1003 expected_start=1002 drift_ms=1 budget_ms=1
+ts_ms=1003 [health] ok event_at=1003 alerts=[false, false, false]
+ts_ms=1003 [scheduling] visibility_window_transition state=open window_start_ms=1001 window_end_ms=1101 at_ms=1003
+ts_ms=1102 [scheduling] visibility_window_transition state=closed window_start_ms=1001 window_end_ms=1101 at_ms=1102
+ts_ms=1203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=1203 expected_start=1202 drift_ms=1 budget_ms=1
+ts_ms=1203 [health] ok event_at=1203 alerts=[false, false, false]
+ts_ms=1253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=1253 expected_start=1252 drift_ms=1 budget_ms=1
+ts_ms=1353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=1353 expected_start=1352 drift_ms=1 budget_ms=1
+ts_ms=1401 [health] ok event_at=1401 alerts=[false, false, false]
+ts_ms=1453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=1453 expected_start=1452 drift_ms=1 budget_ms=1
+ts_ms=1502 [scheduling] visibility_window_transition state=open window_start_ms=1501 window_end_ms=1601 at_ms=1502
+ts_ms=1603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=1603 expected_start=1602 drift_ms=1 budget_ms=1
+ts_ms=1603 [health] ok event_at=1603 alerts=[false, false, false]
+ts_ms=1603 [scheduling] visibility_window_transition state=closed window_start_ms=1501 window_end_ms=1601 at_ms=1603
+ts_ms=1657 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=1657 expected_start=1652 drift_ms=5 budget_ms=1
+ts_ms=1657 [scheduling] deadline_violation kind=StartDelay task_kind=Compression at=1657 expected_start=1653 drift_ms=4 budget_ms=3
+ts_ms=1803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=1803 expected_start=1802 drift_ms=1 budget_ms=1
+ts_ms=1803 [health] ok event_at=1803 alerts=[false, false, false]
+ts_ms=1903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=1903 expected_start=1902 drift_ms=1 budget_ms=1
+ts_ms=2003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=2003 expected_start=2002 drift_ms=1 budget_ms=1
+ts_ms=2003 [health] ok event_at=2003 alerts=[false, false, false]
+ts_ms=2003 [scheduling] visibility_window_transition state=open window_start_ms=2001 window_end_ms=2101 at_ms=2003
+ts_ms=2053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=2053 expected_start=2052 drift_ms=1 budget_ms=1
+ts_ms=2102 [scheduling] visibility_window_transition state=closed window_start_ms=2001 window_end_ms=2101 at_ms=2102
+ts_ms=2203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=2203 expected_start=2202 drift_ms=1 budget_ms=1
+ts_ms=2203 [health] ok event_at=2203 alerts=[false, false, false]
+ts_ms=2253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=2253 expected_start=2252 drift_ms=1 budget_ms=1
+ts_ms=2353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=2353 expected_start=2352 drift_ms=1 budget_ms=1
+ts_ms=2402 [health] ok event_at=2402 alerts=[false, false, false]
+ts_ms=2502 [scheduling] visibility_window_transition state=open window_start_ms=2501 window_end_ms=2601 at_ms=2502
+ts_ms=2553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=2553 expected_start=2552 drift_ms=1 budget_ms=1
+ts_ms=2602 [health] ok event_at=2602 alerts=[false, false, false]
+ts_ms=2602 [scheduling] visibility_window_transition state=closed window_start_ms=2501 window_end_ms=2601 at_ms=2602
+ts_ms=2703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=2703 expected_start=2702 drift_ms=1 budget_ms=1
+ts_ms=2803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=2803 expected_start=2802 drift_ms=1 budget_ms=1
+ts_ms=2803 [health] ok event_at=2803 alerts=[false, false, false]
+ts_ms=3002 [health] ok event_at=3002 alerts=[false, false, false]
+ts_ms=3003 [scheduling] visibility_window_transition state=open window_start_ms=3001 window_end_ms=3101 at_ms=3003
+ts_ms=3053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=3053 expected_start=3052 drift_ms=1 budget_ms=1
+ts_ms=3103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=3103 expected_start=3102 drift_ms=1 budget_ms=1
+ts_ms=3103 [scheduling] visibility_window_transition state=closed window_start_ms=3001 window_end_ms=3101 at_ms=3103
+ts_ms=3202 [health] ok event_at=3202 alerts=[false, false, false]
+ts_ms=3253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=3253 expected_start=3252 drift_ms=1 budget_ms=1
+ts_ms=3402 [health] ok event_at=3402 alerts=[false, false, false]
+ts_ms=3453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=3453 expected_start=3452 drift_ms=1 budget_ms=1
+ts_ms=3502 [scheduling] visibility_window_transition state=open window_start_ms=3501 window_end_ms=3601 at_ms=3502
+ts_ms=3602 [health] ok event_at=3602 alerts=[false, false, false]
+ts_ms=3603 [scheduling] visibility_window_transition state=closed window_start_ms=3501 window_end_ms=3601 at_ms=3603
+ts_ms=3753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=3753 expected_start=3752 drift_ms=1 budget_ms=1
+ts_ms=3803 [health] ok event_at=3803 alerts=[false, false, false]
+ts_ms=4003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4003 expected_start=4002 drift_ms=1 budget_ms=1
+ts_ms=4003 [health] ok event_at=4003 alerts=[false, false, false]
+ts_ms=4003 [scheduling] visibility_window_transition state=open window_start_ms=4001 window_end_ms=4101 at_ms=4003
+ts_ms=4102 [scheduling] visibility_window_transition state=closed window_start_ms=4001 window_end_ms=4101 at_ms=4102
+ts_ms=4202 [health] ok event_at=4202 alerts=[false, false, false]
+ts_ms=4253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4253 expected_start=4252 drift_ms=1 budget_ms=1
+ts_ms=4303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4303 expected_start=4302 drift_ms=1 budget_ms=1
+ts_ms=4353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4353 expected_start=4352 drift_ms=1 budget_ms=1
+ts_ms=4402 [health] ok event_at=4402 alerts=[false, false, false]
+ts_ms=4453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4453 expected_start=4452 drift_ms=1 budget_ms=1
+ts_ms=4503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4503 expected_start=4502 drift_ms=1 budget_ms=1
+ts_ms=4503 [scheduling] visibility_window_transition state=open window_start_ms=4501 window_end_ms=4601 at_ms=4503
+ts_ms=4603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4603 expected_start=4602 drift_ms=1 budget_ms=1
+ts_ms=4603 [health] ok event_at=4603 alerts=[false, false, false]
+ts_ms=4603 [scheduling] visibility_window_transition state=closed window_start_ms=4501 window_end_ms=4601 at_ms=4603
+ts_ms=4703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4703 expected_start=4702 drift_ms=1 budget_ms=1
+ts_ms=4753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4753 expected_start=4752 drift_ms=1 budget_ms=1
+ts_ms=4802 [health] ok event_at=4802 alerts=[false, false, false]
+ts_ms=4853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4853 expected_start=4852 drift_ms=1 budget_ms=1
+ts_ms=4903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4903 expected_start=4902 drift_ms=1 budget_ms=1
+ts_ms=4953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=4953 expected_start=4952 drift_ms=1 budget_ms=1
+ts_ms=5003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5003 expected_start=5002 drift_ms=1 budget_ms=1
+ts_ms=5003 [benchmarking] cycle=1 alert wait timeout (5s)
+ts_ms=5003 [health] ok event_at=5003 alerts=[false, false, false]
+ts_ms=5003 [scheduling] visibility_window_transition state=open window_start_ms=5001 window_end_ms=5101 at_ms=5003
+ts_ms=5053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5053 expected_start=5052 drift_ms=1 budget_ms=1
+ts_ms=5102 [scheduling] visibility_window_transition state=closed window_start_ms=5001 window_end_ms=5101 at_ms=5102
+ts_ms=5203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5203 expected_start=5202 drift_ms=1 budget_ms=1
+ts_ms=5203 [health] ok event_at=5203 alerts=[false, false, false]
+ts_ms=5253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5253 expected_start=5252 drift_ms=1 budget_ms=1
+ts_ms=5303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5303 expected_start=5302 drift_ms=1 budget_ms=1
+ts_ms=5353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5353 expected_start=5352 drift_ms=1 budget_ms=1
+ts_ms=5403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5403 expected_start=5402 drift_ms=1 budget_ms=1
+ts_ms=5403 [health] ok event_at=5403 alerts=[false, false, false]
+ts_ms=5453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5453 expected_start=5452 drift_ms=1 budget_ms=1
+ts_ms=5503 [scheduling] visibility_window_transition state=open window_start_ms=5501 window_end_ms=5601 at_ms=5503
+ts_ms=5553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5553 expected_start=5552 drift_ms=1 budget_ms=1
+ts_ms=5603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5603 expected_start=5602 drift_ms=1 budget_ms=1
+ts_ms=5603 [health] ok event_at=5603 alerts=[false, false, false]
+ts_ms=5603 [scheduling] visibility_window_transition state=closed window_start_ms=5501 window_end_ms=5601 at_ms=5603
+ts_ms=5653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5653 expected_start=5652 drift_ms=1 budget_ms=1
+ts_ms=5753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5753 expected_start=5752 drift_ms=1 budget_ms=1
+ts_ms=5803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5803 expected_start=5802 drift_ms=1 budget_ms=1
+ts_ms=5803 [health] ok event_at=5803 alerts=[false, false, false]
+ts_ms=5853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5853 expected_start=5852 drift_ms=1 budget_ms=1
+ts_ms=5953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=5953 expected_start=5952 drift_ms=1 budget_ms=1
+ts_ms=6003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=6003 expected_start=6002 drift_ms=1 budget_ms=1
+ts_ms=6003 [health] ok event_at=6003 alerts=[false, false, false]
+ts_ms=6003 [scheduling] visibility_window_transition state=open window_start_ms=6001 window_end_ms=6101 at_ms=6003
+ts_ms=6103 [scheduling] visibility_window_transition state=closed window_start_ms=6001 window_end_ms=6101 at_ms=6103
+ts_ms=6116 [uplink] recv peer=127.0.0.1:49884 command_id=2 payload_len=0
+ts_ms=6202 [health] ok event_at=6202 alerts=[false, false, false]
+ts_ms=6253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=6253 expected_start=6252 drift_ms=1 budget_ms=1
+ts_ms=6303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=6303 expected_start=6302 drift_ms=1 budget_ms=1
+ts_ms=6402 [health] ok event_at=6402 alerts=[false, false, false]
+ts_ms=6453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=6453 expected_start=6452 drift_ms=1 budget_ms=1
+ts_ms=6503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=6503 expected_start=6502 drift_ms=1 budget_ms=1
+ts_ms=6503 [scheduling] visibility_window_transition state=open window_start_ms=6501 window_end_ms=6601 at_ms=6503
+ts_ms=6553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=6553 expected_start=6552 drift_ms=1 budget_ms=1
+ts_ms=6602 [health] ok event_at=6602 alerts=[false, false, false]
+ts_ms=6603 [scheduling] visibility_window_transition state=closed window_start_ms=6501 window_end_ms=6601 at_ms=6603
+ts_ms=6753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=6753 expected_start=6752 drift_ms=1 budget_ms=1
+ts_ms=6802 [health] ok event_at=6802 alerts=[false, false, false]
+ts_ms=6903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=6903 expected_start=6902 drift_ms=1 budget_ms=1
+ts_ms=7003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=7003 expected_start=7002 drift_ms=1 budget_ms=1
+ts_ms=7003 [health] ok event_at=7003 alerts=[false, false, false]
+ts_ms=7003 [scheduling] visibility_window_transition state=open window_start_ms=7001 window_end_ms=7101 at_ms=7003
+ts_ms=7102 [scheduling] visibility_window_transition state=closed window_start_ms=7001 window_end_ms=7101 at_ms=7102
+ts_ms=7203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=7203 expected_start=7202 drift_ms=1 budget_ms=1
+ts_ms=7203 [health] ok event_at=7203 alerts=[false, false, false]
+ts_ms=7253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=7253 expected_start=7252 drift_ms=1 budget_ms=1
+ts_ms=7403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=7403 expected_start=7402 drift_ms=1 budget_ms=1
+ts_ms=7403 [health] ok event_at=7403 alerts=[false, false, false]
+ts_ms=7453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=7453 expected_start=7452 drift_ms=1 budget_ms=1
+ts_ms=7502 [scheduling] visibility_window_transition state=open window_start_ms=7501 window_end_ms=7601 at_ms=7502
+ts_ms=7603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=7603 expected_start=7602 drift_ms=1 budget_ms=1
+ts_ms=7603 [health] ok event_at=7603 alerts=[false, false, false]
+ts_ms=7603 [scheduling] visibility_window_transition state=closed window_start_ms=7501 window_end_ms=7601 at_ms=7603
+ts_ms=7703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=7703 expected_start=7702 drift_ms=1 budget_ms=1
+ts_ms=7753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=7753 expected_start=7752 drift_ms=1 budget_ms=1
+ts_ms=7803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=7803 expected_start=7802 drift_ms=1 budget_ms=1
+ts_ms=7803 [health] ok event_at=7803 alerts=[false, false, false]
+ts_ms=7903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=7903 expected_start=7902 drift_ms=1 budget_ms=1
+ts_ms=8002 [health] ok event_at=8002 alerts=[false, false, false]
+ts_ms=8002 [scheduling] visibility_window_transition state=open window_start_ms=8001 window_end_ms=8101 at_ms=8002
+ts_ms=8102 [scheduling] visibility_window_transition state=closed window_start_ms=8001 window_end_ms=8101 at_ms=8102
+ts_ms=8116 [uplink] recv peer=127.0.0.1:49884 command_id=3 payload_len=0
+ts_ms=8153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=8153 expected_start=8152 drift_ms=1 budget_ms=1
+ts_ms=8203 [health] ok event_at=8203 alerts=[false, false, false]
+ts_ms=8253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=8253 expected_start=8252 drift_ms=1 budget_ms=1
+ts_ms=8403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=8403 expected_start=8402 drift_ms=1 budget_ms=1
+ts_ms=8403 [health] ok event_at=8403 alerts=[false, false, false]
+ts_ms=8503 [scheduling] visibility_window_transition state=open window_start_ms=8501 window_end_ms=8601 at_ms=8503
+ts_ms=8553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=8553 expected_start=8552 drift_ms=1 budget_ms=1
+ts_ms=8603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=8603 expected_start=8602 drift_ms=1 budget_ms=1
+ts_ms=8603 [health] ok event_at=8603 alerts=[false, false, false]
+ts_ms=8603 [scheduling] visibility_window_transition state=closed window_start_ms=8501 window_end_ms=8601 at_ms=8603
+ts_ms=8653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=8653 expected_start=8652 drift_ms=1 budget_ms=1
+ts_ms=8703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=8703 expected_start=8702 drift_ms=1 budget_ms=1
+ts_ms=8803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=8803 expected_start=8802 drift_ms=1 budget_ms=1
+ts_ms=8803 [health] ok event_at=8803 alerts=[false, false, false]
+ts_ms=8853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=8853 expected_start=8852 drift_ms=1 budget_ms=1
+ts_ms=9002 [health] ok event_at=9002 alerts=[false, false, false]
+ts_ms=9003 [scheduling] visibility_window_transition state=open window_start_ms=9001 window_end_ms=9101 at_ms=9003
+ts_ms=9102 [scheduling] visibility_window_transition state=closed window_start_ms=9001 window_end_ms=9101 at_ms=9102
+ts_ms=9202 [health] ok event_at=9202 alerts=[false, false, false]
+ts_ms=9253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=9253 expected_start=9252 drift_ms=1 budget_ms=1
+ts_ms=9303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=9303 expected_start=9302 drift_ms=1 budget_ms=1
+ts_ms=9403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=9403 expected_start=9402 drift_ms=1 budget_ms=1
+ts_ms=9403 [health] ok event_at=9403 alerts=[false, false, false]
+ts_ms=9503 [scheduling] visibility_window_transition state=open window_start_ms=9501 window_end_ms=9601 at_ms=9503
+ts_ms=9602 [health] ok event_at=9602 alerts=[false, false, false]
+ts_ms=9602 [scheduling] visibility_window_transition state=closed window_start_ms=9501 window_end_ms=9601 at_ms=9602
+ts_ms=9703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=9703 expected_start=9702 drift_ms=1 budget_ms=1
+ts_ms=9753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=9753 expected_start=9752 drift_ms=1 budget_ms=1
+ts_ms=9803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=9803 expected_start=9802 drift_ms=1 budget_ms=1
+ts_ms=9803 [health] ok event_at=9803 alerts=[false, false, false]
+ts_ms=9903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=9903 expected_start=9902 drift_ms=1 budget_ms=1
+ts_ms=10002 [health] ok event_at=10002 alerts=[false, false, false]
+ts_ms=10003 [scheduling] visibility_window_transition state=open window_start_ms=10001 window_end_ms=10101 at_ms=10003
+ts_ms=10102 [scheduling] visibility_window_transition state=closed window_start_ms=10001 window_end_ms=10101 at_ms=10102
+ts_ms=10153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=10153 expected_start=10152 drift_ms=1 budget_ms=1
+ts_ms=10203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=10203 expected_start=10202 drift_ms=1 budget_ms=1
+ts_ms=10203 [health] ok event_at=10203 alerts=[false, false, false]
+ts_ms=10353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=10353 expected_start=10352 drift_ms=1 budget_ms=1
+ts_ms=10402 [health] ok event_at=10402 alerts=[false, false, false]
+ts_ms=10503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=10503 expected_start=10502 drift_ms=1 budget_ms=1
+ts_ms=10503 [scheduling] visibility_window_transition state=open window_start_ms=10501 window_end_ms=10601 at_ms=10503
+ts_ms=10603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=10603 expected_start=10602 drift_ms=1 budget_ms=1
+ts_ms=10603 [health] ok event_at=10603 alerts=[false, false, false]
+ts_ms=10603 [scheduling] visibility_window_transition state=closed window_start_ms=10501 window_end_ms=10601 at_ms=10603
+ts_ms=10753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=10753 expected_start=10752 drift_ms=1 budget_ms=1
+ts_ms=10802 [health] ok event_at=10802 alerts=[false, false, false]
+ts_ms=10903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=10903 expected_start=10902 drift_ms=1 budget_ms=1
+ts_ms=10953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=10953 expected_start=10952 drift_ms=1 budget_ms=1
+ts_ms=11003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11003 expected_start=11002 drift_ms=1 budget_ms=1
+ts_ms=11003 [health] ok event_at=11003 alerts=[false, false, false]
+ts_ms=11003 [scheduling] visibility_window_transition state=open window_start_ms=11001 window_end_ms=11101 at_ms=11003
+ts_ms=11053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11053 expected_start=11052 drift_ms=1 budget_ms=1
+ts_ms=11103 [scheduling] visibility_window_transition state=closed window_start_ms=11001 window_end_ms=11101 at_ms=11103
+ts_ms=11203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11203 expected_start=11202 drift_ms=1 budget_ms=1
+ts_ms=11203 [health] ok event_at=11203 alerts=[false, false, false]
+ts_ms=11253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11253 expected_start=11252 drift_ms=1 budget_ms=1
+ts_ms=11403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11403 expected_start=11402 drift_ms=1 budget_ms=1
+ts_ms=11403 [health] ok event_at=11403 alerts=[false, false, false]
+ts_ms=11453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11453 expected_start=11452 drift_ms=1 budget_ms=1
+ts_ms=11502 [scheduling] visibility_window_transition state=open window_start_ms=11501 window_end_ms=11601 at_ms=11502
+ts_ms=11553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11553 expected_start=11552 drift_ms=1 budget_ms=1
+ts_ms=11603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11603 expected_start=11602 drift_ms=1 budget_ms=1
+ts_ms=11603 [health] ok event_at=11603 alerts=[false, false, false]
+ts_ms=11603 [scheduling] visibility_window_transition state=closed window_start_ms=11501 window_end_ms=11601 at_ms=11603
+ts_ms=11703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11703 expected_start=11702 drift_ms=1 budget_ms=1
+ts_ms=11753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11753 expected_start=11752 drift_ms=1 budget_ms=1
+ts_ms=11803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11803 expected_start=11802 drift_ms=1 budget_ms=1
+ts_ms=11803 [health] ok event_at=11803 alerts=[false, false, false]
+ts_ms=11853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11853 expected_start=11852 drift_ms=1 budget_ms=1
+ts_ms=11953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=11953 expected_start=11952 drift_ms=1 budget_ms=1
+ts_ms=12003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=12003 expected_start=12002 drift_ms=1 budget_ms=1
+ts_ms=12003 [health] ok event_at=12003 alerts=[false, false, false]
+ts_ms=12003 [scheduling] visibility_window_transition state=open window_start_ms=12001 window_end_ms=12101 at_ms=12003
+ts_ms=12102 [scheduling] visibility_window_transition state=closed window_start_ms=12001 window_end_ms=12101 at_ms=12102
+ts_ms=12202 [health] ok event_at=12202 alerts=[false, false, false]
+ts_ms=12303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=12303 expected_start=12302 drift_ms=1 budget_ms=1
+ts_ms=12403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=12403 expected_start=12402 drift_ms=1 budget_ms=1
+ts_ms=12403 [health] ok event_at=12403 alerts=[false, false, false]
+ts_ms=12503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=12503 expected_start=12502 drift_ms=1 budget_ms=1
+ts_ms=12503 [scheduling] visibility_window_transition state=open window_start_ms=12501 window_end_ms=12601 at_ms=12503
+ts_ms=12603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=12603 expected_start=12602 drift_ms=1 budget_ms=1
+ts_ms=12603 [health] ok event_at=12603 alerts=[false, false, false]
+ts_ms=12603 [scheduling] visibility_window_transition state=closed window_start_ms=12501 window_end_ms=12601 at_ms=12603
+ts_ms=12803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=12803 expected_start=12802 drift_ms=1 budget_ms=1
+ts_ms=12803 [health] ok event_at=12803 alerts=[false, false, false]
+ts_ms=12853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=12853 expected_start=12852 drift_ms=1 budget_ms=1
+ts_ms=12903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=12903 expected_start=12902 drift_ms=1 budget_ms=1
+ts_ms=13002 [health] ok event_at=13002 alerts=[false, false, false]
+ts_ms=13003 [scheduling] visibility_window_transition state=open window_start_ms=13001 window_end_ms=13101 at_ms=13003
+ts_ms=13103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=13103 expected_start=13102 drift_ms=1 budget_ms=1
+ts_ms=13103 [scheduling] visibility_window_transition state=closed window_start_ms=13001 window_end_ms=13101 at_ms=13103
+ts_ms=13202 [health] ok event_at=13202 alerts=[false, false, false]
+ts_ms=13303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=13303 expected_start=13302 drift_ms=1 budget_ms=1
+ts_ms=13402 [health] ok event_at=13402 alerts=[false, false, false]
+ts_ms=13503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=13503 expected_start=13502 drift_ms=1 budget_ms=1
+ts_ms=13503 [scheduling] visibility_window_transition state=open window_start_ms=13501 window_end_ms=13601 at_ms=13503
+ts_ms=13603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=13603 expected_start=13602 drift_ms=1 budget_ms=1
+ts_ms=13603 [health] ok event_at=13603 alerts=[false, false, false]
+ts_ms=13603 [scheduling] visibility_window_transition state=closed window_start_ms=13501 window_end_ms=13601 at_ms=13603
+ts_ms=13653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=13653 expected_start=13652 drift_ms=1 budget_ms=1
+ts_ms=13753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=13753 expected_start=13752 drift_ms=1 budget_ms=1
+ts_ms=13802 [health] ok event_at=13802 alerts=[false, false, false]
+ts_ms=13953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=13953 expected_start=13952 drift_ms=1 budget_ms=1
+ts_ms=14002 [health] ok event_at=14002 alerts=[false, false, false]
+ts_ms=14002 [scheduling] visibility_window_transition state=open window_start_ms=14001 window_end_ms=14101 at_ms=14002
+ts_ms=14053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=14053 expected_start=14052 drift_ms=1 budget_ms=1
+ts_ms=14102 [scheduling] visibility_window_transition state=closed window_start_ms=14001 window_end_ms=14101 at_ms=14102
+ts_ms=14202 [health] ok event_at=14202 alerts=[false, false, false]
+ts_ms=14401 [health] ok event_at=14401 alerts=[false, false, false]
+ts_ms=14503 [scheduling] visibility_window_transition state=open window_start_ms=14501 window_end_ms=14601 at_ms=14503
+ts_ms=14602 [health] ok event_at=14602 alerts=[false, false, false]
+ts_ms=14603 [scheduling] visibility_window_transition state=closed window_start_ms=14501 window_end_ms=14601 at_ms=14603
+ts_ms=14653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=14653 expected_start=14652 drift_ms=1 budget_ms=1
+ts_ms=14703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=14703 expected_start=14702 drift_ms=1 budget_ms=1
+ts_ms=14802 [health] ok event_at=14802 alerts=[false, false, false]
+ts_ms=15003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=15003 expected_start=15002 drift_ms=1 budget_ms=1
+ts_ms=15003 [health] ok event_at=15003 alerts=[false, false, false]
+ts_ms=15003 [scheduling] visibility_window_transition state=open window_start_ms=15001 window_end_ms=15101 at_ms=15003
+ts_ms=15102 [scheduling] visibility_window_transition state=closed window_start_ms=15001 window_end_ms=15101 at_ms=15102
+ts_ms=15153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=15153 expected_start=15152 drift_ms=1 budget_ms=1
+ts_ms=15202 [health] ok event_at=15202 alerts=[false, false, false]
+ts_ms=15353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=15353 expected_start=15352 drift_ms=1 budget_ms=1
+ts_ms=15402 [health] ok event_at=15402 alerts=[false, false, false]
+ts_ms=15503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=15503 expected_start=15502 drift_ms=1 budget_ms=1
+ts_ms=15503 [scheduling] visibility_window_transition state=open window_start_ms=15501 window_end_ms=15601 at_ms=15503
+ts_ms=15602 [health] ok event_at=15602 alerts=[false, false, false]
+ts_ms=15603 [scheduling] visibility_window_transition state=closed window_start_ms=15501 window_end_ms=15601 at_ms=15603
+ts_ms=15803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=15803 expected_start=15802 drift_ms=1 budget_ms=1
+ts_ms=15803 [health] ok event_at=15803 alerts=[false, false, false]
+ts_ms=15903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=15903 expected_start=15902 drift_ms=1 budget_ms=1
+ts_ms=16002 [health] ok event_at=16002 alerts=[false, false, false]
+ts_ms=16002 [scheduling] visibility_window_transition state=open window_start_ms=16001 window_end_ms=16101 at_ms=16002
+ts_ms=16103 [scheduling] visibility_window_transition state=closed window_start_ms=16001 window_end_ms=16101 at_ms=16103
+ts_ms=16203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16203 expected_start=16202 drift_ms=1 budget_ms=1
+ts_ms=16203 [health] ok event_at=16203 alerts=[false, false, false]
+ts_ms=16253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16253 expected_start=16252 drift_ms=1 budget_ms=1
+ts_ms=16303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16303 expected_start=16302 drift_ms=1 budget_ms=1
+ts_ms=16353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16353 expected_start=16352 drift_ms=1 budget_ms=1
+ts_ms=16403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16403 expected_start=16402 drift_ms=1 budget_ms=1
+ts_ms=16403 [health] ok event_at=16403 alerts=[false, false, false]
+ts_ms=16453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16453 expected_start=16452 drift_ms=1 budget_ms=1
+ts_ms=16503 [scheduling] visibility_window_transition state=open window_start_ms=16501 window_end_ms=16601 at_ms=16503
+ts_ms=16603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16603 expected_start=16602 drift_ms=1 budget_ms=1
+ts_ms=16603 [health] ok event_at=16603 alerts=[false, false, false]
+ts_ms=16603 [scheduling] visibility_window_transition state=closed window_start_ms=16501 window_end_ms=16601 at_ms=16603
+ts_ms=16703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16703 expected_start=16702 drift_ms=1 budget_ms=1
+ts_ms=16753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16753 expected_start=16752 drift_ms=1 budget_ms=1
+ts_ms=16803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16803 expected_start=16802 drift_ms=1 budget_ms=1
+ts_ms=16803 [health] ok event_at=16803 alerts=[false, false, false]
+ts_ms=16853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16853 expected_start=16852 drift_ms=1 budget_ms=1
+ts_ms=16953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=16953 expected_start=16952 drift_ms=1 budget_ms=1
+ts_ms=17002 [health] ok event_at=17002 alerts=[false, false, false]
+ts_ms=17002 [scheduling] visibility_window_transition state=open window_start_ms=17001 window_end_ms=17101 at_ms=17002
+ts_ms=17103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=17103 expected_start=17102 drift_ms=1 budget_ms=1
+ts_ms=17103 [scheduling] visibility_window_transition state=closed window_start_ms=17001 window_end_ms=17101 at_ms=17103
+ts_ms=17203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=17203 expected_start=17202 drift_ms=1 budget_ms=1
+ts_ms=17203 [health] ok event_at=17203 alerts=[false, false, false]
+ts_ms=17303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=17303 expected_start=17302 drift_ms=1 budget_ms=1
+ts_ms=17353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=17353 expected_start=17352 drift_ms=1 budget_ms=1
+ts_ms=17403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=17403 expected_start=17402 drift_ms=1 budget_ms=1
+ts_ms=17403 [health] ok event_at=17403 alerts=[false, false, false]
+ts_ms=17503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=17503 expected_start=17502 drift_ms=1 budget_ms=1
+ts_ms=17503 [scheduling] visibility_window_transition state=open window_start_ms=17501 window_end_ms=17601 at_ms=17503
+ts_ms=17601 [health] ok event_at=17601 alerts=[false, false, false]
+ts_ms=17602 [scheduling] visibility_window_transition state=closed window_start_ms=17501 window_end_ms=17601 at_ms=17602
+ts_ms=17803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=17803 expected_start=17802 drift_ms=1 budget_ms=1
+ts_ms=17803 [health] ok event_at=17803 alerts=[false, false, false]
+ts_ms=17953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=17953 expected_start=17952 drift_ms=1 budget_ms=1
+ts_ms=18003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=18003 expected_start=18002 drift_ms=1 budget_ms=1
+ts_ms=18003 [health] ok event_at=18003 alerts=[false, false, false]
+ts_ms=18003 [scheduling] visibility_window_transition state=open window_start_ms=18001 window_end_ms=18101 at_ms=18003
+ts_ms=18102 [scheduling] visibility_window_transition state=closed window_start_ms=18001 window_end_ms=18101 at_ms=18102
+ts_ms=18203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=18203 expected_start=18202 drift_ms=1 budget_ms=1
+ts_ms=18203 [health] ok event_at=18203 alerts=[false, false, false]
+ts_ms=18403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=18403 expected_start=18402 drift_ms=1 budget_ms=1
+ts_ms=18403 [health] ok event_at=18403 alerts=[false, false, false]
+ts_ms=18501 [scheduling] visibility_window_transition state=open window_start_ms=18501 window_end_ms=18601 at_ms=18501
+ts_ms=18553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=18553 expected_start=18552 drift_ms=1 budget_ms=1
+ts_ms=18603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=18603 expected_start=18602 drift_ms=1 budget_ms=1
+ts_ms=18603 [health] ok event_at=18603 alerts=[false, false, false]
+ts_ms=18603 [scheduling] visibility_window_transition state=closed window_start_ms=18501 window_end_ms=18601 at_ms=18603
+ts_ms=18802 [health] ok event_at=18802 alerts=[false, false, false]
+ts_ms=18903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=18903 expected_start=18902 drift_ms=1 budget_ms=1
+ts_ms=19002 [health] ok event_at=19002 alerts=[false, false, false]
+ts_ms=19002 [scheduling] visibility_window_transition state=open window_start_ms=19001 window_end_ms=19101 at_ms=19002
+ts_ms=19053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=19053 expected_start=19052 drift_ms=1 budget_ms=1
+ts_ms=19102 [scheduling] visibility_window_transition state=closed window_start_ms=19001 window_end_ms=19101 at_ms=19102
+ts_ms=19203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=19203 expected_start=19202 drift_ms=1 budget_ms=1
+ts_ms=19203 [health] ok event_at=19203 alerts=[false, false, false]
+ts_ms=19353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=19353 expected_start=19352 drift_ms=1 budget_ms=1
+ts_ms=19402 [health] ok event_at=19402 alerts=[false, false, false]
+ts_ms=19503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=19503 expected_start=19502 drift_ms=1 budget_ms=1
+ts_ms=19503 [scheduling] visibility_window_transition state=open window_start_ms=19501 window_end_ms=19601 at_ms=19503
+ts_ms=19602 [health] ok event_at=19602 alerts=[false, false, false]
+ts_ms=19602 [scheduling] visibility_window_transition state=closed window_start_ms=19501 window_end_ms=19601 at_ms=19602
+ts_ms=19653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=19653 expected_start=19652 drift_ms=1 budget_ms=1
+ts_ms=19703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=19703 expected_start=19702 drift_ms=1 budget_ms=1
+ts_ms=19753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=19753 expected_start=19752 drift_ms=1 budget_ms=1
+ts_ms=19803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=19803 expected_start=19802 drift_ms=1 budget_ms=1
+ts_ms=19803 [health] ok event_at=19803 alerts=[false, false, false]
+ts_ms=19903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=19903 expected_start=19902 drift_ms=1 budget_ms=1
+ts_ms=19953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=19953 expected_start=19952 drift_ms=1 budget_ms=1
+ts_ms=20003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=20003 expected_start=20002 drift_ms=1 budget_ms=1
+ts_ms=20003 [health] ok event_at=20003 alerts=[false, false, false]
+ts_ms=20004 [scheduling] visibility_window_transition state=open window_start_ms=20001 window_end_ms=20101 at_ms=20004
+ts_ms=20053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=20053 expected_start=20052 drift_ms=1 budget_ms=1
+ts_ms=20102 [scheduling] visibility_window_transition state=closed window_start_ms=20001 window_end_ms=20101 at_ms=20102
+ts_ms=20203 [health] ok event_at=20203 alerts=[false, false, false]
+ts_ms=20253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=20253 expected_start=20252 drift_ms=1 budget_ms=1
+ts_ms=20303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=20303 expected_start=20302 drift_ms=1 budget_ms=1
+ts_ms=20403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=20403 expected_start=20402 drift_ms=1 budget_ms=1
+ts_ms=20403 [health] ok event_at=20403 alerts=[false, false, false]
+ts_ms=20453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=20453 expected_start=20452 drift_ms=1 budget_ms=1
+ts_ms=20503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=20503 expected_start=20502 drift_ms=1 budget_ms=1
+ts_ms=20503 [scheduling] visibility_window_transition state=open window_start_ms=20501 window_end_ms=20601 at_ms=20503
+ts_ms=20602 [health] ok event_at=20602 alerts=[false, false, false]
+ts_ms=20602 [scheduling] visibility_window_transition state=closed window_start_ms=20501 window_end_ms=20601 at_ms=20602
+ts_ms=20653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=20653 expected_start=20652 drift_ms=1 budget_ms=1
+ts_ms=20802 [health] ok event_at=20802 alerts=[false, false, false]
+ts_ms=20853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=20853 expected_start=20852 drift_ms=1 budget_ms=1
+ts_ms=20953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=20953 expected_start=20952 drift_ms=1 budget_ms=1
+ts_ms=21003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=21003 expected_start=21002 drift_ms=1 budget_ms=1
+ts_ms=21003 [health] ok event_at=21003 alerts=[false, false, false]
+ts_ms=21003 [scheduling] visibility_window_transition state=open window_start_ms=21001 window_end_ms=21101 at_ms=21003
+ts_ms=21103 [scheduling] visibility_window_transition state=closed window_start_ms=21001 window_end_ms=21101 at_ms=21103
+ts_ms=21203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=21203 expected_start=21202 drift_ms=1 budget_ms=1
+ts_ms=21203 [health] ok event_at=21203 alerts=[false, false, false]
+ts_ms=21303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=21303 expected_start=21302 drift_ms=1 budget_ms=1
+ts_ms=21402 [health] ok event_at=21402 alerts=[false, false, false]
+ts_ms=21453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=21453 expected_start=21452 drift_ms=1 budget_ms=1
+ts_ms=21502 [scheduling] visibility_window_transition state=open window_start_ms=21501 window_end_ms=21601 at_ms=21502
+ts_ms=21603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=21603 expected_start=21602 drift_ms=1 budget_ms=1
+ts_ms=21603 [health] ok event_at=21603 alerts=[false, false, false]
+ts_ms=21603 [scheduling] visibility_window_transition state=closed window_start_ms=21501 window_end_ms=21601 at_ms=21603
+ts_ms=21753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=21753 expected_start=21752 drift_ms=1 budget_ms=1
+ts_ms=21802 [health] ok event_at=21802 alerts=[false, false, false]
+ts_ms=21953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=21953 expected_start=21952 drift_ms=1 budget_ms=1
+ts_ms=22002 [health] ok event_at=22002 alerts=[false, false, false]
+ts_ms=22003 [scheduling] visibility_window_transition state=open window_start_ms=22001 window_end_ms=22101 at_ms=22003
+ts_ms=22102 [scheduling] visibility_window_transition state=closed window_start_ms=22001 window_end_ms=22101 at_ms=22102
+ts_ms=22153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=22153 expected_start=22152 drift_ms=1 budget_ms=1
+ts_ms=22202 [health] ok event_at=22202 alerts=[false, false, false]
+ts_ms=22253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=22253 expected_start=22252 drift_ms=1 budget_ms=1
+ts_ms=22353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=22353 expected_start=22352 drift_ms=1 budget_ms=1
+ts_ms=22402 [health] ok event_at=22402 alerts=[false, false, false]
+ts_ms=22453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=22453 expected_start=22452 drift_ms=1 budget_ms=1
+ts_ms=22502 [scheduling] visibility_window_transition state=open window_start_ms=22501 window_end_ms=22601 at_ms=22502
+ts_ms=22603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=22603 expected_start=22602 drift_ms=1 budget_ms=1
+ts_ms=22603 [health] ok event_at=22603 alerts=[false, false, false]
+ts_ms=22603 [scheduling] visibility_window_transition state=closed window_start_ms=22501 window_end_ms=22601 at_ms=22603
+ts_ms=22653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=22653 expected_start=22652 drift_ms=1 budget_ms=1
+ts_ms=22753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=22753 expected_start=22752 drift_ms=1 budget_ms=1
+ts_ms=22803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=22803 expected_start=22802 drift_ms=1 budget_ms=1
+ts_ms=22803 [health] ok event_at=22803 alerts=[false, false, false]
+ts_ms=22853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=22853 expected_start=22852 drift_ms=1 budget_ms=1
+ts_ms=23003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=23003 expected_start=23002 drift_ms=1 budget_ms=1
+ts_ms=23003 [health] ok event_at=23003 alerts=[false, false, false]
+ts_ms=23003 [scheduling] visibility_window_transition state=open window_start_ms=23001 window_end_ms=23101 at_ms=23003
+ts_ms=23103 [scheduling] visibility_window_transition state=closed window_start_ms=23001 window_end_ms=23101 at_ms=23103
+ts_ms=23203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=23203 expected_start=23202 drift_ms=1 budget_ms=1
+ts_ms=23203 [health] ok event_at=23203 alerts=[false, false, false]
+ts_ms=23253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=23253 expected_start=23252 drift_ms=1 budget_ms=1
+ts_ms=23303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=23303 expected_start=23302 drift_ms=1 budget_ms=1
+ts_ms=23402 [health] ok event_at=23402 alerts=[false, false, false]
+ts_ms=23503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=23503 expected_start=23502 drift_ms=1 budget_ms=1
+ts_ms=23503 [scheduling] visibility_window_transition state=open window_start_ms=23501 window_end_ms=23601 at_ms=23503
+ts_ms=23553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=23553 expected_start=23552 drift_ms=1 budget_ms=1
+ts_ms=23603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=23603 expected_start=23602 drift_ms=1 budget_ms=1
+ts_ms=23603 [health] ok event_at=23603 alerts=[false, false, false]
+ts_ms=23603 [scheduling] visibility_window_transition state=closed window_start_ms=23501 window_end_ms=23601 at_ms=23603
+ts_ms=23703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=23703 expected_start=23702 drift_ms=1 budget_ms=1
+ts_ms=23803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=23803 expected_start=23802 drift_ms=1 budget_ms=1
+ts_ms=23803 [health] ok event_at=23803 alerts=[false, false, false]
+ts_ms=23953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=23953 expected_start=23952 drift_ms=1 budget_ms=1
+ts_ms=24002 [health] ok event_at=24002 alerts=[false, false, false]
+ts_ms=24002 [scheduling] visibility_window_transition state=open window_start_ms=24001 window_end_ms=24101 at_ms=24002
+ts_ms=24102 [scheduling] visibility_window_transition state=closed window_start_ms=24001 window_end_ms=24101 at_ms=24102
+ts_ms=24203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=24203 expected_start=24202 drift_ms=1 budget_ms=1
+ts_ms=24203 [health] ok event_at=24203 alerts=[false, false, false]
+ts_ms=24253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=24253 expected_start=24252 drift_ms=1 budget_ms=1
+ts_ms=24303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=24303 expected_start=24302 drift_ms=1 budget_ms=1
+ts_ms=24403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=24403 expected_start=24402 drift_ms=1 budget_ms=1
+ts_ms=24403 [health] ok event_at=24403 alerts=[false, false, false]
+ts_ms=24502 [scheduling] visibility_window_transition state=open window_start_ms=24501 window_end_ms=24601 at_ms=24502
+ts_ms=24603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=24603 expected_start=24602 drift_ms=1 budget_ms=1
+ts_ms=24603 [health] ok event_at=24603 alerts=[false, false, false]
+ts_ms=24603 [scheduling] visibility_window_transition state=closed window_start_ms=24501 window_end_ms=24601 at_ms=24603
+ts_ms=24753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=24753 expected_start=24752 drift_ms=1 budget_ms=1
+ts_ms=24802 [health] ok event_at=24802 alerts=[false, false, false]
+ts_ms=24853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=24853 expected_start=24852 drift_ms=1 budget_ms=1
+ts_ms=24953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=24953 expected_start=24952 drift_ms=1 budget_ms=1
+ts_ms=25003 [health] ok event_at=25003 alerts=[false, false, false]
+ts_ms=25003 [scheduling] visibility_window_transition state=open window_start_ms=25001 window_end_ms=25101 at_ms=25003
+ts_ms=25053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=25053 expected_start=25052 drift_ms=1 budget_ms=1
+ts_ms=25102 [scheduling] visibility_window_transition state=closed window_start_ms=25001 window_end_ms=25101 at_ms=25102
+ts_ms=25203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=25203 expected_start=25202 drift_ms=1 budget_ms=1
+ts_ms=25203 [health] ok event_at=25203 alerts=[false, false, false]
+ts_ms=25353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=25353 expected_start=25352 drift_ms=1 budget_ms=1
+ts_ms=25403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=25403 expected_start=25402 drift_ms=1 budget_ms=1
+ts_ms=25403 [health] ok event_at=25403 alerts=[false, false, false]
+ts_ms=25453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=25453 expected_start=25452 drift_ms=1 budget_ms=1
+ts_ms=25502 [scheduling] visibility_window_transition state=open window_start_ms=25501 window_end_ms=25601 at_ms=25502
+ts_ms=25602 [health] ok event_at=25602 alerts=[false, false, false]
+ts_ms=25602 [scheduling] visibility_window_transition state=closed window_start_ms=25501 window_end_ms=25601 at_ms=25602
+ts_ms=25802 [health] ok event_at=25802 alerts=[false, false, false]
+ts_ms=25903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=25903 expected_start=25902 drift_ms=1 budget_ms=1
+ts_ms=25953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=25953 expected_start=25952 drift_ms=1 budget_ms=1
+ts_ms=26002 [health] ok event_at=26002 alerts=[false, false, false]
+ts_ms=26002 [scheduling] visibility_window_transition state=open window_start_ms=26001 window_end_ms=26101 at_ms=26002
+ts_ms=26102 [scheduling] visibility_window_transition state=closed window_start_ms=26001 window_end_ms=26101 at_ms=26102
+ts_ms=26153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=26153 expected_start=26152 drift_ms=1 budget_ms=1
+ts_ms=26202 [health] ok event_at=26202 alerts=[false, false, false]
+ts_ms=26303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=26303 expected_start=26302 drift_ms=1 budget_ms=1
+ts_ms=26353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=26353 expected_start=26352 drift_ms=1 budget_ms=1
+ts_ms=26403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=26403 expected_start=26402 drift_ms=1 budget_ms=1
+ts_ms=26403 [health] ok event_at=26403 alerts=[false, false, false]
+ts_ms=26503 [scheduling] visibility_window_transition state=open window_start_ms=26501 window_end_ms=26601 at_ms=26503
+ts_ms=26602 [health] ok event_at=26602 alerts=[false, false, false]
+ts_ms=26602 [scheduling] visibility_window_transition state=closed window_start_ms=26501 window_end_ms=26601 at_ms=26602
+ts_ms=26753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=26753 expected_start=26752 drift_ms=1 budget_ms=1
+ts_ms=26802 [health] ok event_at=26802 alerts=[false, false, false]
+ts_ms=26853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=26853 expected_start=26852 drift_ms=1 budget_ms=1
+ts_ms=27002 [health] ok event_at=27002 alerts=[false, false, false]
+ts_ms=27003 [scheduling] visibility_window_transition state=open window_start_ms=27001 window_end_ms=27101 at_ms=27003
+ts_ms=27103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=27103 expected_start=27102 drift_ms=1 budget_ms=1
+ts_ms=27103 [scheduling] visibility_window_transition state=closed window_start_ms=27001 window_end_ms=27101 at_ms=27103
+ts_ms=27202 [health] ok event_at=27202 alerts=[false, false, false]
+ts_ms=27353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=27353 expected_start=27352 drift_ms=1 budget_ms=1
+ts_ms=27402 [health] ok event_at=27402 alerts=[false, false, false]
+ts_ms=27453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=27453 expected_start=27452 drift_ms=1 budget_ms=1
+ts_ms=27503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=27503 expected_start=27502 drift_ms=1 budget_ms=1
+ts_ms=27503 [scheduling] visibility_window_transition state=open window_start_ms=27501 window_end_ms=27601 at_ms=27503
+ts_ms=27602 [health] ok event_at=27602 alerts=[false, false, false]
+ts_ms=27602 [scheduling] visibility_window_transition state=closed window_start_ms=27501 window_end_ms=27601 at_ms=27602
+ts_ms=27753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=27753 expected_start=27752 drift_ms=1 budget_ms=1
+ts_ms=27802 [health] ok event_at=27802 alerts=[false, false, false]
+ts_ms=27953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=27953 expected_start=27952 drift_ms=1 budget_ms=1
+ts_ms=28002 [health] ok event_at=28002 alerts=[false, false, false]
+ts_ms=28003 [scheduling] visibility_window_transition state=open window_start_ms=28001 window_end_ms=28101 at_ms=28003
+ts_ms=28102 [scheduling] visibility_window_transition state=closed window_start_ms=28001 window_end_ms=28101 at_ms=28102
+ts_ms=28153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=28153 expected_start=28152 drift_ms=1 budget_ms=1
+ts_ms=28202 [health] ok event_at=28202 alerts=[false, false, false]
+ts_ms=28402 [health] ok event_at=28402 alerts=[false, false, false]
+ts_ms=28503 [scheduling] visibility_window_transition state=open window_start_ms=28501 window_end_ms=28601 at_ms=28503
+ts_ms=28603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=28603 expected_start=28602 drift_ms=1 budget_ms=1
+ts_ms=28603 [health] ok event_at=28603 alerts=[false, false, false]
+ts_ms=28603 [scheduling] visibility_window_transition state=closed window_start_ms=28501 window_end_ms=28601 at_ms=28603
+ts_ms=28653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=28653 expected_start=28652 drift_ms=1 budget_ms=1
+ts_ms=28803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=28803 expected_start=28802 drift_ms=1 budget_ms=1
+ts_ms=28803 [health] ok event_at=28803 alerts=[false, false, false]
+ts_ms=28853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=28853 expected_start=28852 drift_ms=1 budget_ms=1
+ts_ms=28903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=28903 expected_start=28902 drift_ms=1 budget_ms=1
+ts_ms=29003 [health] ok event_at=29003 alerts=[false, false, false]
+ts_ms=29003 [scheduling] visibility_window_transition state=open window_start_ms=29001 window_end_ms=29101 at_ms=29003
+ts_ms=29102 [scheduling] visibility_window_transition state=closed window_start_ms=29001 window_end_ms=29101 at_ms=29102
+ts_ms=29153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=29153 expected_start=29152 drift_ms=1 budget_ms=1
+ts_ms=29202 [health] ok event_at=29202 alerts=[false, false, false]
+ts_ms=29253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=29253 expected_start=29252 drift_ms=1 budget_ms=1
+ts_ms=29353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=29353 expected_start=29352 drift_ms=1 budget_ms=1
+ts_ms=29402 [health] ok event_at=29402 alerts=[false, false, false]
+ts_ms=29503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=29503 expected_start=29502 drift_ms=1 budget_ms=1
+ts_ms=29503 [scheduling] visibility_window_transition state=open window_start_ms=29501 window_end_ms=29601 at_ms=29503
+ts_ms=29603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=29603 expected_start=29602 drift_ms=1 budget_ms=1
+ts_ms=29603 [health] ok event_at=29603 alerts=[false, false, false]
+ts_ms=29603 [scheduling] visibility_window_transition state=closed window_start_ms=29501 window_end_ms=29601 at_ms=29603
+ts_ms=29653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=29653 expected_start=29652 drift_ms=1 budget_ms=1
+ts_ms=29803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=29803 expected_start=29802 drift_ms=1 budget_ms=1
+ts_ms=29803 [health] ok event_at=29803 alerts=[false, false, false]
+ts_ms=29953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=29953 expected_start=29952 drift_ms=1 budget_ms=1
+ts_ms=30002 [health] ok event_at=30002 alerts=[false, false, false]
+ts_ms=30003 [scheduling] visibility_window_transition state=open window_start_ms=30001 window_end_ms=30101 at_ms=30003
+ts_ms=30102 [scheduling] visibility_window_transition state=closed window_start_ms=30001 window_end_ms=30101 at_ms=30102
+ts_ms=30202 [health] ok event_at=30202 alerts=[false, false, false]
+ts_ms=30403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=30403 expected_start=30402 drift_ms=1 budget_ms=1
+ts_ms=30403 [health] ok event_at=30403 alerts=[false, false, false]
+ts_ms=30453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=30453 expected_start=30452 drift_ms=1 budget_ms=1
+ts_ms=30502 [scheduling] visibility_window_transition state=open window_start_ms=30501 window_end_ms=30601 at_ms=30502
+ts_ms=30553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=30553 expected_start=30552 drift_ms=1 budget_ms=1
+ts_ms=30602 [health] ok event_at=30602 alerts=[false, false, false]
+ts_ms=30602 [scheduling] visibility_window_transition state=closed window_start_ms=30501 window_end_ms=30601 at_ms=30602
+ts_ms=30703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=30703 expected_start=30702 drift_ms=1 budget_ms=1
+ts_ms=30802 [health] ok event_at=30802 alerts=[false, false, false]
+ts_ms=30903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=30903 expected_start=30902 drift_ms=1 budget_ms=1
+ts_ms=31003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31003 expected_start=31002 drift_ms=1 budget_ms=1
+ts_ms=31003 [health] ok event_at=31003 alerts=[false, false, false]
+ts_ms=31003 [scheduling] visibility_window_transition state=open window_start_ms=31001 window_end_ms=31101 at_ms=31003
+ts_ms=31102 [scheduling] visibility_window_transition state=closed window_start_ms=31001 window_end_ms=31101 at_ms=31102
+ts_ms=31153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31153 expected_start=31152 drift_ms=1 budget_ms=1
+ts_ms=31203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31203 expected_start=31202 drift_ms=1 budget_ms=1
+ts_ms=31203 [health] ok event_at=31203 alerts=[false, false, false]
+ts_ms=31403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31403 expected_start=31402 drift_ms=1 budget_ms=1
+ts_ms=31403 [health] ok event_at=31403 alerts=[false, false, false]
+ts_ms=31453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31453 expected_start=31452 drift_ms=1 budget_ms=1
+ts_ms=31502 [scheduling] visibility_window_transition state=open window_start_ms=31501 window_end_ms=31601 at_ms=31502
+ts_ms=31553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31553 expected_start=31552 drift_ms=1 budget_ms=1
+ts_ms=31602 [health] ok event_at=31602 alerts=[false, false, false]
+ts_ms=31603 [scheduling] visibility_window_transition state=closed window_start_ms=31501 window_end_ms=31601 at_ms=31603
+ts_ms=31703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31703 expected_start=31702 drift_ms=1 budget_ms=1
+ts_ms=31753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31753 expected_start=31752 drift_ms=1 budget_ms=1
+ts_ms=31803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31803 expected_start=31802 drift_ms=1 budget_ms=1
+ts_ms=31803 [health] ok event_at=31803 alerts=[false, false, false]
+ts_ms=31853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31853 expected_start=31852 drift_ms=1 budget_ms=1
+ts_ms=31953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=31953 expected_start=31952 drift_ms=1 budget_ms=1
+ts_ms=32002 [health] ok event_at=32002 alerts=[false, false, false]
+ts_ms=32002 [scheduling] visibility_window_transition state=open window_start_ms=32001 window_end_ms=32101 at_ms=32002
+ts_ms=32101 [scheduling] visibility_window_transition state=closed window_start_ms=32001 window_end_ms=32101 at_ms=32101
+ts_ms=32153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=32153 expected_start=32152 drift_ms=1 budget_ms=1
+ts_ms=32203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=32203 expected_start=32202 drift_ms=1 budget_ms=1
+ts_ms=32203 [health] ok event_at=32203 alerts=[false, false, false]
+ts_ms=32402 [health] ok event_at=32402 alerts=[false, false, false]
+ts_ms=32502 [scheduling] visibility_window_transition state=open window_start_ms=32501 window_end_ms=32601 at_ms=32502
+ts_ms=32603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=32603 expected_start=32602 drift_ms=1 budget_ms=1
+ts_ms=32603 [health] ok event_at=32603 alerts=[false, false, false]
+ts_ms=32603 [scheduling] visibility_window_transition state=closed window_start_ms=32501 window_end_ms=32601 at_ms=32603
+ts_ms=32703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=32703 expected_start=32702 drift_ms=1 budget_ms=1
+ts_ms=32753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=32753 expected_start=32752 drift_ms=1 budget_ms=1
+ts_ms=32802 [health] ok event_at=32802 alerts=[false, false, false]
+ts_ms=32853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=32853 expected_start=32852 drift_ms=1 budget_ms=1
+ts_ms=33003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=33003 expected_start=33002 drift_ms=1 budget_ms=1
+ts_ms=33003 [health] ok event_at=33003 alerts=[false, false, false]
+ts_ms=33003 [scheduling] visibility_window_transition state=open window_start_ms=33001 window_end_ms=33101 at_ms=33003
+ts_ms=33053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=33053 expected_start=33052 drift_ms=1 budget_ms=1
+ts_ms=33103 [scheduling] visibility_window_transition state=closed window_start_ms=33001 window_end_ms=33101 at_ms=33103
+ts_ms=33202 [health] ok event_at=33202 alerts=[false, false, false]
+ts_ms=33253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=33253 expected_start=33252 drift_ms=1 budget_ms=1
+ts_ms=33403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=33403 expected_start=33402 drift_ms=1 budget_ms=1
+ts_ms=33403 [health] ok event_at=33403 alerts=[false, false, false]
+ts_ms=33502 [scheduling] visibility_window_transition state=open window_start_ms=33501 window_end_ms=33601 at_ms=33502
+ts_ms=33603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=33603 expected_start=33602 drift_ms=1 budget_ms=1
+ts_ms=33603 [health] ok event_at=33603 alerts=[false, false, false]
+ts_ms=33603 [scheduling] visibility_window_transition state=closed window_start_ms=33501 window_end_ms=33601 at_ms=33603
+ts_ms=33703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=33703 expected_start=33702 drift_ms=1 budget_ms=1
+ts_ms=33802 [health] ok event_at=33802 alerts=[false, false, false]
+ts_ms=33903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=33903 expected_start=33902 drift_ms=1 budget_ms=1
+ts_ms=33953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=33953 expected_start=33952 drift_ms=1 budget_ms=1
+ts_ms=34002 [health] ok event_at=34002 alerts=[false, false, false]
+ts_ms=34003 [scheduling] visibility_window_transition state=open window_start_ms=34001 window_end_ms=34101 at_ms=34003
+ts_ms=34053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=34053 expected_start=34052 drift_ms=1 budget_ms=1
+ts_ms=34103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=34103 expected_start=34102 drift_ms=1 budget_ms=1
+ts_ms=34103 [scheduling] visibility_window_transition state=closed window_start_ms=34001 window_end_ms=34101 at_ms=34103
+ts_ms=34202 [health] ok event_at=34202 alerts=[false, false, false]
+ts_ms=34253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=34253 expected_start=34252 drift_ms=1 budget_ms=1
+ts_ms=34303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=34303 expected_start=34302 drift_ms=1 budget_ms=1
+ts_ms=34353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=34353 expected_start=34352 drift_ms=1 budget_ms=1
+ts_ms=34402 [health] ok event_at=34402 alerts=[false, false, false]
+ts_ms=34503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=34503 expected_start=34502 drift_ms=1 budget_ms=1
+ts_ms=34503 [scheduling] visibility_window_transition state=open window_start_ms=34501 window_end_ms=34601 at_ms=34503
+ts_ms=34553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=34553 expected_start=34552 drift_ms=1 budget_ms=1
+ts_ms=34602 [health] ok event_at=34602 alerts=[false, false, false]
+ts_ms=34602 [scheduling] visibility_window_transition state=closed window_start_ms=34501 window_end_ms=34601 at_ms=34602
+ts_ms=34653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=34653 expected_start=34652 drift_ms=1 budget_ms=1
+ts_ms=34803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=34803 expected_start=34802 drift_ms=1 budget_ms=1
+ts_ms=34803 [health] ok event_at=34803 alerts=[false, false, false]
+ts_ms=34953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=34953 expected_start=34952 drift_ms=1 budget_ms=1
+ts_ms=35002 [health] ok event_at=35002 alerts=[false, false, false]
+ts_ms=35002 [scheduling] visibility_window_transition state=open window_start_ms=35001 window_end_ms=35101 at_ms=35002
+ts_ms=35103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=35103 expected_start=35102 drift_ms=1 budget_ms=1
+ts_ms=35103 [scheduling] visibility_window_transition state=closed window_start_ms=35001 window_end_ms=35101 at_ms=35103
+ts_ms=35203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=35203 expected_start=35202 drift_ms=1 budget_ms=1
+ts_ms=35203 [health] ok event_at=35203 alerts=[false, false, false]
+ts_ms=35353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=35353 expected_start=35352 drift_ms=1 budget_ms=1
+ts_ms=35403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=35403 expected_start=35402 drift_ms=1 budget_ms=1
+ts_ms=35403 [health] ok event_at=35403 alerts=[false, false, false]
+ts_ms=35503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=35503 expected_start=35502 drift_ms=1 budget_ms=1
+ts_ms=35503 [scheduling] visibility_window_transition state=open window_start_ms=35501 window_end_ms=35601 at_ms=35503
+ts_ms=35553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=35553 expected_start=35552 drift_ms=1 budget_ms=1
+ts_ms=35602 [health] ok event_at=35602 alerts=[false, false, false]
+ts_ms=35603 [scheduling] visibility_window_transition state=closed window_start_ms=35501 window_end_ms=35601 at_ms=35603
+ts_ms=35803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=35803 expected_start=35802 drift_ms=1 budget_ms=1
+ts_ms=35803 [health] ok event_at=35803 alerts=[false, false, false]
+ts_ms=35953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=35953 expected_start=35952 drift_ms=1 budget_ms=1
+ts_ms=36002 [health] ok event_at=36002 alerts=[false, false, false]
+ts_ms=36002 [scheduling] visibility_window_transition state=open window_start_ms=36001 window_end_ms=36101 at_ms=36002
+ts_ms=36053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36053 expected_start=36052 drift_ms=1 budget_ms=1
+ts_ms=36103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36103 expected_start=36102 drift_ms=1 budget_ms=1
+ts_ms=36103 [scheduling] visibility_window_transition state=closed window_start_ms=36001 window_end_ms=36101 at_ms=36103
+ts_ms=36202 [health] ok event_at=36202 alerts=[false, false, false]
+ts_ms=36253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36253 expected_start=36252 drift_ms=1 budget_ms=1
+ts_ms=36303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36303 expected_start=36302 drift_ms=1 budget_ms=1
+ts_ms=36353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36353 expected_start=36352 drift_ms=1 budget_ms=1
+ts_ms=36403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36403 expected_start=36402 drift_ms=1 budget_ms=1
+ts_ms=36403 [health] ok event_at=36403 alerts=[false, false, false]
+ts_ms=36453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36453 expected_start=36452 drift_ms=1 budget_ms=1
+ts_ms=36503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36503 expected_start=36502 drift_ms=1 budget_ms=1
+ts_ms=36503 [scheduling] visibility_window_transition state=open window_start_ms=36501 window_end_ms=36601 at_ms=36503
+ts_ms=36602 [health] ok event_at=36602 alerts=[false, false, false]
+ts_ms=36602 [scheduling] visibility_window_transition state=closed window_start_ms=36501 window_end_ms=36601 at_ms=36602
+ts_ms=36653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36653 expected_start=36652 drift_ms=1 budget_ms=1
+ts_ms=36703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36703 expected_start=36702 drift_ms=1 budget_ms=1
+ts_ms=36753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36753 expected_start=36752 drift_ms=1 budget_ms=1
+ts_ms=36803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36803 expected_start=36802 drift_ms=1 budget_ms=1
+ts_ms=36803 [health] ok event_at=36803 alerts=[false, false, false]
+ts_ms=36853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=36853 expected_start=36852 drift_ms=1 budget_ms=1
+ts_ms=37003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=37003 expected_start=37002 drift_ms=1 budget_ms=1
+ts_ms=37003 [health] ok event_at=37003 alerts=[false, false, false]
+ts_ms=37003 [scheduling] visibility_window_transition state=open window_start_ms=37001 window_end_ms=37101 at_ms=37003
+ts_ms=37102 [scheduling] visibility_window_transition state=closed window_start_ms=37001 window_end_ms=37101 at_ms=37102
+ts_ms=37153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=37153 expected_start=37152 drift_ms=1 budget_ms=1
+ts_ms=37202 [health] ok event_at=37202 alerts=[false, false, false]
+ts_ms=37303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=37303 expected_start=37302 drift_ms=1 budget_ms=1
+ts_ms=37403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=37403 expected_start=37402 drift_ms=1 budget_ms=1
+ts_ms=37403 [health] ok event_at=37403 alerts=[false, false, false]
+ts_ms=37502 [scheduling] visibility_window_transition state=open window_start_ms=37501 window_end_ms=37601 at_ms=37502
+ts_ms=37603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=37603 expected_start=37602 drift_ms=1 budget_ms=1
+ts_ms=37603 [health] ok event_at=37603 alerts=[false, false, false]
+ts_ms=37603 [scheduling] visibility_window_transition state=closed window_start_ms=37501 window_end_ms=37601 at_ms=37603
+ts_ms=37703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=37703 expected_start=37702 drift_ms=1 budget_ms=1
+ts_ms=37753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=37753 expected_start=37752 drift_ms=1 budget_ms=1
+ts_ms=37803 [health] ok event_at=37803 alerts=[false, false, false]
+ts_ms=37853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=37853 expected_start=37852 drift_ms=1 budget_ms=1
+ts_ms=37953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=37953 expected_start=37952 drift_ms=1 budget_ms=1
+ts_ms=38002 [health] ok event_at=38002 alerts=[false, false, false]
+ts_ms=38002 [scheduling] visibility_window_transition state=open window_start_ms=38001 window_end_ms=38101 at_ms=38002
+ts_ms=38103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38103 expected_start=38102 drift_ms=1 budget_ms=1
+ts_ms=38103 [scheduling] visibility_window_transition state=closed window_start_ms=38001 window_end_ms=38101 at_ms=38103
+ts_ms=38153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38153 expected_start=38152 drift_ms=1 budget_ms=1
+ts_ms=38202 [health] ok event_at=38202 alerts=[false, false, false]
+ts_ms=38253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38253 expected_start=38252 drift_ms=1 budget_ms=1
+ts_ms=38303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38303 expected_start=38302 drift_ms=1 budget_ms=1
+ts_ms=38402 [health] ok event_at=38402 alerts=[false, false, false]
+ts_ms=38453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38453 expected_start=38452 drift_ms=1 budget_ms=1
+ts_ms=38503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38503 expected_start=38502 drift_ms=1 budget_ms=1
+ts_ms=38503 [scheduling] visibility_window_transition state=open window_start_ms=38501 window_end_ms=38601 at_ms=38503
+ts_ms=38553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38553 expected_start=38552 drift_ms=1 budget_ms=1
+ts_ms=38602 [health] ok event_at=38602 alerts=[false, false, false]
+ts_ms=38602 [scheduling] visibility_window_transition state=closed window_start_ms=38501 window_end_ms=38601 at_ms=38602
+ts_ms=38653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38653 expected_start=38652 drift_ms=1 budget_ms=1
+ts_ms=38703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38703 expected_start=38702 drift_ms=1 budget_ms=1
+ts_ms=38753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38753 expected_start=38752 drift_ms=1 budget_ms=1
+ts_ms=38802 [health] ok event_at=38802 alerts=[false, false, false]
+ts_ms=38903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=38903 expected_start=38902 drift_ms=1 budget_ms=1
+ts_ms=39002 [health] ok event_at=39002 alerts=[false, false, false]
+ts_ms=39002 [scheduling] visibility_window_transition state=open window_start_ms=39001 window_end_ms=39101 at_ms=39002
+ts_ms=39102 [scheduling] visibility_window_transition state=closed window_start_ms=39001 window_end_ms=39101 at_ms=39102
+ts_ms=39153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=39153 expected_start=39152 drift_ms=1 budget_ms=1
+ts_ms=39202 [health] ok event_at=39202 alerts=[false, false, false]
+ts_ms=39253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=39253 expected_start=39252 drift_ms=1 budget_ms=1
+ts_ms=39353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=39353 expected_start=39352 drift_ms=1 budget_ms=1
+ts_ms=39403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=39403 expected_start=39402 drift_ms=1 budget_ms=1
+ts_ms=39403 [health] ok event_at=39403 alerts=[false, false, false]
+ts_ms=39502 [scheduling] visibility_window_transition state=open window_start_ms=39501 window_end_ms=39601 at_ms=39502
+ts_ms=39553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=39553 expected_start=39552 drift_ms=1 budget_ms=1
+ts_ms=39602 [health] ok event_at=39602 alerts=[false, false, false]
+ts_ms=39602 [scheduling] visibility_window_transition state=closed window_start_ms=39501 window_end_ms=39601 at_ms=39602
+ts_ms=39653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=39653 expected_start=39652 drift_ms=1 budget_ms=1
+ts_ms=39753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=39753 expected_start=39752 drift_ms=1 budget_ms=1
+ts_ms=39803 [health] ok event_at=39803 alerts=[false, false, false]
+ts_ms=39903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=39903 expected_start=39902 drift_ms=1 budget_ms=1
+ts_ms=39953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=39953 expected_start=39952 drift_ms=1 budget_ms=1
+ts_ms=40002 [health] ok event_at=40002 alerts=[false, false, false]
+ts_ms=40002 [scheduling] visibility_window_transition state=open window_start_ms=40001 window_end_ms=40101 at_ms=40002
+ts_ms=40102 [scheduling] visibility_window_transition state=closed window_start_ms=40001 window_end_ms=40101 at_ms=40102
+ts_ms=40203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=40203 expected_start=40202 drift_ms=1 budget_ms=1
+ts_ms=40203 [health] ok event_at=40203 alerts=[false, false, false]
+ts_ms=40253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=40253 expected_start=40252 drift_ms=1 budget_ms=1
+ts_ms=40353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=40353 expected_start=40352 drift_ms=1 budget_ms=1
+ts_ms=40402 [health] ok event_at=40402 alerts=[false, false, false]
+ts_ms=40453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=40453 expected_start=40452 drift_ms=1 budget_ms=1
+ts_ms=40503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=40503 expected_start=40502 drift_ms=1 budget_ms=1
+ts_ms=40503 [scheduling] visibility_window_transition state=open window_start_ms=40501 window_end_ms=40601 at_ms=40503
+ts_ms=40603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=40603 expected_start=40602 drift_ms=1 budget_ms=1
+ts_ms=40603 [health] ok event_at=40603 alerts=[false, false, false]
+ts_ms=40603 [scheduling] visibility_window_transition state=closed window_start_ms=40501 window_end_ms=40601 at_ms=40603
+ts_ms=40653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=40653 expected_start=40652 drift_ms=1 budget_ms=1
+ts_ms=40703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=40703 expected_start=40702 drift_ms=1 budget_ms=1
+ts_ms=40803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=40803 expected_start=40802 drift_ms=1 budget_ms=1
+ts_ms=40803 [health] ok event_at=40803 alerts=[false, false, false]
+ts_ms=40953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=40953 expected_start=40952 drift_ms=1 budget_ms=1
+ts_ms=41003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=41003 expected_start=41002 drift_ms=1 budget_ms=1
+ts_ms=41003 [health] ok event_at=41003 alerts=[false, false, false]
+ts_ms=41003 [scheduling] visibility_window_transition state=open window_start_ms=41001 window_end_ms=41101 at_ms=41003
+ts_ms=41103 [scheduling] visibility_window_transition state=closed window_start_ms=41001 window_end_ms=41101 at_ms=41103
+ts_ms=41153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=41153 expected_start=41152 drift_ms=1 budget_ms=1
+ts_ms=41203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=41203 expected_start=41202 drift_ms=1 budget_ms=1
+ts_ms=41203 [health] ok event_at=41203 alerts=[false, false, false]
+ts_ms=41353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=41353 expected_start=41352 drift_ms=1 budget_ms=1
+ts_ms=41403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=41403 expected_start=41402 drift_ms=1 budget_ms=1
+ts_ms=41403 [health] ok event_at=41403 alerts=[false, false, false]
+ts_ms=41503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=41503 expected_start=41502 drift_ms=1 budget_ms=1
+ts_ms=41503 [scheduling] visibility_window_transition state=open window_start_ms=41501 window_end_ms=41601 at_ms=41503
+ts_ms=41603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=41603 expected_start=41602 drift_ms=1 budget_ms=1
+ts_ms=41603 [health] ok event_at=41603 alerts=[false, false, false]
+ts_ms=41603 [scheduling] visibility_window_transition state=closed window_start_ms=41501 window_end_ms=41601 at_ms=41603
+ts_ms=41802 [health] ok event_at=41802 alerts=[false, false, false]
+ts_ms=41953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=41953 expected_start=41952 drift_ms=1 budget_ms=1
+ts_ms=42003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=42003 expected_start=42002 drift_ms=1 budget_ms=1
+ts_ms=42003 [health] ok event_at=42003 alerts=[false, false, false]
+ts_ms=42003 [scheduling] visibility_window_transition state=open window_start_ms=42001 window_end_ms=42101 at_ms=42003
+ts_ms=42103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=42103 expected_start=42102 drift_ms=1 budget_ms=1
+ts_ms=42103 [scheduling] visibility_window_transition state=closed window_start_ms=42001 window_end_ms=42101 at_ms=42103
+ts_ms=42153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=42153 expected_start=42152 drift_ms=1 budget_ms=1
+ts_ms=42203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=42203 expected_start=42202 drift_ms=1 budget_ms=1
+ts_ms=42203 [health] ok event_at=42203 alerts=[false, false, false]
+ts_ms=42403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=42403 expected_start=42402 drift_ms=1 budget_ms=1
+ts_ms=42403 [health] ok event_at=42403 alerts=[false, false, false]
+ts_ms=42502 [scheduling] visibility_window_transition state=open window_start_ms=42501 window_end_ms=42601 at_ms=42502
+ts_ms=42553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=42553 expected_start=42552 drift_ms=1 budget_ms=1
+ts_ms=42602 [health] ok event_at=42602 alerts=[false, false, false]
+ts_ms=42603 [scheduling] visibility_window_transition state=closed window_start_ms=42501 window_end_ms=42601 at_ms=42603
+ts_ms=42653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=42653 expected_start=42652 drift_ms=1 budget_ms=1
+ts_ms=42703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=42703 expected_start=42702 drift_ms=1 budget_ms=1
+ts_ms=42802 [health] ok event_at=42802 alerts=[false, false, false]
+ts_ms=42853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=42853 expected_start=42852 drift_ms=1 budget_ms=1
+ts_ms=42953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=42953 expected_start=42952 drift_ms=1 budget_ms=1
+ts_ms=43003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43003 expected_start=43002 drift_ms=1 budget_ms=1
+ts_ms=43003 [health] ok event_at=43003 alerts=[false, false, false]
+ts_ms=43003 [scheduling] visibility_window_transition state=open window_start_ms=43001 window_end_ms=43101 at_ms=43003
+ts_ms=43103 [scheduling] visibility_window_transition state=closed window_start_ms=43001 window_end_ms=43101 at_ms=43103
+ts_ms=43153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43153 expected_start=43152 drift_ms=1 budget_ms=1
+ts_ms=43202 [health] ok event_at=43202 alerts=[false, false, false]
+ts_ms=43353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43353 expected_start=43352 drift_ms=1 budget_ms=1
+ts_ms=43401 [health] ok event_at=43401 alerts=[false, false, false]
+ts_ms=43453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43453 expected_start=43452 drift_ms=1 budget_ms=1
+ts_ms=43503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43503 expected_start=43502 drift_ms=1 budget_ms=1
+ts_ms=43503 [scheduling] visibility_window_transition state=open window_start_ms=43501 window_end_ms=43601 at_ms=43503
+ts_ms=43603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43603 expected_start=43602 drift_ms=1 budget_ms=1
+ts_ms=43603 [health] ok event_at=43603 alerts=[false, false, false]
+ts_ms=43603 [scheduling] visibility_window_transition state=closed window_start_ms=43501 window_end_ms=43601 at_ms=43603
+ts_ms=43653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43653 expected_start=43652 drift_ms=1 budget_ms=1
+ts_ms=43803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43803 expected_start=43802 drift_ms=1 budget_ms=1
+ts_ms=43803 [health] ok event_at=43803 alerts=[false, false, false]
+ts_ms=43853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43853 expected_start=43852 drift_ms=1 budget_ms=1
+ts_ms=43903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43903 expected_start=43902 drift_ms=1 budget_ms=1
+ts_ms=43953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=43953 expected_start=43952 drift_ms=1 budget_ms=1
+ts_ms=44001 [health] ok event_at=44001 alerts=[false, false, false]
+ts_ms=44002 [scheduling] visibility_window_transition state=open window_start_ms=44001 window_end_ms=44101 at_ms=44002
+ts_ms=44102 [scheduling] visibility_window_transition state=closed window_start_ms=44001 window_end_ms=44101 at_ms=44102
+ts_ms=44203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=44203 expected_start=44202 drift_ms=1 budget_ms=1
+ts_ms=44203 [health] ok event_at=44203 alerts=[false, false, false]
+ts_ms=44303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=44303 expected_start=44302 drift_ms=1 budget_ms=1
+ts_ms=44403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=44403 expected_start=44402 drift_ms=1 budget_ms=1
+ts_ms=44403 [health] ok event_at=44403 alerts=[false, false, false]
+ts_ms=44503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=44503 expected_start=44502 drift_ms=1 budget_ms=1
+ts_ms=44503 [scheduling] visibility_window_transition state=open window_start_ms=44501 window_end_ms=44601 at_ms=44503
+ts_ms=44602 [health] ok event_at=44602 alerts=[false, false, false]
+ts_ms=44602 [scheduling] visibility_window_transition state=closed window_start_ms=44501 window_end_ms=44601 at_ms=44602
+ts_ms=44653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=44653 expected_start=44652 drift_ms=1 budget_ms=1
+ts_ms=44753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=44753 expected_start=44752 drift_ms=1 budget_ms=1
+ts_ms=44803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=44803 expected_start=44802 drift_ms=1 budget_ms=1
+ts_ms=44803 [health] ok event_at=44803 alerts=[false, false, false]
+ts_ms=45002 [health] ok event_at=45002 alerts=[false, false, false]
+ts_ms=45003 [scheduling] visibility_window_transition state=open window_start_ms=45001 window_end_ms=45101 at_ms=45003
+ts_ms=45102 [scheduling] visibility_window_transition state=closed window_start_ms=45001 window_end_ms=45101 at_ms=45102
+ts_ms=45153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=45153 expected_start=45152 drift_ms=1 budget_ms=1
+ts_ms=45203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=45203 expected_start=45202 drift_ms=1 budget_ms=1
+ts_ms=45203 [health] ok event_at=45203 alerts=[false, false, false]
+ts_ms=45303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=45303 expected_start=45302 drift_ms=1 budget_ms=1
+ts_ms=45402 [health] ok event_at=45402 alerts=[false, false, false]
+ts_ms=45453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=45453 expected_start=45452 drift_ms=1 budget_ms=1
+ts_ms=45503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=45503 expected_start=45502 drift_ms=1 budget_ms=1
+ts_ms=45503 [scheduling] visibility_window_transition state=open window_start_ms=45501 window_end_ms=45601 at_ms=45503
+ts_ms=45553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=45553 expected_start=45552 drift_ms=1 budget_ms=1
+ts_ms=45602 [health] ok event_at=45602 alerts=[false, false, false]
+ts_ms=45602 [scheduling] visibility_window_transition state=closed window_start_ms=45501 window_end_ms=45601 at_ms=45602
+ts_ms=45753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=45753 expected_start=45752 drift_ms=1 budget_ms=1
+ts_ms=45802 [health] ok event_at=45802 alerts=[false, false, false]
+ts_ms=45853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=45853 expected_start=45852 drift_ms=1 budget_ms=1
+ts_ms=45953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=45953 expected_start=45952 drift_ms=1 budget_ms=1
+ts_ms=46003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=46003 expected_start=46002 drift_ms=1 budget_ms=1
+ts_ms=46003 [health] ok event_at=46003 alerts=[false, false, false]
+ts_ms=46003 [scheduling] visibility_window_transition state=open window_start_ms=46001 window_end_ms=46101 at_ms=46003
+ts_ms=46053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=46053 expected_start=46052 drift_ms=1 budget_ms=1
+ts_ms=46102 [scheduling] visibility_window_transition state=closed window_start_ms=46001 window_end_ms=46101 at_ms=46102
+ts_ms=46202 [health] ok event_at=46202 alerts=[false, false, false]
+ts_ms=46353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=46353 expected_start=46352 drift_ms=1 budget_ms=1
+ts_ms=46402 [health] ok event_at=46402 alerts=[false, false, false]
+ts_ms=46453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=46453 expected_start=46452 drift_ms=1 budget_ms=1
+ts_ms=46503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=46503 expected_start=46502 drift_ms=1 budget_ms=1
+ts_ms=46503 [scheduling] visibility_window_transition state=open window_start_ms=46501 window_end_ms=46601 at_ms=46503
+ts_ms=46603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=46603 expected_start=46602 drift_ms=1 budget_ms=1
+ts_ms=46603 [health] ok event_at=46603 alerts=[false, false, false]
+ts_ms=46603 [scheduling] visibility_window_transition state=closed window_start_ms=46501 window_end_ms=46601 at_ms=46603
+ts_ms=46653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=46653 expected_start=46652 drift_ms=1 budget_ms=1
+ts_ms=46802 [health] ok event_at=46802 alerts=[false, false, false]
+ts_ms=46903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=46903 expected_start=46902 drift_ms=1 budget_ms=1
+ts_ms=47003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=47003 expected_start=47002 drift_ms=1 budget_ms=1
+ts_ms=47003 [health] ok event_at=47003 alerts=[false, false, false]
+ts_ms=47004 [scheduling] visibility_window_transition state=open window_start_ms=47001 window_end_ms=47101 at_ms=47004
+ts_ms=47053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=47053 expected_start=47052 drift_ms=1 budget_ms=1
+ts_ms=47102 [scheduling] visibility_window_transition state=closed window_start_ms=47001 window_end_ms=47101 at_ms=47102
+ts_ms=47203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=47203 expected_start=47202 drift_ms=1 budget_ms=1
+ts_ms=47203 [health] ok event_at=47203 alerts=[false, false, false]
+ts_ms=47353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=47353 expected_start=47352 drift_ms=1 budget_ms=1
+ts_ms=47402 [health] ok event_at=47402 alerts=[false, false, false]
+ts_ms=47453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=47453 expected_start=47452 drift_ms=1 budget_ms=1
+ts_ms=47503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=47503 expected_start=47502 drift_ms=1 budget_ms=1
+ts_ms=47503 [scheduling] visibility_window_transition state=open window_start_ms=47501 window_end_ms=47601 at_ms=47503
+ts_ms=47553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=47553 expected_start=47552 drift_ms=1 budget_ms=1
+ts_ms=47602 [health] ok event_at=47602 alerts=[false, false, false]
+ts_ms=47603 [scheduling] visibility_window_transition state=closed window_start_ms=47501 window_end_ms=47601 at_ms=47603
+ts_ms=47802 [health] ok event_at=47802 alerts=[false, false, false]
+ts_ms=48002 [health] ok event_at=48002 alerts=[false, false, false]
+ts_ms=48003 [scheduling] visibility_window_transition state=open window_start_ms=48001 window_end_ms=48101 at_ms=48003
+ts_ms=48102 [scheduling] visibility_window_transition state=closed window_start_ms=48001 window_end_ms=48101 at_ms=48102
+ts_ms=48153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=48153 expected_start=48152 drift_ms=1 budget_ms=1
+ts_ms=48203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=48203 expected_start=48202 drift_ms=1 budget_ms=1
+ts_ms=48203 [health] ok event_at=48203 alerts=[false, false, false]
+ts_ms=48353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=48353 expected_start=48352 drift_ms=1 budget_ms=1
+ts_ms=48403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=48403 expected_start=48402 drift_ms=1 budget_ms=1
+ts_ms=48403 [health] ok event_at=48403 alerts=[false, false, false]
+ts_ms=48502 [scheduling] visibility_window_transition state=open window_start_ms=48501 window_end_ms=48601 at_ms=48502
+ts_ms=48553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=48553 expected_start=48552 drift_ms=1 budget_ms=1
+ts_ms=48603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=48603 expected_start=48602 drift_ms=1 budget_ms=1
+ts_ms=48603 [health] ok event_at=48603 alerts=[false, false, false]
+ts_ms=48603 [scheduling] visibility_window_transition state=closed window_start_ms=48501 window_end_ms=48601 at_ms=48603
+ts_ms=48753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=48753 expected_start=48752 drift_ms=1 budget_ms=1
+ts_ms=48802 [health] ok event_at=48802 alerts=[false, false, false]
+ts_ms=48853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=48853 expected_start=48852 drift_ms=1 budget_ms=1
+ts_ms=48903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=48903 expected_start=48902 drift_ms=1 budget_ms=1
+ts_ms=48953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=48953 expected_start=48952 drift_ms=1 budget_ms=1
+ts_ms=49002 [health] ok event_at=49002 alerts=[false, false, false]
+ts_ms=49002 [scheduling] visibility_window_transition state=open window_start_ms=49001 window_end_ms=49101 at_ms=49002
+ts_ms=49053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=49053 expected_start=49052 drift_ms=1 budget_ms=1
+ts_ms=49103 [scheduling] visibility_window_transition state=closed window_start_ms=49001 window_end_ms=49101 at_ms=49103
+ts_ms=49202 [health] ok event_at=49202 alerts=[false, false, false]
+ts_ms=49253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=49253 expected_start=49252 drift_ms=1 budget_ms=1
+ts_ms=49303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=49303 expected_start=49302 drift_ms=1 budget_ms=1
+ts_ms=49353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=49353 expected_start=49352 drift_ms=1 budget_ms=1
+ts_ms=49402 [health] ok event_at=49402 alerts=[false, false, false]
+ts_ms=49453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=49453 expected_start=49452 drift_ms=1 budget_ms=1
+ts_ms=49503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=49503 expected_start=49502 drift_ms=1 budget_ms=1
+ts_ms=49503 [scheduling] visibility_window_transition state=open window_start_ms=49501 window_end_ms=49601 at_ms=49503
+ts_ms=49602 [health] ok event_at=49602 alerts=[false, false, false]
+ts_ms=49602 [scheduling] visibility_window_transition state=closed window_start_ms=49501 window_end_ms=49601 at_ms=49602
+ts_ms=49703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=49703 expected_start=49702 drift_ms=1 budget_ms=1
+ts_ms=49753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=49753 expected_start=49752 drift_ms=1 budget_ms=1
+ts_ms=49803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=49803 expected_start=49802 drift_ms=1 budget_ms=1
+ts_ms=49803 [health] ok event_at=49803 alerts=[false, false, false]
+ts_ms=50002 [health] ok event_at=50002 alerts=[false, false, false]
+ts_ms=50003 [scheduling] visibility_window_transition state=open window_start_ms=50001 window_end_ms=50101 at_ms=50003
+ts_ms=50053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=50053 expected_start=50052 drift_ms=1 budget_ms=1
+ts_ms=50102 [scheduling] visibility_window_transition state=closed window_start_ms=50001 window_end_ms=50101 at_ms=50102
+ts_ms=50203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=50203 expected_start=50202 drift_ms=1 budget_ms=1
+ts_ms=50203 [health] ok event_at=50203 alerts=[false, false, false]
+ts_ms=50353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=50353 expected_start=50352 drift_ms=1 budget_ms=1
+ts_ms=50402 [health] ok event_at=50402 alerts=[false, false, false]
+ts_ms=50502 [scheduling] visibility_window_transition state=open window_start_ms=50501 window_end_ms=50601 at_ms=50502
+ts_ms=50553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=50553 expected_start=50552 drift_ms=1 budget_ms=1
+ts_ms=50602 [health] ok event_at=50602 alerts=[false, false, false]
+ts_ms=50602 [scheduling] visibility_window_transition state=closed window_start_ms=50501 window_end_ms=50601 at_ms=50602
+ts_ms=50703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=50703 expected_start=50702 drift_ms=1 budget_ms=1
+ts_ms=50802 [health] ok event_at=50802 alerts=[false, false, false]
+ts_ms=50853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=50853 expected_start=50852 drift_ms=1 budget_ms=1
+ts_ms=50953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=50953 expected_start=50952 drift_ms=1 budget_ms=1
+ts_ms=51003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51003 expected_start=51002 drift_ms=1 budget_ms=1
+ts_ms=51003 [health] ok event_at=51003 alerts=[false, false, false]
+ts_ms=51003 [scheduling] visibility_window_transition state=open window_start_ms=51001 window_end_ms=51101 at_ms=51003
+ts_ms=51053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51053 expected_start=51052 drift_ms=1 budget_ms=1
+ts_ms=51103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51103 expected_start=51102 drift_ms=1 budget_ms=1
+ts_ms=51103 [scheduling] visibility_window_transition state=closed window_start_ms=51001 window_end_ms=51101 at_ms=51103
+ts_ms=51153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51153 expected_start=51152 drift_ms=1 budget_ms=1
+ts_ms=51201 [health] ok event_at=51201 alerts=[false, false, false]
+ts_ms=51253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51253 expected_start=51252 drift_ms=1 budget_ms=1
+ts_ms=51403 [health] ok event_at=51403 alerts=[false, false, false]
+ts_ms=51453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51453 expected_start=51452 drift_ms=1 budget_ms=1
+ts_ms=51503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51503 expected_start=51502 drift_ms=1 budget_ms=1
+ts_ms=51503 [scheduling] visibility_window_transition state=open window_start_ms=51501 window_end_ms=51601 at_ms=51503
+ts_ms=51553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51553 expected_start=51552 drift_ms=1 budget_ms=1
+ts_ms=51602 [health] ok event_at=51602 alerts=[false, false, false]
+ts_ms=51603 [scheduling] visibility_window_transition state=closed window_start_ms=51501 window_end_ms=51601 at_ms=51603
+ts_ms=51703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51703 expected_start=51702 drift_ms=1 budget_ms=1
+ts_ms=51802 [health] ok event_at=51802 alerts=[false, false, false]
+ts_ms=51853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51853 expected_start=51852 drift_ms=1 budget_ms=1
+ts_ms=51903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51903 expected_start=51902 drift_ms=1 budget_ms=1
+ts_ms=51953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=51953 expected_start=51952 drift_ms=1 budget_ms=1
+ts_ms=52003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52003 expected_start=52002 drift_ms=1 budget_ms=1
+ts_ms=52003 [health] ok event_at=52003 alerts=[false, false, false]
+ts_ms=52003 [scheduling] visibility_window_transition state=open window_start_ms=52001 window_end_ms=52101 at_ms=52003
+ts_ms=52053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52053 expected_start=52052 drift_ms=1 budget_ms=1
+ts_ms=52102 [scheduling] visibility_window_transition state=closed window_start_ms=52001 window_end_ms=52101 at_ms=52102
+ts_ms=52153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52153 expected_start=52152 drift_ms=1 budget_ms=1
+ts_ms=52203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52203 expected_start=52202 drift_ms=1 budget_ms=1
+ts_ms=52203 [health] ok event_at=52203 alerts=[false, false, false]
+ts_ms=52402 [health] ok event_at=52402 alerts=[false, false, false]
+ts_ms=52453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52453 expected_start=52452 drift_ms=1 budget_ms=1
+ts_ms=52503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52503 expected_start=52502 drift_ms=1 budget_ms=1
+ts_ms=52503 [scheduling] visibility_window_transition state=open window_start_ms=52501 window_end_ms=52601 at_ms=52503
+ts_ms=52553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52553 expected_start=52552 drift_ms=1 budget_ms=1
+ts_ms=52603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52603 expected_start=52602 drift_ms=1 budget_ms=1
+ts_ms=52603 [health] ok event_at=52603 alerts=[false, false, false]
+ts_ms=52603 [scheduling] visibility_window_transition state=closed window_start_ms=52501 window_end_ms=52601 at_ms=52603
+ts_ms=52653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52653 expected_start=52652 drift_ms=1 budget_ms=1
+ts_ms=52703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52703 expected_start=52702 drift_ms=1 budget_ms=1
+ts_ms=52753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52753 expected_start=52752 drift_ms=1 budget_ms=1
+ts_ms=52802 [health] ok event_at=52802 alerts=[false, false, false]
+ts_ms=52903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=52903 expected_start=52902 drift_ms=1 budget_ms=1
+ts_ms=53003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53003 expected_start=53002 drift_ms=1 budget_ms=1
+ts_ms=53003 [health] ok event_at=53003 alerts=[false, false, false]
+ts_ms=53004 [scheduling] visibility_window_transition state=open window_start_ms=53001 window_end_ms=53101 at_ms=53004
+ts_ms=53053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53053 expected_start=53052 drift_ms=1 budget_ms=1
+ts_ms=53102 [scheduling] visibility_window_transition state=closed window_start_ms=53001 window_end_ms=53101 at_ms=53102
+ts_ms=53202 [health] ok event_at=53202 alerts=[false, false, false]
+ts_ms=53353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53353 expected_start=53352 drift_ms=1 budget_ms=1
+ts_ms=53403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53403 expected_start=53402 drift_ms=1 budget_ms=1
+ts_ms=53403 [health] ok event_at=53403 alerts=[false, false, false]
+ts_ms=53502 [scheduling] visibility_window_transition state=open window_start_ms=53501 window_end_ms=53601 at_ms=53502
+ts_ms=53553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53553 expected_start=53552 drift_ms=1 budget_ms=1
+ts_ms=53602 [health] ok event_at=53602 alerts=[false, false, false]
+ts_ms=53602 [scheduling] visibility_window_transition state=closed window_start_ms=53501 window_end_ms=53601 at_ms=53602
+ts_ms=53653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53653 expected_start=53652 drift_ms=1 budget_ms=1
+ts_ms=53703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53703 expected_start=53702 drift_ms=1 budget_ms=1
+ts_ms=53803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53803 expected_start=53802 drift_ms=1 budget_ms=1
+ts_ms=53803 [health] ok event_at=53803 alerts=[false, false, false]
+ts_ms=53853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53853 expected_start=53852 drift_ms=1 budget_ms=1
+ts_ms=53903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53903 expected_start=53902 drift_ms=1 budget_ms=1
+ts_ms=53953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=53953 expected_start=53952 drift_ms=1 budget_ms=1
+ts_ms=54002 [health] ok event_at=54002 alerts=[false, false, false]
+ts_ms=54003 [scheduling] visibility_window_transition state=open window_start_ms=54001 window_end_ms=54101 at_ms=54003
+ts_ms=54053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=54053 expected_start=54052 drift_ms=1 budget_ms=1
+ts_ms=54103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=54103 expected_start=54102 drift_ms=1 budget_ms=1
+ts_ms=54103 [scheduling] visibility_window_transition state=closed window_start_ms=54001 window_end_ms=54101 at_ms=54103
+ts_ms=54203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=54203 expected_start=54202 drift_ms=1 budget_ms=1
+ts_ms=54203 [health] ok event_at=54203 alerts=[false, false, false]
+ts_ms=54253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=54253 expected_start=54252 drift_ms=1 budget_ms=1
+ts_ms=54402 [health] ok event_at=54402 alerts=[false, false, false]
+ts_ms=54453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=54453 expected_start=54452 drift_ms=1 budget_ms=1
+ts_ms=54503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=54503 expected_start=54502 drift_ms=1 budget_ms=1
+ts_ms=54503 [scheduling] visibility_window_transition state=open window_start_ms=54501 window_end_ms=54601 at_ms=54503
+ts_ms=54603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=54603 expected_start=54602 drift_ms=1 budget_ms=1
+ts_ms=54603 [health] ok event_at=54603 alerts=[false, false, false]
+ts_ms=54603 [scheduling] visibility_window_transition state=closed window_start_ms=54501 window_end_ms=54601 at_ms=54603
+ts_ms=54802 [health] ok event_at=54802 alerts=[false, false, false]
+ts_ms=54853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=54853 expected_start=54852 drift_ms=1 budget_ms=1
+ts_ms=54903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=54903 expected_start=54902 drift_ms=1 budget_ms=1
+ts_ms=54953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=54953 expected_start=54952 drift_ms=1 budget_ms=1
+ts_ms=55002 [health] ok event_at=55002 alerts=[false, false, false]
+ts_ms=55003 [scheduling] visibility_window_transition state=open window_start_ms=55001 window_end_ms=55101 at_ms=55003
+ts_ms=55103 [scheduling] visibility_window_transition state=closed window_start_ms=55001 window_end_ms=55101 at_ms=55103
+ts_ms=55203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=55203 expected_start=55202 drift_ms=1 budget_ms=1
+ts_ms=55203 [health] ok event_at=55203 alerts=[false, false, false]
+ts_ms=55253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=55253 expected_start=55252 drift_ms=1 budget_ms=1
+ts_ms=55303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=55303 expected_start=55302 drift_ms=1 budget_ms=1
+ts_ms=55403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=55403 expected_start=55402 drift_ms=1 budget_ms=1
+ts_ms=55403 [health] ok event_at=55403 alerts=[false, false, false]
+ts_ms=55453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=55453 expected_start=55452 drift_ms=1 budget_ms=1
+ts_ms=55503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=55503 expected_start=55502 drift_ms=1 budget_ms=1
+ts_ms=55503 [scheduling] visibility_window_transition state=open window_start_ms=55501 window_end_ms=55601 at_ms=55503
+ts_ms=55602 [health] ok event_at=55602 alerts=[false, false, false]
+ts_ms=55603 [scheduling] visibility_window_transition state=closed window_start_ms=55501 window_end_ms=55601 at_ms=55603
+ts_ms=55653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=55653 expected_start=55652 drift_ms=1 budget_ms=1
+ts_ms=55802 [health] ok event_at=55802 alerts=[false, false, false]
+ts_ms=55953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=55953 expected_start=55952 drift_ms=1 budget_ms=1
+ts_ms=56002 [health] ok event_at=56002 alerts=[false, false, false]
+ts_ms=56002 [scheduling] visibility_window_transition state=open window_start_ms=56001 window_end_ms=56101 at_ms=56002
+ts_ms=56103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=56103 expected_start=56102 drift_ms=1 budget_ms=1
+ts_ms=56103 [scheduling] visibility_window_transition state=closed window_start_ms=56001 window_end_ms=56101 at_ms=56103
+ts_ms=56203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=56203 expected_start=56202 drift_ms=1 budget_ms=1
+ts_ms=56203 [health] ok event_at=56203 alerts=[false, false, false]
+ts_ms=56253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=56253 expected_start=56252 drift_ms=1 budget_ms=1
+ts_ms=56353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=56353 expected_start=56352 drift_ms=1 budget_ms=1
+ts_ms=56402 [health] ok event_at=56402 alerts=[false, false, false]
+ts_ms=56503 [scheduling] visibility_window_transition state=open window_start_ms=56501 window_end_ms=56601 at_ms=56503
+ts_ms=56553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=56553 expected_start=56552 drift_ms=1 budget_ms=1
+ts_ms=56602 [health] ok event_at=56602 alerts=[false, false, false]
+ts_ms=56602 [scheduling] visibility_window_transition state=closed window_start_ms=56501 window_end_ms=56601 at_ms=56602
+ts_ms=56653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=56653 expected_start=56652 drift_ms=1 budget_ms=1
+ts_ms=56753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=56753 expected_start=56752 drift_ms=1 budget_ms=1
+ts_ms=56802 [health] ok event_at=56802 alerts=[false, false, false]
+ts_ms=56853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=56853 expected_start=56852 drift_ms=1 budget_ms=1
+ts_ms=56903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=56903 expected_start=56902 drift_ms=1 budget_ms=1
+ts_ms=57002 [health] ok event_at=57002 alerts=[false, false, false]
+ts_ms=57003 [scheduling] visibility_window_transition state=open window_start_ms=57001 window_end_ms=57101 at_ms=57003
+ts_ms=57103 [scheduling] visibility_window_transition state=closed window_start_ms=57001 window_end_ms=57101 at_ms=57103
+ts_ms=57203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=57203 expected_start=57202 drift_ms=1 budget_ms=1
+ts_ms=57203 [health] ok event_at=57203 alerts=[false, false, false]
+ts_ms=57253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=57253 expected_start=57252 drift_ms=1 budget_ms=1
+ts_ms=57303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=57303 expected_start=57302 drift_ms=1 budget_ms=1
+ts_ms=57402 [health] ok event_at=57402 alerts=[false, false, false]
+ts_ms=57453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=57453 expected_start=57452 drift_ms=1 budget_ms=1
+ts_ms=57503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=57503 expected_start=57502 drift_ms=1 budget_ms=1
+ts_ms=57503 [scheduling] visibility_window_transition state=open window_start_ms=57501 window_end_ms=57601 at_ms=57503
+ts_ms=57553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=57553 expected_start=57552 drift_ms=1 budget_ms=1
+ts_ms=57603 [health] ok event_at=57603 alerts=[false, false, false]
+ts_ms=57603 [scheduling] visibility_window_transition state=closed window_start_ms=57501 window_end_ms=57601 at_ms=57603
+ts_ms=57703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=57703 expected_start=57702 drift_ms=1 budget_ms=1
+ts_ms=57753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=57753 expected_start=57752 drift_ms=1 budget_ms=1
+ts_ms=57802 [health] ok event_at=57802 alerts=[false, false, false]
+ts_ms=57853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=57853 expected_start=57852 drift_ms=1 budget_ms=1
+ts_ms=57903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=57903 expected_start=57902 drift_ms=1 budget_ms=1
+ts_ms=58003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58003 expected_start=58002 drift_ms=1 budget_ms=1
+ts_ms=58003 [health] ok event_at=58003 alerts=[false, false, false]
+ts_ms=58003 [scheduling] visibility_window_transition state=open window_start_ms=58001 window_end_ms=58101 at_ms=58003
+ts_ms=58053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58053 expected_start=58052 drift_ms=1 budget_ms=1
+ts_ms=58102 [scheduling] visibility_window_transition state=closed window_start_ms=58001 window_end_ms=58101 at_ms=58102
+ts_ms=58153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58153 expected_start=58152 drift_ms=1 budget_ms=1
+ts_ms=58203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58203 expected_start=58202 drift_ms=1 budget_ms=1
+ts_ms=58203 [health] ok event_at=58203 alerts=[false, false, false]
+ts_ms=58253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58253 expected_start=58252 drift_ms=1 budget_ms=1
+ts_ms=58353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58353 expected_start=58352 drift_ms=1 budget_ms=1
+ts_ms=58403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58403 expected_start=58402 drift_ms=1 budget_ms=1
+ts_ms=58403 [health] ok event_at=58403 alerts=[false, false, false]
+ts_ms=58503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58503 expected_start=58502 drift_ms=1 budget_ms=1
+ts_ms=58503 [scheduling] visibility_window_transition state=open window_start_ms=58501 window_end_ms=58601 at_ms=58503
+ts_ms=58602 [health] ok event_at=58602 alerts=[false, false, false]
+ts_ms=58603 [scheduling] visibility_window_transition state=closed window_start_ms=58501 window_end_ms=58601 at_ms=58603
+ts_ms=58653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58653 expected_start=58652 drift_ms=1 budget_ms=1
+ts_ms=58753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58753 expected_start=58752 drift_ms=1 budget_ms=1
+ts_ms=58803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58803 expected_start=58802 drift_ms=1 budget_ms=1
+ts_ms=58803 [health] ok event_at=58803 alerts=[false, false, false]
+ts_ms=58953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=58953 expected_start=58952 drift_ms=1 budget_ms=1
+ts_ms=59002 [health] ok event_at=59002 alerts=[false, false, false]
+ts_ms=59002 [scheduling] visibility_window_transition state=open window_start_ms=59001 window_end_ms=59101 at_ms=59002
+ts_ms=59053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59053 expected_start=59052 drift_ms=1 budget_ms=1
+ts_ms=59102 [scheduling] visibility_window_transition state=closed window_start_ms=59001 window_end_ms=59101 at_ms=59102
+ts_ms=59203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59203 expected_start=59202 drift_ms=1 budget_ms=1
+ts_ms=59203 [health] ok event_at=59203 alerts=[false, false, false]
+ts_ms=59303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59303 expected_start=59302 drift_ms=1 budget_ms=1
+ts_ms=59353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59353 expected_start=59352 drift_ms=1 budget_ms=1
+ts_ms=59403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59403 expected_start=59402 drift_ms=1 budget_ms=1
+ts_ms=59403 [health] ok event_at=59403 alerts=[false, false, false]
+ts_ms=59453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59453 expected_start=59452 drift_ms=1 budget_ms=1
+ts_ms=59503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59503 expected_start=59502 drift_ms=1 budget_ms=1
+ts_ms=59503 [scheduling] visibility_window_transition state=open window_start_ms=59501 window_end_ms=59601 at_ms=59503
+ts_ms=59553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59553 expected_start=59552 drift_ms=1 budget_ms=1
+ts_ms=59602 [health] ok event_at=59602 alerts=[false, false, false]
+ts_ms=59602 [scheduling] visibility_window_transition state=closed window_start_ms=59501 window_end_ms=59601 at_ms=59602
+ts_ms=59653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59653 expected_start=59652 drift_ms=1 budget_ms=1
+ts_ms=59753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59753 expected_start=59752 drift_ms=1 budget_ms=1
+ts_ms=59803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=59803 expected_start=59802 drift_ms=1 budget_ms=1
+ts_ms=59803 [health] ok event_at=59803 alerts=[false, false, false]
+ts_ms=60002 [benchmarking] cycle=2 eval thermal_sensor_jitter_max_ms=3 thermal_sensor_fault_jitter_max_ms=7 thermal_task_jitter_max_ms=4 compression_task_jitter_max_ms=5 health_task_jitter_max_ms=2 antenna_task_jitter_max_ms=1 drift_max_ms=5 drift_avg_ms=-0.15 drift_late_starts=804 deadline_violations=527 start_delay_violations=527 completion_delay_violations=0 prepare_deadline_violations=0 visibility_prepare_deadline_violations=0 cpu_util_avg=0.9% e2e_latency_max_ms=1 e2e_latency_avg_ms=0.04 tx_queue_latency_max_ms=1 tx_queue_latency_avg_ms=0.03 peak_buffer_fill_rate_percent=1 dropped_samples=0 compression_overload_skips=0 degraded_mode_enter_count=0 missed_communication_count=0
+ts_ms=60002 [health] ok event_at=60002 alerts=[false, false, false]
+ts_ms=60003 [benchmarking] cycle=2 fault injected sensor_id=0 kind=Delayed
+ts_ms=60003 [scheduling] visibility_window_transition state=open window_start_ms=60001 window_end_ms=60101 at_ms=60003
+ts_ms=60053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60053 expected_start=60052 drift_ms=1 budget_ms=1
+ts_ms=60053 [safety] alert sensor_id=0 consecutive_miss=3 event_at=60053
+ts_ms=60053 [benchmarking] cycle=2 fault cleared, waiting for recovery metric
+ts_ms=60055 [safety] alert sensor_id=0 consecutive_miss=3 event_at=60055
+ts_ms=60055 [safety] recovered sensor_id=0 event_at=60055
+ts_ms=60055 [benchmarking] cycle=2 recovery sensor_id=0 duration_ms=2 fault_at=60053 recovered_at=60055 result=OK
+ts_ms=60103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60103 expected_start=60102 drift_ms=1 budget_ms=1
+ts_ms=60103 [scheduling] visibility_window_transition state=closed window_start_ms=60001 window_end_ms=60101 at_ms=60103
+ts_ms=60153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60153 expected_start=60152 drift_ms=1 budget_ms=1
+ts_ms=60203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60203 expected_start=60202 drift_ms=1 budget_ms=1
+ts_ms=60203 [health] ok event_at=60203 alerts=[false, false, false]
+ts_ms=60253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60253 expected_start=60252 drift_ms=1 budget_ms=1
+ts_ms=60303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60303 expected_start=60302 drift_ms=1 budget_ms=1
+ts_ms=60353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60353 expected_start=60352 drift_ms=1 budget_ms=1
+ts_ms=60403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60403 expected_start=60402 drift_ms=1 budget_ms=1
+ts_ms=60403 [health] ok event_at=60403 alerts=[false, false, false]
+ts_ms=60453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60453 expected_start=60452 drift_ms=1 budget_ms=1
+ts_ms=60503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60503 expected_start=60502 drift_ms=1 budget_ms=1
+ts_ms=60503 [scheduling] visibility_window_transition state=open window_start_ms=60501 window_end_ms=60601 at_ms=60503
+ts_ms=60603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60603 expected_start=60602 drift_ms=1 budget_ms=1
+ts_ms=60603 [health] ok event_at=60603 alerts=[false, false, false]
+ts_ms=60604 [scheduling] visibility_window_transition state=closed window_start_ms=60501 window_end_ms=60601 at_ms=60604
+ts_ms=60753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60753 expected_start=60752 drift_ms=1 budget_ms=1
+ts_ms=60802 [health] ok event_at=60802 alerts=[false, false, false]
+ts_ms=60853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=60853 expected_start=60852 drift_ms=1 budget_ms=1
+ts_ms=61003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=61003 expected_start=61002 drift_ms=1 budget_ms=1
+ts_ms=61003 [health] ok event_at=61003 alerts=[false, false, false]
+ts_ms=61003 [scheduling] visibility_window_transition state=open window_start_ms=61001 window_end_ms=61101 at_ms=61003
+ts_ms=61053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=61053 expected_start=61052 drift_ms=1 budget_ms=1
+ts_ms=61102 [scheduling] visibility_window_transition state=closed window_start_ms=61001 window_end_ms=61101 at_ms=61102
+ts_ms=61202 [health] ok event_at=61202 alerts=[false, false, false]
+ts_ms=61253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=61253 expected_start=61252 drift_ms=1 budget_ms=1
+ts_ms=61353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=61353 expected_start=61352 drift_ms=1 budget_ms=1
+ts_ms=61403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=61403 expected_start=61402 drift_ms=1 budget_ms=1
+ts_ms=61403 [health] ok event_at=61403 alerts=[false, false, false]
+ts_ms=61453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=61453 expected_start=61452 drift_ms=1 budget_ms=1
+ts_ms=61502 [scheduling] visibility_window_transition state=open window_start_ms=61501 window_end_ms=61601 at_ms=61502
+ts_ms=61603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=61603 expected_start=61602 drift_ms=1 budget_ms=1
+ts_ms=61603 [health] ok event_at=61603 alerts=[false, false, false]
+ts_ms=61603 [scheduling] visibility_window_transition state=closed window_start_ms=61501 window_end_ms=61601 at_ms=61603
+ts_ms=61703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=61703 expected_start=61702 drift_ms=1 budget_ms=1
+ts_ms=61802 [health] ok event_at=61802 alerts=[false, false, false]
+ts_ms=62002 [health] ok event_at=62002 alerts=[false, false, false]
+ts_ms=62002 [scheduling] visibility_window_transition state=open window_start_ms=62001 window_end_ms=62101 at_ms=62002
+ts_ms=62053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62053 expected_start=62052 drift_ms=1 budget_ms=1
+ts_ms=62103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62103 expected_start=62102 drift_ms=1 budget_ms=1
+ts_ms=62103 [scheduling] visibility_window_transition state=closed window_start_ms=62001 window_end_ms=62101 at_ms=62103
+ts_ms=62203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62203 expected_start=62202 drift_ms=1 budget_ms=1
+ts_ms=62203 [health] ok event_at=62203 alerts=[false, false, false]
+ts_ms=62253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62253 expected_start=62252 drift_ms=1 budget_ms=1
+ts_ms=62353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62353 expected_start=62352 drift_ms=1 budget_ms=1
+ts_ms=62403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62403 expected_start=62402 drift_ms=1 budget_ms=1
+ts_ms=62403 [health] ok event_at=62403 alerts=[false, false, false]
+ts_ms=62453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62453 expected_start=62452 drift_ms=1 budget_ms=1
+ts_ms=62503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62503 expected_start=62502 drift_ms=1 budget_ms=1
+ts_ms=62503 [scheduling] visibility_window_transition state=open window_start_ms=62501 window_end_ms=62601 at_ms=62503
+ts_ms=62603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62603 expected_start=62602 drift_ms=1 budget_ms=1
+ts_ms=62603 [health] ok event_at=62603 alerts=[false, false, false]
+ts_ms=62604 [scheduling] visibility_window_transition state=closed window_start_ms=62501 window_end_ms=62601 at_ms=62604
+ts_ms=62703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62703 expected_start=62702 drift_ms=1 budget_ms=1
+ts_ms=62803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62803 expected_start=62802 drift_ms=1 budget_ms=1
+ts_ms=62803 [health] ok event_at=62803 alerts=[false, false, false]
+ts_ms=62953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=62953 expected_start=62952 drift_ms=1 budget_ms=1
+ts_ms=63001 [health] ok event_at=63001 alerts=[false, false, false]
+ts_ms=63002 [scheduling] visibility_window_transition state=open window_start_ms=63001 window_end_ms=63101 at_ms=63002
+ts_ms=63103 [scheduling] visibility_window_transition state=closed window_start_ms=63001 window_end_ms=63101 at_ms=63103
+ts_ms=63203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=63203 expected_start=63202 drift_ms=1 budget_ms=1
+ts_ms=63203 [health] ok event_at=63203 alerts=[false, false, false]
+ts_ms=63253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=63253 expected_start=63252 drift_ms=1 budget_ms=1
+ts_ms=63303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=63303 expected_start=63302 drift_ms=1 budget_ms=1
+ts_ms=63402 [health] ok event_at=63402 alerts=[false, false, false]
+ts_ms=63453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=63453 expected_start=63452 drift_ms=1 budget_ms=1
+ts_ms=63502 [scheduling] visibility_window_transition state=open window_start_ms=63501 window_end_ms=63601 at_ms=63502
+ts_ms=63553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=63553 expected_start=63552 drift_ms=1 budget_ms=1
+ts_ms=63602 [health] ok event_at=63602 alerts=[false, false, false]
+ts_ms=63603 [scheduling] visibility_window_transition state=closed window_start_ms=63501 window_end_ms=63601 at_ms=63603
+ts_ms=63703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=63703 expected_start=63702 drift_ms=1 budget_ms=1
+ts_ms=63803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=63803 expected_start=63802 drift_ms=1 budget_ms=1
+ts_ms=63803 [health] ok event_at=63803 alerts=[false, false, false]
+ts_ms=63854 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=63854 expected_start=63852 drift_ms=2 budget_ms=1
+ts_ms=63903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=63903 expected_start=63902 drift_ms=1 budget_ms=1
+ts_ms=64001 [health] ok event_at=64001 alerts=[false, false, false]
+ts_ms=64002 [scheduling] visibility_window_transition state=open window_start_ms=64001 window_end_ms=64101 at_ms=64002
+ts_ms=64101 [scheduling] visibility_window_transition state=closed window_start_ms=64001 window_end_ms=64101 at_ms=64101
+ts_ms=64153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=64153 expected_start=64152 drift_ms=1 budget_ms=1
+ts_ms=64202 [health] ok event_at=64202 alerts=[false, false, false]
+ts_ms=64303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=64303 expected_start=64302 drift_ms=1 budget_ms=1
+ts_ms=64402 [health] ok event_at=64402 alerts=[false, false, false]
+ts_ms=64503 [scheduling] visibility_window_transition state=open window_start_ms=64501 window_end_ms=64601 at_ms=64503
+ts_ms=64602 [health] ok event_at=64602 alerts=[false, false, false]
+ts_ms=64602 [scheduling] visibility_window_transition state=closed window_start_ms=64501 window_end_ms=64601 at_ms=64602
+ts_ms=64753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=64753 expected_start=64752 drift_ms=1 budget_ms=1
+ts_ms=64803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=64803 expected_start=64802 drift_ms=1 budget_ms=1
+ts_ms=64803 [health] ok event_at=64803 alerts=[false, false, false]
+ts_ms=64903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=64903 expected_start=64902 drift_ms=1 budget_ms=1
+ts_ms=65003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65003 expected_start=65002 drift_ms=1 budget_ms=1
+ts_ms=65003 [health] ok event_at=65003 alerts=[false, false, false]
+ts_ms=65003 [scheduling] visibility_window_transition state=open window_start_ms=65001 window_end_ms=65101 at_ms=65003
+ts_ms=65053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65053 expected_start=65052 drift_ms=1 budget_ms=1
+ts_ms=65102 [scheduling] visibility_window_transition state=closed window_start_ms=65001 window_end_ms=65101 at_ms=65102
+ts_ms=65202 [health] ok event_at=65202 alerts=[false, false, false]
+ts_ms=65253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65253 expected_start=65252 drift_ms=1 budget_ms=1
+ts_ms=65303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65303 expected_start=65302 drift_ms=1 budget_ms=1
+ts_ms=65353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65353 expected_start=65352 drift_ms=1 budget_ms=1
+ts_ms=65403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65403 expected_start=65402 drift_ms=1 budget_ms=1
+ts_ms=65403 [health] ok event_at=65403 alerts=[false, false, false]
+ts_ms=65453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65453 expected_start=65452 drift_ms=1 budget_ms=1
+ts_ms=65502 [scheduling] visibility_window_transition state=open window_start_ms=65501 window_end_ms=65601 at_ms=65502
+ts_ms=65553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65553 expected_start=65552 drift_ms=1 budget_ms=1
+ts_ms=65602 [health] ok event_at=65602 alerts=[false, false, false]
+ts_ms=65603 [scheduling] visibility_window_transition state=closed window_start_ms=65501 window_end_ms=65601 at_ms=65603
+ts_ms=65653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65653 expected_start=65652 drift_ms=1 budget_ms=1
+ts_ms=65703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65703 expected_start=65702 drift_ms=1 budget_ms=1
+ts_ms=65802 [health] ok event_at=65802 alerts=[false, false, false]
+ts_ms=65853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=65853 expected_start=65852 drift_ms=1 budget_ms=1
+ts_ms=66002 [health] ok event_at=66002 alerts=[false, false, false]
+ts_ms=66003 [scheduling] visibility_window_transition state=open window_start_ms=66001 window_end_ms=66101 at_ms=66003
+ts_ms=66103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=66103 expected_start=66102 drift_ms=1 budget_ms=1
+ts_ms=66103 [scheduling] visibility_window_transition state=closed window_start_ms=66001 window_end_ms=66101 at_ms=66103
+ts_ms=66153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=66153 expected_start=66152 drift_ms=1 budget_ms=1
+ts_ms=66202 [health] ok event_at=66202 alerts=[false, false, false]
+ts_ms=66303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=66303 expected_start=66302 drift_ms=1 budget_ms=1
+ts_ms=66353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=66353 expected_start=66352 drift_ms=1 budget_ms=1
+ts_ms=66403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=66403 expected_start=66402 drift_ms=1 budget_ms=1
+ts_ms=66403 [health] ok event_at=66403 alerts=[false, false, false]
+ts_ms=66502 [scheduling] visibility_window_transition state=open window_start_ms=66501 window_end_ms=66601 at_ms=66502
+ts_ms=66602 [health] ok event_at=66602 alerts=[false, false, false]
+ts_ms=66602 [scheduling] visibility_window_transition state=closed window_start_ms=66501 window_end_ms=66601 at_ms=66602
+ts_ms=66653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=66653 expected_start=66652 drift_ms=1 budget_ms=1
+ts_ms=66703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=66703 expected_start=66702 drift_ms=1 budget_ms=1
+ts_ms=66753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=66753 expected_start=66752 drift_ms=1 budget_ms=1
+ts_ms=66802 [health] ok event_at=66802 alerts=[false, false, false]
+ts_ms=66903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=66903 expected_start=66902 drift_ms=1 budget_ms=1
+ts_ms=67002 [health] ok event_at=67002 alerts=[false, false, false]
+ts_ms=67003 [scheduling] visibility_window_transition state=open window_start_ms=67001 window_end_ms=67101 at_ms=67003
+ts_ms=67053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=67053 expected_start=67052 drift_ms=1 budget_ms=1
+ts_ms=67103 [scheduling] visibility_window_transition state=closed window_start_ms=67001 window_end_ms=67101 at_ms=67103
+ts_ms=67203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=67203 expected_start=67202 drift_ms=1 budget_ms=1
+ts_ms=67203 [health] ok event_at=67203 alerts=[false, false, false]
+ts_ms=67303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=67303 expected_start=67302 drift_ms=1 budget_ms=1
+ts_ms=67353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=67353 expected_start=67352 drift_ms=1 budget_ms=1
+ts_ms=67403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=67403 expected_start=67402 drift_ms=1 budget_ms=1
+ts_ms=67403 [health] ok event_at=67403 alerts=[false, false, false]
+ts_ms=67503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=67503 expected_start=67502 drift_ms=1 budget_ms=1
+ts_ms=67503 [scheduling] visibility_window_transition state=open window_start_ms=67501 window_end_ms=67601 at_ms=67503
+ts_ms=67603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=67603 expected_start=67602 drift_ms=1 budget_ms=1
+ts_ms=67603 [health] ok event_at=67603 alerts=[false, false, false]
+ts_ms=67603 [scheduling] visibility_window_transition state=closed window_start_ms=67501 window_end_ms=67601 at_ms=67603
+ts_ms=67802 [health] ok event_at=67802 alerts=[false, false, false]
+ts_ms=67903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=67903 expected_start=67902 drift_ms=1 budget_ms=1
+ts_ms=67953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=67953 expected_start=67952 drift_ms=1 budget_ms=1
+ts_ms=68003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=68003 expected_start=68002 drift_ms=1 budget_ms=1
+ts_ms=68003 [health] ok event_at=68003 alerts=[false, false, false]
+ts_ms=68003 [scheduling] visibility_window_transition state=open window_start_ms=68001 window_end_ms=68101 at_ms=68003
+ts_ms=68053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=68053 expected_start=68052 drift_ms=1 budget_ms=1
+ts_ms=68102 [scheduling] visibility_window_transition state=closed window_start_ms=68001 window_end_ms=68101 at_ms=68102
+ts_ms=68153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=68153 expected_start=68152 drift_ms=1 budget_ms=1
+ts_ms=68202 [health] ok event_at=68202 alerts=[false, false, false]
+ts_ms=68402 [health] ok event_at=68402 alerts=[false, false, false]
+ts_ms=68503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=68503 expected_start=68502 drift_ms=1 budget_ms=1
+ts_ms=68503 [scheduling] visibility_window_transition state=open window_start_ms=68501 window_end_ms=68601 at_ms=68503
+ts_ms=68602 [health] ok event_at=68602 alerts=[false, false, false]
+ts_ms=68603 [scheduling] visibility_window_transition state=closed window_start_ms=68501 window_end_ms=68601 at_ms=68603
+ts_ms=68753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=68753 expected_start=68752 drift_ms=1 budget_ms=1
+ts_ms=68802 [health] ok event_at=68802 alerts=[false, false, false]
+ts_ms=68903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=68903 expected_start=68902 drift_ms=1 budget_ms=1
+ts_ms=68953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=68953 expected_start=68952 drift_ms=1 budget_ms=1
+ts_ms=69003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=69003 expected_start=69002 drift_ms=1 budget_ms=1
+ts_ms=69003 [health] ok event_at=69003 alerts=[false, false, false]
+ts_ms=69003 [scheduling] visibility_window_transition state=open window_start_ms=69001 window_end_ms=69101 at_ms=69003
+ts_ms=69103 [scheduling] visibility_window_transition state=closed window_start_ms=69001 window_end_ms=69101 at_ms=69103
+ts_ms=69202 [health] ok event_at=69202 alerts=[false, false, false]
+ts_ms=69253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=69253 expected_start=69252 drift_ms=1 budget_ms=1
+ts_ms=69303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=69303 expected_start=69302 drift_ms=1 budget_ms=1
+ts_ms=69402 [health] ok event_at=69402 alerts=[false, false, false]
+ts_ms=69453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=69453 expected_start=69452 drift_ms=1 budget_ms=1
+ts_ms=69503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=69503 expected_start=69502 drift_ms=1 budget_ms=1
+ts_ms=69503 [scheduling] visibility_window_transition state=open window_start_ms=69501 window_end_ms=69601 at_ms=69503
+ts_ms=69603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=69603 expected_start=69602 drift_ms=1 budget_ms=1
+ts_ms=69603 [health] ok event_at=69603 alerts=[false, false, false]
+ts_ms=69603 [scheduling] visibility_window_transition state=closed window_start_ms=69501 window_end_ms=69601 at_ms=69603
+ts_ms=69753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=69753 expected_start=69752 drift_ms=1 budget_ms=1
+ts_ms=69803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=69803 expected_start=69802 drift_ms=1 budget_ms=1
+ts_ms=69803 [health] ok event_at=69803 alerts=[false, false, false]
+ts_ms=69903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=69903 expected_start=69902 drift_ms=1 budget_ms=1
+ts_ms=70003 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=70003 expected_start=70002 drift_ms=1 budget_ms=1
+ts_ms=70003 [health] ok event_at=70003 alerts=[false, false, false]
+ts_ms=70003 [scheduling] visibility_window_transition state=open window_start_ms=70001 window_end_ms=70101 at_ms=70003
+ts_ms=70053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=70053 expected_start=70052 drift_ms=1 budget_ms=1
+ts_ms=70103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=70103 expected_start=70102 drift_ms=1 budget_ms=1
+ts_ms=70103 [scheduling] visibility_window_transition state=closed window_start_ms=70001 window_end_ms=70101 at_ms=70103
+ts_ms=70203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=70203 expected_start=70202 drift_ms=1 budget_ms=1
+ts_ms=70203 [health] ok event_at=70203 alerts=[false, false, false]
+ts_ms=70303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=70303 expected_start=70302 drift_ms=1 budget_ms=1
+ts_ms=70403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=70403 expected_start=70402 drift_ms=1 budget_ms=1
+ts_ms=70403 [health] ok event_at=70403 alerts=[false, false, false]
+ts_ms=70453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=70453 expected_start=70452 drift_ms=1 budget_ms=1
+ts_ms=70503 [scheduling] visibility_window_transition state=open window_start_ms=70501 window_end_ms=70601 at_ms=70503
+ts_ms=70602 [health] ok event_at=70602 alerts=[false, false, false]
+ts_ms=70603 [scheduling] visibility_window_transition state=closed window_start_ms=70501 window_end_ms=70601 at_ms=70603
+ts_ms=70753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=70753 expected_start=70752 drift_ms=1 budget_ms=1
+ts_ms=70802 [health] ok event_at=70802 alerts=[false, false, false]
+ts_ms=70903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=70903 expected_start=70902 drift_ms=1 budget_ms=1
+ts_ms=71010 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=71010 expected_start=71002 drift_ms=8 budget_ms=1
+ts_ms=71010 [scheduling] deadline_violation kind=StartDelay task_kind=Compression at=71010 expected_start=71003 drift_ms=7 budget_ms=3
+ts_ms=71010 [health] ok event_at=71010 alerts=[false, false, false]
+ts_ms=71010 [scheduling] deadline_violation kind=StartDelay task_kind=Health at=71010 expected_start=71002 drift_ms=8 budget_ms=3
+ts_ms=71011 [scheduling] deadline_violation kind=StartDelay task_kind=Antenna at=71011 expected_start=71002 drift_ms=9 budget_ms=3
+ts_ms=71011 [scheduling] visibility_window_transition state=open window_start_ms=71001 window_end_ms=71101 at_ms=71011
+ts_ms=71102 [scheduling] visibility_window_transition state=closed window_start_ms=71001 window_end_ms=71101 at_ms=71102
+ts_ms=71153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=71153 expected_start=71152 drift_ms=1 budget_ms=1
+ts_ms=71203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=71203 expected_start=71202 drift_ms=1 budget_ms=1
+ts_ms=71203 [health] ok event_at=71203 alerts=[false, false, false]
+ts_ms=71303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=71303 expected_start=71302 drift_ms=1 budget_ms=1
+ts_ms=71403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=71403 expected_start=71402 drift_ms=1 budget_ms=1
+ts_ms=71403 [health] ok event_at=71403 alerts=[false, false, false]
+ts_ms=71502 [scheduling] visibility_window_transition state=open window_start_ms=71501 window_end_ms=71601 at_ms=71502
+ts_ms=71602 [health] ok event_at=71602 alerts=[false, false, false]
+ts_ms=71602 [scheduling] visibility_window_transition state=closed window_start_ms=71501 window_end_ms=71601 at_ms=71602
+ts_ms=71653 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=71653 expected_start=71652 drift_ms=1 budget_ms=1
+ts_ms=71802 [health] ok event_at=71802 alerts=[false, false, false]
+ts_ms=71853 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=71853 expected_start=71852 drift_ms=1 budget_ms=1
+ts_ms=72002 [health] ok event_at=72002 alerts=[false, false, false]
+ts_ms=72002 [scheduling] visibility_window_transition state=open window_start_ms=72001 window_end_ms=72101 at_ms=72002
+ts_ms=72103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=72103 expected_start=72102 drift_ms=1 budget_ms=1
+ts_ms=72103 [scheduling] visibility_window_transition state=closed window_start_ms=72001 window_end_ms=72101 at_ms=72103
+ts_ms=72153 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=72153 expected_start=72152 drift_ms=1 budget_ms=1
+ts_ms=72202 [health] ok event_at=72202 alerts=[false, false, false]
+ts_ms=72253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=72253 expected_start=72252 drift_ms=1 budget_ms=1
+ts_ms=72303 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=72303 expected_start=72302 drift_ms=1 budget_ms=1
+ts_ms=72402 [health] ok event_at=72402 alerts=[false, false, false]
+ts_ms=72503 [scheduling] visibility_window_transition state=open window_start_ms=72501 window_end_ms=72601 at_ms=72503
+ts_ms=72603 [health] ok event_at=72603 alerts=[false, false, false]
+ts_ms=72603 [scheduling] visibility_window_transition state=closed window_start_ms=72501 window_end_ms=72601 at_ms=72603
+ts_ms=72659 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=72659 expected_start=72652 drift_ms=7 budget_ms=1
+ts_ms=72659 [scheduling] deadline_violation kind=StartDelay task_kind=Compression at=72659 expected_start=72653 drift_ms=6 budget_ms=3
+ts_ms=72663 [scheduling] deadline_violation kind=CompletionDelay task_kind=Thermal at=72663 expected_completion=72662
+ts_ms=72703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=72703 expected_start=72702 drift_ms=1 budget_ms=1
+ts_ms=72802 [health] ok event_at=72802 alerts=[false, false, false]
+ts_ms=72904 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=72904 expected_start=72902 drift_ms=2 budget_ms=1
+ts_ms=73002 [health] ok event_at=73002 alerts=[false, false, false]
+ts_ms=73002 [scheduling] visibility_window_transition state=open window_start_ms=73001 window_end_ms=73101 at_ms=73002
+ts_ms=73053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=73053 expected_start=73052 drift_ms=1 budget_ms=1
+ts_ms=73103 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=73103 expected_start=73102 drift_ms=1 budget_ms=1
+ts_ms=73103 [scheduling] visibility_window_transition state=closed window_start_ms=73001 window_end_ms=73101 at_ms=73103
+ts_ms=73203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=73203 expected_start=73202 drift_ms=1 budget_ms=1
+ts_ms=73203 [health] ok event_at=73203 alerts=[false, false, false]
+ts_ms=73353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=73353 expected_start=73352 drift_ms=1 budget_ms=1
+ts_ms=73402 [health] ok event_at=73402 alerts=[false, false, false]
+ts_ms=73503 [scheduling] visibility_window_transition state=open window_start_ms=73501 window_end_ms=73601 at_ms=73503
+ts_ms=73602 [health] ok event_at=73602 alerts=[false, false, false]
+ts_ms=73603 [scheduling] visibility_window_transition state=closed window_start_ms=73501 window_end_ms=73601 at_ms=73603
+ts_ms=73753 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=73753 expected_start=73752 drift_ms=1 budget_ms=1
+ts_ms=73803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=73803 expected_start=73802 drift_ms=1 budget_ms=1
+ts_ms=73803 [health] ok event_at=73803 alerts=[false, false, false]
+ts_ms=73903 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=73903 expected_start=73902 drift_ms=1 budget_ms=1
+ts_ms=74002 [health] ok event_at=74002 alerts=[false, false, false]
+ts_ms=74002 [scheduling] visibility_window_transition state=open window_start_ms=74001 window_end_ms=74101 at_ms=74002
+ts_ms=74053 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=74053 expected_start=74052 drift_ms=1 budget_ms=1
+ts_ms=74102 [scheduling] visibility_window_transition state=closed window_start_ms=74001 window_end_ms=74101 at_ms=74102
+ts_ms=74202 [health] ok event_at=74202 alerts=[false, false, false]
+ts_ms=74353 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=74353 expected_start=74352 drift_ms=1 budget_ms=1
+ts_ms=74403 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=74403 expected_start=74402 drift_ms=1 budget_ms=1
+ts_ms=74403 [health] ok event_at=74403 alerts=[false, false, false]
+ts_ms=74503 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=74503 expected_start=74502 drift_ms=1 budget_ms=1
+ts_ms=74503 [scheduling] visibility_window_transition state=open window_start_ms=74501 window_end_ms=74601 at_ms=74503
+ts_ms=74553 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=74553 expected_start=74552 drift_ms=1 budget_ms=1
+ts_ms=74603 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=74603 expected_start=74602 drift_ms=1 budget_ms=1
+ts_ms=74603 [health] ok event_at=74603 alerts=[false, false, false]
+ts_ms=74603 [scheduling] visibility_window_transition state=closed window_start_ms=74501 window_end_ms=74601 at_ms=74603
+ts_ms=74703 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=74703 expected_start=74702 drift_ms=1 budget_ms=1
+ts_ms=74803 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=74803 expected_start=74802 drift_ms=1 budget_ms=1
+ts_ms=74803 [health] ok event_at=74803 alerts=[false, false, false]
+ts_ms=74953 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=74953 expected_start=74952 drift_ms=1 budget_ms=1
+ts_ms=75002 [health] ok event_at=75002 alerts=[false, false, false]
+ts_ms=75003 [scheduling] visibility_window_transition state=open window_start_ms=75001 window_end_ms=75101 at_ms=75003
+ts_ms=75102 [scheduling] visibility_window_transition state=closed window_start_ms=75001 window_end_ms=75101 at_ms=75102
+ts_ms=75203 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=75203 expected_start=75202 drift_ms=1 budget_ms=1
+ts_ms=75203 [health] ok event_at=75203 alerts=[false, false, false]
+ts_ms=75253 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=75253 expected_start=75252 drift_ms=1 budget_ms=1
+ts_ms=75402 [health] ok event_at=75402 alerts=[false, false, false]
+ts_ms=75453 [scheduling] deadline_violation kind=StartDelay task_kind=Thermal at=75453 expected_start=75452 drift_ms=1 budget_ms=1
+ts_ms=75502 [scheduling] visibility_window_transition state=open window_start_ms=75501 window_end_ms=75601 at_ms=75502
+ts_ms=75602 [health] ok event_at=75602 alerts=[false, false, false]
+ts_ms=75603 [scheduling] visibility_window_transition state=closed window_start_ms=75501 window_end_ms=75601 at_ms=75603

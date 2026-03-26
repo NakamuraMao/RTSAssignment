@@ -7,7 +7,9 @@ use tokio::sync::{mpsc, watch};
 use tokio::time::timeout;
 
 use super::safety;
-use super::types::{BenchmarkMetrics, FaultInjectionState, FaultKind, RecoveryTimeMetric, SensorId};
+use super::types::{
+    BenchmarkMetrics, FaultInjectionState, FaultKind, RecoveryTimeMetric, SensorId,
+};
 
 const BENCH_INTERVAL_SECS: u64 = 60;
 const RECOVERY_WAIT_TIMEOUT_SECS: u64 = 5;
@@ -64,10 +66,25 @@ pub async fn run_benchmarking(
             } else {
                 m.thermal_sensor_fault_max_jitter_ms.to_string()
             };
-            let thermal_sched_drift_max = if m.thermal_scheduling_drift_ms == i64::MIN {
+            let thermal_task_jitter_max = if m.thermal_task_jitter_max_ms == i64::MIN {
                 "n/a".to_string()
             } else {
-                m.thermal_scheduling_drift_ms.to_string()
+                m.thermal_task_jitter_max_ms.to_string()
+            };
+            let compression_task_jitter_max = if m.compression_task_jitter_max_ms == i64::MIN {
+                "n/a".to_string()
+            } else {
+                m.compression_task_jitter_max_ms.to_string()
+            };
+            let health_task_jitter_max = if m.health_task_jitter_max_ms == i64::MIN {
+                "n/a".to_string()
+            } else {
+                m.health_task_jitter_max_ms.to_string()
+            };
+            let antenna_task_jitter_max = if m.antenna_task_jitter_max_ms == i64::MIN {
+                "n/a".to_string()
+            } else {
+                m.antenna_task_jitter_max_ms.to_string()
             };
             let drift_max = if m.drift_max_ms == i64::MIN {
                 "n/a".to_string()
@@ -75,15 +92,23 @@ pub async fn run_benchmarking(
                 m.drift_max_ms.to_string()
             };
             crate::ocs_ts_eprintln!(
-                "[benchmarking] cycle={} eval thermal_sensor_jitter_max_ms={} thermal_sensor_fault_jitter_max_ms={} thermal_sched_drift_max_ms={} drift_max_ms={} drift_avg_ms={:.2} drift_late_starts={} deadline_violations={} cpu_util_avg={:.1}% e2e_latency_max_ms={} e2e_latency_avg_ms={:.2} tx_queue_latency_max_ms={} tx_queue_latency_avg_ms={:.2} peak_buffer_fill_rate_percent={} dropped_samples={} compression_overload_skips={}",
+                "[benchmarking] cycle={} eval thermal_sensor_jitter_max_ms={} thermal_sensor_fault_jitter_max_ms={} thermal_task_jitter_max_ms={} compression_task_jitter_max_ms={} health_task_jitter_max_ms={} antenna_task_jitter_max_ms={} drift_max_ms={} drift_avg_ms={:.2} drift_late_starts={} deadline_violations={} start_delay_violations={} completion_delay_violations={} prepare_deadline_violations={} visibility_prepare_deadline_violations={} critical_jitter_violations={} cpu_util_avg={:.1}% e2e_latency_max_ms={} e2e_latency_avg_ms={:.2} tx_queue_latency_max_ms={} tx_queue_latency_avg_ms={:.2} peak_buffer_fill_rate_percent={} dropped_samples={} compression_overload_skips={} degraded_mode_enter_count={} missed_communication_count={}",
                 cycle,
                 sensor_jitter_max,
                 sensor_fault_jitter_max,
-                thermal_sched_drift_max,
+                thermal_task_jitter_max,
+                compression_task_jitter_max,
+                health_task_jitter_max,
+                antenna_task_jitter_max,
                 drift_max,
                 drift_avg_ms,
                 m.drift_late_start_count,
                 m.deadline_violations,
+                m.start_delay_violations,
+                m.completion_delay_violations,
+                m.prepare_deadline_violations,
+                m.visibility_prepare_deadline_violations,
+                m.critical_jitter_violation_count,
                 cpu_util_avg,
                 m.max_e2e_latency_ms,
                 e2e_latency_avg,
@@ -91,7 +116,9 @@ pub async fn run_benchmarking(
                 tx_queue_latency_avg,
                 m.peak_buffer_fill_rate_percent,
                 m.total_dropped_samples,
-                m.compression_overload_skip_count
+                m.compression_overload_skip_count,
+                m.degraded_mode_enter_count,
+                m.missed_communication_count
             );
         }
 
@@ -118,23 +145,17 @@ pub async fn run_benchmarking(
         );
 
         // 2. wait for alert (timeout after 5s for "true to become")
-        let alert_ok = timeout(
-            Duration::from_secs(ALERT_WAIT_TIMEOUT_SECS),
-            async {
-                while !alert_rx.borrow()[idx] {
-                    alert_rx.changed().await.map_err(|_| ())?;
-                }
-                Ok::<(), ()>(())
-            },
-        )
+        let alert_ok = timeout(Duration::from_secs(ALERT_WAIT_TIMEOUT_SECS), async {
+            while !alert_rx.borrow()[idx] {
+                alert_rx.changed().await.map_err(|_| ())?;
+            }
+            Ok::<(), ()>(())
+        })
         .await;
         let alert_ok = match alert_ok {
             Ok(Ok(())) => true,
             Ok(Err(_)) => {
-                crate::ocs_ts_eprintln!(
-                    "[benchmarking] cycle={} alert_rx closed",
-                    cycle
-                );
+                crate::ocs_ts_eprintln!("[benchmarking] cycle={} alert_rx closed", cycle);
                 false
             }
             Err(_) => {
@@ -161,25 +182,22 @@ pub async fn run_benchmarking(
         );
 
         // 4. wait for RecoveryTimeMetric (only accept the target sensor's, ignore others and re-recv)
-        let recv_result = timeout(
-            Duration::from_secs(RECOVERY_WAIT_TIMEOUT_SECS),
-            async {
-                loop {
-                    match metrics_rx.recv().await {
-                        Some(m) if m.sensor_id == target_sensor => break Some(m),
-                        Some(m) => {
-                            crate::ocs_ts_eprintln!(
-                                "[benchmarking] cycle={} ignored metric for sensor_id={} (expected {})",
-                                cycle,
-                                m.sensor_id.0,
-                                target_sensor.0
-                            );
-                        }
-                        None => break None,
+        let recv_result = timeout(Duration::from_secs(RECOVERY_WAIT_TIMEOUT_SECS), async {
+            loop {
+                match metrics_rx.recv().await {
+                    Some(m) if m.sensor_id == target_sensor => break Some(m),
+                    Some(m) => {
+                        crate::ocs_ts_eprintln!(
+                            "[benchmarking] cycle={} ignored metric for sensor_id={} (expected {})",
+                            cycle,
+                            m.sensor_id.0,
+                            target_sensor.0
+                        );
                     }
+                    None => break None,
                 }
-            },
-        )
+            }
+        })
         .await;
 
         match recv_result {
@@ -189,10 +207,10 @@ pub async fn run_benchmarking(
                     let mut m = bench_metrics.lock().expect("bench_metrics lock");
                     m.recovery_last_duration_ms = Some(metric.duration_ms);
                     m.recovery_count = m.recovery_count.saturating_add(1);
-                    m.recovery_sum_duration_ms =
-                        m.recovery_sum_duration_ms.saturating_add(metric.duration_ms);
-                    m.recovery_max_duration_ms =
-                        m.recovery_max_duration_ms.max(metric.duration_ms);
+                    m.recovery_sum_duration_ms = m
+                        .recovery_sum_duration_ms
+                        .saturating_add(metric.duration_ms);
+                    m.recovery_max_duration_ms = m.recovery_max_duration_ms.max(metric.duration_ms);
                     if metric.duration_ms > safety::RECOVERY_ABORT_THRESHOLD_MS {
                         m.recovery_over_abort_threshold_count =
                             m.recovery_over_abort_threshold_count.saturating_add(1);
@@ -209,10 +227,7 @@ pub async fn run_benchmarking(
                 );
             }
             Ok(None) => {
-                crate::ocs_ts_eprintln!(
-                    "[benchmarking] cycle={} metrics_rx closed",
-                    cycle
-                );
+                crate::ocs_ts_eprintln!("[benchmarking] cycle={} metrics_rx closed", cycle);
             }
             Err(_) => {
                 crate::ocs_ts_eprintln!(

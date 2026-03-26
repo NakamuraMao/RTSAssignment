@@ -1,0 +1,583 @@
+    Blocking waiting for file lock on artifact directory
+warning: fields `kind`, `deadline_abs_ms`, and `dispatched_at_ms` are never read
+   --> src/ocs/scheduling.rs:250:5
+    |
+249 | struct JobTrigger {
+    |        ---------- fields in this struct
+250 |     kind: TaskKind,
+    |     ^^^^
+...
+254 |     deadline_abs_ms: u64,
+    |     ^^^^^^^^^^^^^^^
+255 |     dispatched_at_ms: u64,
+    |     ^^^^^^^^^^^^^^^^
+    |
+    = note: `JobTrigger` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: multiple fields are never read
+   --> src/ocs/scheduling.rs:273:5
+    |
+272 | struct CompletionReport {
+    |        ---------------- fields in this struct
+273 |     kind: TaskKind,
+    |     ^^^^
+274 |     actual_start_ms: u64,
+    |     ^^^^^^^^^^^^^^^
+275 |     actual_end_ms: u64,
+    |     ^^^^^^^^^^^^^
+276 |     expected_completion_ms: u64,
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+277 |     /// (optional) release information for better logs
+278 |     release_ms: u64,
+    |     ^^^^^^^^^^
+279 |     /// For `StartDelay` log context
+280 |     expected_start_ms: u64,
+    |     ^^^^^^^^^^^^^^^^^
+281 |     /// For visibility-window rule
+282 |     vis_window_start_ms: u64,
+    |     ^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `CompletionReport` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: crate `RTSassignment` should have a snake case name
+  |
+  = help: convert the identifier to snake case: `rtsassignment`
+  = note: `#[warn(non_snake_case)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: `RTSassignment` (lib) generated 3 warnings
+   Compiling RTSassignment v0.1.0 (/Users/nakamuramao/RTSassignment)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.92s
+     Running `target/debug/ocs`
+ts_ms=0 [runtime] ocs runtime started (supervisor-managed)
+ts_ms=1 [uplink] listening udp addr=127.0.0.1:9001
+ts_ms=2 [benchmarking] cycle=1 eval thermal_sensor_jitter_max_ms=n/a thermal_sensor_fault_jitter_max_ms=n/a thermal_task_jitter_max_ms=n/a compression_task_jitter_max_ms=n/a health_task_jitter_max_ms=n/a antenna_task_jitter_max_ms=n/a drift_max_ms=n/a drift_avg_ms=0.00 drift_late_starts=0 deadline_violations=0 start_delay_violations=0 completion_delay_violations=0 prepare_deadline_violations=0 visibility_prepare_deadline_violations=0 critical_jitter_violations=0 cpu_util_avg=0.0% e2e_latency_max_ms=0 e2e_latency_avg_ms=0.00 tx_queue_latency_max_ms=0 tx_queue_latency_avg_ms=0.00 peak_buffer_fill_rate_percent=0 dropped_samples=0 compression_overload_skips=0 degraded_mode_enter_count=0 missed_communication_count=0
+ts_ms=3 [benchmarking] cycle=1 fault injected sensor_id=0 kind=Delayed
+ts_ms=29 [scheduling] visibility_window_transition state=open window_start_ms=1 window_end_ms=101 at_ms=29
+ts_ms=43 [safety] alert sensor_id=0 consecutive_miss=3 event_at=43
+ts_ms=43 [benchmarking] cycle=1 fault cleared, waiting for recovery metric
+ts_ms=44 [safety] recovered sensor_id=0 event_at=44
+ts_ms=44 [benchmarking] cycle=1 recovery sensor_id=0 duration_ms=2 fault_at=43 recovered_at=44 result=OK
+ts_ms=102 [scheduling] visibility_window_transition state=closed window_start_ms=1 window_end_ms=101 at_ms=102
+ts_ms=203 [health] ok event_at=203 alerts=[false, false, false]
+ts_ms=403 [health] ok event_at=403 alerts=[false, false, false]
+ts_ms=503 [scheduling] visibility_window_transition state=open window_start_ms=501 window_end_ms=601 at_ms=503
+ts_ms=602 [health] ok event_at=602 alerts=[false, false, false]
+ts_ms=602 [scheduling] visibility_window_transition state=closed window_start_ms=501 window_end_ms=601 at_ms=602
+ts_ms=802 [health] ok event_at=802 alerts=[false, false, false]
+ts_ms=1003 [health] ok event_at=1003 alerts=[false, false, false]
+ts_ms=1003 [scheduling] visibility_window_transition state=open window_start_ms=1001 window_end_ms=1101 at_ms=1003
+ts_ms=1102 [scheduling] visibility_window_transition state=closed window_start_ms=1001 window_end_ms=1101 at_ms=1102
+ts_ms=1202 [health] ok event_at=1202 alerts=[false, false, false]
+ts_ms=1402 [health] ok event_at=1402 alerts=[false, false, false]
+ts_ms=1503 [scheduling] visibility_window_transition state=open window_start_ms=1501 window_end_ms=1601 at_ms=1503
+ts_ms=1603 [health] ok event_at=1603 alerts=[false, false, false]
+ts_ms=1603 [scheduling] visibility_window_transition state=closed window_start_ms=1501 window_end_ms=1601 at_ms=1603
+ts_ms=1803 [health] ok event_at=1803 alerts=[false, false, false]
+ts_ms=2003 [health] ok event_at=2003 alerts=[false, false, false]
+ts_ms=2003 [scheduling] visibility_window_transition state=open window_start_ms=2001 window_end_ms=2101 at_ms=2003
+ts_ms=2103 [scheduling] visibility_window_transition state=closed window_start_ms=2001 window_end_ms=2101 at_ms=2103
+ts_ms=2203 [health] ok event_at=2203 alerts=[false, false, false]
+ts_ms=2403 [health] ok event_at=2403 alerts=[false, false, false]
+ts_ms=2503 [scheduling] visibility_window_transition state=open window_start_ms=2501 window_end_ms=2601 at_ms=2503
+ts_ms=2603 [health] ok event_at=2603 alerts=[false, false, false]
+ts_ms=2603 [scheduling] visibility_window_transition state=closed window_start_ms=2501 window_end_ms=2601 at_ms=2603
+ts_ms=2803 [health] ok event_at=2803 alerts=[false, false, false]
+ts_ms=3003 [health] ok event_at=3003 alerts=[false, false, false]
+ts_ms=3013 [scheduling] deadline_violation kind=StartDelay task_kind=Antenna at=3013 expected_start=3002 drift_ms=11 budget_ms=5
+ts_ms=3013 [scheduling] visibility_window_transition state=open window_start_ms=3001 window_end_ms=3101 at_ms=3013
+ts_ms=3102 [scheduling] visibility_window_transition state=closed window_start_ms=3001 window_end_ms=3101 at_ms=3102
+ts_ms=3203 [health] ok event_at=3203 alerts=[false, false, false]
+ts_ms=3403 [health] ok event_at=3403 alerts=[false, false, false]
+ts_ms=3503 [scheduling] visibility_window_transition state=open window_start_ms=3501 window_end_ms=3601 at_ms=3503
+ts_ms=3602 [health] ok event_at=3602 alerts=[false, false, false]
+ts_ms=3602 [scheduling] visibility_window_transition state=closed window_start_ms=3501 window_end_ms=3601 at_ms=3602
+ts_ms=3802 [health] ok event_at=3802 alerts=[false, false, false]
+ts_ms=4003 [health] ok event_at=4003 alerts=[false, false, false]
+ts_ms=4003 [scheduling] visibility_window_transition state=open window_start_ms=4001 window_end_ms=4101 at_ms=4003
+ts_ms=4103 [scheduling] visibility_window_transition state=closed window_start_ms=4001 window_end_ms=4101 at_ms=4102
+ts_ms=4203 [health] ok event_at=4203 alerts=[false, false, false]
+ts_ms=4402 [health] ok event_at=4402 alerts=[false, false, false]
+ts_ms=4503 [scheduling] visibility_window_transition state=open window_start_ms=4501 window_end_ms=4601 at_ms=4503
+ts_ms=4602 [health] ok event_at=4602 alerts=[false, false, false]
+ts_ms=4602 [scheduling] visibility_window_transition state=closed window_start_ms=4501 window_end_ms=4601 at_ms=4602
+ts_ms=4802 [health] ok event_at=4802 alerts=[false, false, false]
+ts_ms=5003 [health] ok event_at=5003 alerts=[false, false, false]
+ts_ms=5003 [scheduling] visibility_window_transition state=open window_start_ms=5001 window_end_ms=5101 at_ms=5003
+ts_ms=5102 [scheduling] visibility_window_transition state=closed window_start_ms=5001 window_end_ms=5101 at_ms=5102
+ts_ms=5203 [health] ok event_at=5203 alerts=[false, false, false]
+ts_ms=5403 [health] ok event_at=5403 alerts=[false, false, false]
+ts_ms=5502 [scheduling] visibility_window_transition state=open window_start_ms=5501 window_end_ms=5601 at_ms=5502
+ts_ms=5603 [health] ok event_at=5603 alerts=[false, false, false]
+ts_ms=5603 [scheduling] visibility_window_transition state=closed window_start_ms=5501 window_end_ms=5601 at_ms=5603
+ts_ms=5803 [health] ok event_at=5803 alerts=[false, false, false]
+ts_ms=6003 [health] ok event_at=6003 alerts=[false, false, false]
+ts_ms=6003 [scheduling] visibility_window_transition state=open window_start_ms=6001 window_end_ms=6101 at_ms=6003
+ts_ms=6103 [scheduling] visibility_window_transition state=closed window_start_ms=6001 window_end_ms=6101 at_ms=6103
+ts_ms=6203 [health] ok event_at=6203 alerts=[false, false, false]
+ts_ms=6239 [uplink] recv peer=127.0.0.1:55020 command_id=2 payload_len=0
+ts_ms=6401 [health] ok event_at=6401 alerts=[false, false, false]
+ts_ms=6502 [scheduling] visibility_window_transition state=open window_start_ms=6501 window_end_ms=6601 at_ms=6502
+ts_ms=6603 [health] ok event_at=6603 alerts=[false, false, false]
+ts_ms=6603 [scheduling] visibility_window_transition state=closed window_start_ms=6501 window_end_ms=6601 at_ms=6603
+ts_ms=6802 [health] ok event_at=6802 alerts=[false, false, false]
+ts_ms=7003 [health] ok event_at=7003 alerts=[false, false, false]
+ts_ms=7003 [scheduling] visibility_window_transition state=open window_start_ms=7001 window_end_ms=7101 at_ms=7003
+ts_ms=7102 [scheduling] visibility_window_transition state=closed window_start_ms=7001 window_end_ms=7101 at_ms=7102
+ts_ms=7203 [health] ok event_at=7203 alerts=[false, false, false]
+ts_ms=7403 [health] ok event_at=7403 alerts=[false, false, false]
+ts_ms=7503 [scheduling] visibility_window_transition state=open window_start_ms=7501 window_end_ms=7601 at_ms=7503
+ts_ms=7603 [health] ok event_at=7603 alerts=[false, false, false]
+ts_ms=7603 [scheduling] visibility_window_transition state=closed window_start_ms=7501 window_end_ms=7601 at_ms=7603
+ts_ms=7803 [health] ok event_at=7803 alerts=[false, false, false]
+ts_ms=8002 [health] ok event_at=8002 alerts=[false, false, false]
+ts_ms=8002 [scheduling] visibility_window_transition state=open window_start_ms=8001 window_end_ms=8101 at_ms=8002
+ts_ms=8103 [scheduling] visibility_window_transition state=closed window_start_ms=8001 window_end_ms=8101 at_ms=8103
+ts_ms=8202 [health] ok event_at=8202 alerts=[false, false, false]
+ts_ms=8239 [uplink] recv peer=127.0.0.1:55020 command_id=3 payload_len=0
+ts_ms=8402 [health] ok event_at=8402 alerts=[false, false, false]
+ts_ms=8503 [scheduling] visibility_window_transition state=open window_start_ms=8501 window_end_ms=8601 at_ms=8503
+ts_ms=8602 [health] ok event_at=8602 alerts=[false, false, false]
+ts_ms=8602 [scheduling] visibility_window_transition state=closed window_start_ms=8501 window_end_ms=8601 at_ms=8602
+ts_ms=8803 [health] ok event_at=8803 alerts=[false, false, false]
+ts_ms=9002 [health] ok event_at=9002 alerts=[false, false, false]
+ts_ms=9003 [scheduling] visibility_window_transition state=open window_start_ms=9001 window_end_ms=9101 at_ms=9003
+ts_ms=9103 [scheduling] visibility_window_transition state=closed window_start_ms=9001 window_end_ms=9101 at_ms=9103
+ts_ms=9202 [health] ok event_at=9202 alerts=[false, false, false]
+ts_ms=9403 [health] ok event_at=9403 alerts=[false, false, false]
+ts_ms=9502 [scheduling] visibility_window_transition state=open window_start_ms=9501 window_end_ms=9601 at_ms=9502
+ts_ms=9601 [health] ok event_at=9601 alerts=[false, false, false]
+ts_ms=9602 [scheduling] visibility_window_transition state=closed window_start_ms=9501 window_end_ms=9601 at_ms=9602
+ts_ms=9803 [health] ok event_at=9803 alerts=[false, false, false]
+ts_ms=10003 [health] ok event_at=10003 alerts=[false, false, false]
+ts_ms=10003 [scheduling] visibility_window_transition state=open window_start_ms=10001 window_end_ms=10101 at_ms=10003
+ts_ms=10103 [scheduling] visibility_window_transition state=closed window_start_ms=10001 window_end_ms=10101 at_ms=10103
+ts_ms=10203 [health] ok event_at=10203 alerts=[false, false, false]
+ts_ms=10403 [health] ok event_at=10403 alerts=[false, false, false]
+ts_ms=10502 [scheduling] visibility_window_transition state=open window_start_ms=10501 window_end_ms=10601 at_ms=10502
+ts_ms=10603 [health] ok event_at=10603 alerts=[false, false, false]
+ts_ms=10603 [scheduling] visibility_window_transition state=closed window_start_ms=10501 window_end_ms=10601 at_ms=10603
+ts_ms=10803 [health] ok event_at=10803 alerts=[false, false, false]
+ts_ms=11002 [health] ok event_at=11002 alerts=[false, false, false]
+ts_ms=11002 [scheduling] visibility_window_transition state=open window_start_ms=11001 window_end_ms=11101 at_ms=11002
+ts_ms=11103 [scheduling] visibility_window_transition state=closed window_start_ms=11001 window_end_ms=11101 at_ms=11103
+ts_ms=11203 [health] ok event_at=11203 alerts=[false, false, false]
+ts_ms=11402 [health] ok event_at=11402 alerts=[false, false, false]
+ts_ms=11502 [scheduling] visibility_window_transition state=open window_start_ms=11501 window_end_ms=11601 at_ms=11502
+ts_ms=11603 [health] ok event_at=11603 alerts=[false, false, false]
+ts_ms=11603 [scheduling] visibility_window_transition state=closed window_start_ms=11501 window_end_ms=11601 at_ms=11603
+ts_ms=11803 [health] ok event_at=11803 alerts=[false, false, false]
+ts_ms=12003 [health] ok event_at=12003 alerts=[false, false, false]
+ts_ms=12003 [scheduling] visibility_window_transition state=open window_start_ms=12001 window_end_ms=12101 at_ms=12003
+ts_ms=12103 [scheduling] visibility_window_transition state=closed window_start_ms=12001 window_end_ms=12101 at_ms=12103
+ts_ms=12202 [health] ok event_at=12202 alerts=[false, false, false]
+ts_ms=12402 [health] ok event_at=12402 alerts=[false, false, false]
+ts_ms=12503 [scheduling] visibility_window_transition state=open window_start_ms=12501 window_end_ms=12601 at_ms=12503
+ts_ms=12603 [health] ok event_at=12603 alerts=[false, false, false]
+ts_ms=12603 [scheduling] visibility_window_transition state=closed window_start_ms=12501 window_end_ms=12601 at_ms=12603
+ts_ms=12802 [health] ok event_at=12802 alerts=[false, false, false]
+ts_ms=13002 [health] ok event_at=13002 alerts=[false, false, false]
+ts_ms=13003 [scheduling] visibility_window_transition state=open window_start_ms=13001 window_end_ms=13101 at_ms=13003
+ts_ms=13102 [scheduling] visibility_window_transition state=closed window_start_ms=13001 window_end_ms=13101 at_ms=13102
+ts_ms=13202 [health] ok event_at=13202 alerts=[false, false, false]
+ts_ms=13403 [health] ok event_at=13403 alerts=[false, false, false]
+ts_ms=13503 [scheduling] visibility_window_transition state=open window_start_ms=13501 window_end_ms=13601 at_ms=13503
+ts_ms=13603 [health] ok event_at=13603 alerts=[false, false, false]
+ts_ms=13603 [scheduling] visibility_window_transition state=closed window_start_ms=13501 window_end_ms=13601 at_ms=13603
+ts_ms=13803 [health] ok event_at=13803 alerts=[false, false, false]
+ts_ms=14002 [health] ok event_at=14002 alerts=[false, false, false]
+ts_ms=14002 [scheduling] visibility_window_transition state=open window_start_ms=14001 window_end_ms=14101 at_ms=14002
+ts_ms=14103 [scheduling] visibility_window_transition state=closed window_start_ms=14001 window_end_ms=14101 at_ms=14103
+ts_ms=14202 [health] ok event_at=14202 alerts=[false, false, false]
+ts_ms=14402 [health] ok event_at=14402 alerts=[false, false, false]
+ts_ms=14503 [scheduling] visibility_window_transition state=open window_start_ms=14501 window_end_ms=14601 at_ms=14503
+ts_ms=14603 [health] ok event_at=14603 alerts=[false, false, false]
+ts_ms=14603 [scheduling] visibility_window_transition state=closed window_start_ms=14501 window_end_ms=14601 at_ms=14603
+ts_ms=14803 [health] ok event_at=14803 alerts=[false, false, false]
+ts_ms=15003 [health] ok event_at=15003 alerts=[false, false, false]
+ts_ms=15003 [scheduling] visibility_window_transition state=open window_start_ms=15001 window_end_ms=15101 at_ms=15003
+ts_ms=15103 [scheduling] visibility_window_transition state=closed window_start_ms=15001 window_end_ms=15101 at_ms=15103
+ts_ms=15203 [health] ok event_at=15203 alerts=[false, false, false]
+ts_ms=15403 [health] ok event_at=15403 alerts=[false, false, false]
+ts_ms=15503 [scheduling] visibility_window_transition state=open window_start_ms=15501 window_end_ms=15601 at_ms=15503
+ts_ms=15603 [health] ok event_at=15603 alerts=[false, false, false]
+ts_ms=15603 [scheduling] visibility_window_transition state=closed window_start_ms=15501 window_end_ms=15601 at_ms=15603
+ts_ms=15803 [health] ok event_at=15803 alerts=[false, false, false]
+ts_ms=16002 [health] ok event_at=16002 alerts=[false, false, false]
+ts_ms=16002 [scheduling] visibility_window_transition state=open window_start_ms=16001 window_end_ms=16101 at_ms=16002
+ts_ms=16103 [scheduling] visibility_window_transition state=closed window_start_ms=16001 window_end_ms=16101 at_ms=16103
+ts_ms=16203 [health] ok event_at=16203 alerts=[false, false, false]
+ts_ms=16402 [health] ok event_at=16402 alerts=[false, false, false]
+ts_ms=16503 [scheduling] visibility_window_transition state=open window_start_ms=16501 window_end_ms=16601 at_ms=16503
+ts_ms=16603 [health] ok event_at=16603 alerts=[false, false, false]
+ts_ms=16603 [scheduling] visibility_window_transition state=closed window_start_ms=16501 window_end_ms=16601 at_ms=16603
+ts_ms=16803 [health] ok event_at=16803 alerts=[false, false, false]
+ts_ms=17003 [health] ok event_at=17003 alerts=[false, false, false]
+ts_ms=17003 [scheduling] visibility_window_transition state=open window_start_ms=17001 window_end_ms=17101 at_ms=17003
+ts_ms=17103 [scheduling] visibility_window_transition state=closed window_start_ms=17001 window_end_ms=17101 at_ms=17103
+ts_ms=17202 [health] ok event_at=17202 alerts=[false, false, false]
+ts_ms=17403 [health] ok event_at=17403 alerts=[false, false, false]
+ts_ms=17502 [scheduling] visibility_window_transition state=open window_start_ms=17501 window_end_ms=17601 at_ms=17502
+ts_ms=17602 [health] ok event_at=17602 alerts=[false, false, false]
+ts_ms=17602 [scheduling] visibility_window_transition state=closed window_start_ms=17501 window_end_ms=17601 at_ms=17602
+ts_ms=17803 [health] ok event_at=17803 alerts=[false, false, false]
+ts_ms=18002 [health] ok event_at=18002 alerts=[false, false, false]
+ts_ms=18003 [scheduling] visibility_window_transition state=open window_start_ms=18001 window_end_ms=18101 at_ms=18003
+ts_ms=18103 [scheduling] visibility_window_transition state=closed window_start_ms=18001 window_end_ms=18101 at_ms=18103
+ts_ms=18203 [health] ok event_at=18203 alerts=[false, false, false]
+ts_ms=18403 [health] ok event_at=18403 alerts=[false, false, false]
+ts_ms=18502 [scheduling] visibility_window_transition state=open window_start_ms=18501 window_end_ms=18601 at_ms=18502
+ts_ms=18603 [health] ok event_at=18603 alerts=[false, false, false]
+ts_ms=18603 [scheduling] visibility_window_transition state=closed window_start_ms=18501 window_end_ms=18601 at_ms=18603
+ts_ms=18802 [health] ok event_at=18802 alerts=[false, false, false]
+ts_ms=19002 [health] ok event_at=19002 alerts=[false, false, false]
+ts_ms=19002 [scheduling] visibility_window_transition state=open window_start_ms=19001 window_end_ms=19101 at_ms=19002
+ts_ms=19103 [scheduling] visibility_window_transition state=closed window_start_ms=19001 window_end_ms=19101 at_ms=19103
+ts_ms=19202 [health] ok event_at=19202 alerts=[false, false, false]
+ts_ms=19402 [health] ok event_at=19402 alerts=[false, false, false]
+ts_ms=19502 [scheduling] visibility_window_transition state=open window_start_ms=19501 window_end_ms=19601 at_ms=19502
+ts_ms=19602 [health] ok event_at=19602 alerts=[false, false, false]
+ts_ms=19603 [scheduling] visibility_window_transition state=closed window_start_ms=19501 window_end_ms=19601 at_ms=19603
+ts_ms=19802 [health] ok event_at=19802 alerts=[false, false, false]
+ts_ms=20002 [health] ok event_at=20002 alerts=[false, false, false]
+ts_ms=20002 [scheduling] visibility_window_transition state=open window_start_ms=20001 window_end_ms=20101 at_ms=20002
+ts_ms=20103 [scheduling] visibility_window_transition state=closed window_start_ms=20001 window_end_ms=20101 at_ms=20103
+ts_ms=20202 [health] ok event_at=20202 alerts=[false, false, false]
+ts_ms=20402 [health] ok event_at=20402 alerts=[false, false, false]
+ts_ms=20503 [scheduling] visibility_window_transition state=open window_start_ms=20501 window_end_ms=20601 at_ms=20503
+ts_ms=20602 [health] ok event_at=20602 alerts=[false, false, false]
+ts_ms=20603 [scheduling] visibility_window_transition state=closed window_start_ms=20501 window_end_ms=20601 at_ms=20603
+ts_ms=20802 [health] ok event_at=20802 alerts=[false, false, false]
+ts_ms=21003 [health] ok event_at=21003 alerts=[false, false, false]
+ts_ms=21003 [scheduling] visibility_window_transition state=open window_start_ms=21001 window_end_ms=21101 at_ms=21003
+ts_ms=21103 [scheduling] visibility_window_transition state=closed window_start_ms=21001 window_end_ms=21101 at_ms=21103
+ts_ms=21203 [health] ok event_at=21203 alerts=[false, false, false]
+ts_ms=21403 [health] ok event_at=21403 alerts=[false, false, false]
+ts_ms=21502 [scheduling] visibility_window_transition state=open window_start_ms=21501 window_end_ms=21601 at_ms=21502
+ts_ms=21603 [health] ok event_at=21603 alerts=[false, false, false]
+ts_ms=21603 [scheduling] visibility_window_transition state=closed window_start_ms=21501 window_end_ms=21601 at_ms=21603
+ts_ms=21803 [health] ok event_at=21803 alerts=[false, false, false]
+ts_ms=22003 [health] ok event_at=22003 alerts=[false, false, false]
+ts_ms=22003 [scheduling] visibility_window_transition state=open window_start_ms=22001 window_end_ms=22101 at_ms=22003
+ts_ms=22102 [scheduling] visibility_window_transition state=closed window_start_ms=22001 window_end_ms=22101 at_ms=22102
+ts_ms=22203 [health] ok event_at=22203 alerts=[false, false, false]
+ts_ms=22403 [health] ok event_at=22403 alerts=[false, false, false]
+ts_ms=22503 [scheduling] visibility_window_transition state=open window_start_ms=22501 window_end_ms=22601 at_ms=22503
+ts_ms=22602 [health] ok event_at=22602 alerts=[false, false, false]
+ts_ms=22602 [scheduling] visibility_window_transition state=closed window_start_ms=22501 window_end_ms=22601 at_ms=22602
+ts_ms=22803 [health] ok event_at=22803 alerts=[false, false, false]
+ts_ms=23002 [health] ok event_at=23002 alerts=[false, false, false]
+ts_ms=23002 [scheduling] visibility_window_transition state=open window_start_ms=23001 window_end_ms=23101 at_ms=23002
+ts_ms=23103 [scheduling] visibility_window_transition state=closed window_start_ms=23001 window_end_ms=23101 at_ms=23103
+ts_ms=23202 [health] ok event_at=23202 alerts=[false, false, false]
+ts_ms=23403 [health] ok event_at=23403 alerts=[false, false, false]
+ts_ms=23503 [scheduling] visibility_window_transition state=open window_start_ms=23501 window_end_ms=23601 at_ms=23503
+ts_ms=23602 [health] ok event_at=23602 alerts=[false, false, false]
+ts_ms=23602 [scheduling] visibility_window_transition state=closed window_start_ms=23501 window_end_ms=23601 at_ms=23602
+ts_ms=23803 [health] ok event_at=23803 alerts=[false, false, false]
+ts_ms=24002 [health] ok event_at=24002 alerts=[false, false, false]
+ts_ms=24003 [scheduling] visibility_window_transition state=open window_start_ms=24001 window_end_ms=24101 at_ms=24003
+ts_ms=24103 [scheduling] visibility_window_transition state=closed window_start_ms=24001 window_end_ms=24101 at_ms=24103
+ts_ms=24202 [health] ok event_at=24202 alerts=[false, false, false]
+ts_ms=24402 [health] ok event_at=24402 alerts=[false, false, false]
+ts_ms=24503 [scheduling] visibility_window_transition state=open window_start_ms=24501 window_end_ms=24601 at_ms=24503
+ts_ms=24602 [health] ok event_at=24602 alerts=[false, false, false]
+ts_ms=24603 [scheduling] visibility_window_transition state=closed window_start_ms=24501 window_end_ms=24601 at_ms=24603
+ts_ms=24803 [health] ok event_at=24803 alerts=[false, false, false]
+ts_ms=25003 [health] ok event_at=25003 alerts=[false, false, false]
+ts_ms=25003 [scheduling] visibility_window_transition state=open window_start_ms=25001 window_end_ms=25101 at_ms=25003
+ts_ms=25102 [scheduling] visibility_window_transition state=closed window_start_ms=25001 window_end_ms=25101 at_ms=25102
+ts_ms=25203 [health] ok event_at=25203 alerts=[false, false, false]
+ts_ms=25403 [health] ok event_at=25403 alerts=[false, false, false]
+ts_ms=25502 [scheduling] visibility_window_transition state=open window_start_ms=25501 window_end_ms=25601 at_ms=25502
+ts_ms=25602 [health] ok event_at=25602 alerts=[false, false, false]
+ts_ms=25602 [scheduling] visibility_window_transition state=closed window_start_ms=25501 window_end_ms=25601 at_ms=25602
+ts_ms=25803 [health] ok event_at=25803 alerts=[false, false, false]
+ts_ms=26002 [health] ok event_at=26002 alerts=[false, false, false]
+ts_ms=26002 [scheduling] visibility_window_transition state=open window_start_ms=26001 window_end_ms=26101 at_ms=26002
+ts_ms=26103 [scheduling] visibility_window_transition state=closed window_start_ms=26001 window_end_ms=26101 at_ms=26103
+ts_ms=26203 [health] ok event_at=26203 alerts=[false, false, false]
+ts_ms=26403 [health] ok event_at=26403 alerts=[false, false, false]
+ts_ms=26503 [scheduling] visibility_window_transition state=open window_start_ms=26501 window_end_ms=26601 at_ms=26503
+ts_ms=26602 [health] ok event_at=26602 alerts=[false, false, false]
+ts_ms=26602 [scheduling] visibility_window_transition state=closed window_start_ms=26501 window_end_ms=26601 at_ms=26602
+ts_ms=26802 [health] ok event_at=26802 alerts=[false, false, false]
+ts_ms=27003 [health] ok event_at=27003 alerts=[false, false, false]
+ts_ms=27003 [scheduling] visibility_window_transition state=open window_start_ms=27001 window_end_ms=27101 at_ms=27003
+ts_ms=27102 [scheduling] visibility_window_transition state=closed window_start_ms=27001 window_end_ms=27101 at_ms=27102
+ts_ms=27202 [health] ok event_at=27202 alerts=[false, false, false]
+ts_ms=27402 [health] ok event_at=27402 alerts=[false, false, false]
+ts_ms=27502 [scheduling] visibility_window_transition state=open window_start_ms=27501 window_end_ms=27601 at_ms=27502
+ts_ms=27603 [health] ok event_at=27603 alerts=[false, false, false]
+ts_ms=27603 [scheduling] visibility_window_transition state=closed window_start_ms=27501 window_end_ms=27601 at_ms=27603
+ts_ms=27802 [health] ok event_at=27802 alerts=[false, false, false]
+ts_ms=28003 [health] ok event_at=28003 alerts=[false, false, false]
+ts_ms=28003 [scheduling] visibility_window_transition state=open window_start_ms=28001 window_end_ms=28101 at_ms=28003
+ts_ms=28102 [scheduling] visibility_window_transition state=closed window_start_ms=28001 window_end_ms=28101 at_ms=28102
+ts_ms=28203 [health] ok event_at=28203 alerts=[false, false, false]
+ts_ms=28402 [health] ok event_at=28402 alerts=[false, false, false]
+ts_ms=28503 [scheduling] visibility_window_transition state=open window_start_ms=28501 window_end_ms=28601 at_ms=28503
+ts_ms=28603 [health] ok event_at=28603 alerts=[false, false, false]
+ts_ms=28603 [scheduling] visibility_window_transition state=closed window_start_ms=28501 window_end_ms=28601 at_ms=28603
+ts_ms=28802 [health] ok event_at=28802 alerts=[false, false, false]
+ts_ms=29003 [health] ok event_at=29003 alerts=[false, false, false]
+ts_ms=29003 [scheduling] visibility_window_transition state=open window_start_ms=29001 window_end_ms=29101 at_ms=29003
+ts_ms=29103 [scheduling] visibility_window_transition state=closed window_start_ms=29001 window_end_ms=29101 at_ms=29103
+ts_ms=29203 [health] ok event_at=29203 alerts=[false, false, false]
+ts_ms=29403 [health] ok event_at=29403 alerts=[false, false, false]
+ts_ms=29503 [scheduling] visibility_window_transition state=open window_start_ms=29501 window_end_ms=29601 at_ms=29503
+ts_ms=29603 [health] ok event_at=29603 alerts=[false, false, false]
+ts_ms=29603 [scheduling] visibility_window_transition state=closed window_start_ms=29501 window_end_ms=29601 at_ms=29603
+ts_ms=29802 [health] ok event_at=29802 alerts=[false, false, false]
+ts_ms=30003 [health] ok event_at=30003 alerts=[false, false, false]
+ts_ms=30003 [scheduling] visibility_window_transition state=open window_start_ms=30001 window_end_ms=30101 at_ms=30003
+ts_ms=30103 [scheduling] visibility_window_transition state=closed window_start_ms=30001 window_end_ms=30101 at_ms=30103
+ts_ms=30202 [health] ok event_at=30202 alerts=[false, false, false]
+ts_ms=30402 [health] ok event_at=30402 alerts=[false, false, false]
+ts_ms=30503 [scheduling] visibility_window_transition state=open window_start_ms=30501 window_end_ms=30601 at_ms=30503
+ts_ms=30602 [health] ok event_at=30602 alerts=[false, false, false]
+ts_ms=30603 [scheduling] visibility_window_transition state=closed window_start_ms=30501 window_end_ms=30601 at_ms=30603
+ts_ms=30803 [health] ok event_at=30803 alerts=[false, false, false]
+ts_ms=31003 [health] ok event_at=31003 alerts=[false, false, false]
+ts_ms=31003 [scheduling] visibility_window_transition state=open window_start_ms=31001 window_end_ms=31101 at_ms=31003
+ts_ms=31103 [scheduling] visibility_window_transition state=closed window_start_ms=31001 window_end_ms=31101 at_ms=31103
+ts_ms=31203 [health] ok event_at=31203 alerts=[false, false, false]
+ts_ms=31402 [health] ok event_at=31402 alerts=[false, false, false]
+ts_ms=31503 [scheduling] visibility_window_transition state=open window_start_ms=31501 window_end_ms=31601 at_ms=31503
+ts_ms=31603 [health] ok event_at=31603 alerts=[false, false, false]
+ts_ms=31603 [scheduling] visibility_window_transition state=closed window_start_ms=31501 window_end_ms=31601 at_ms=31603
+ts_ms=31803 [health] ok event_at=31803 alerts=[false, false, false]
+ts_ms=32003 [health] ok event_at=32003 alerts=[false, false, false]
+ts_ms=32003 [scheduling] visibility_window_transition state=open window_start_ms=32001 window_end_ms=32101 at_ms=32003
+ts_ms=32103 [scheduling] visibility_window_transition state=closed window_start_ms=32001 window_end_ms=32101 at_ms=32103
+ts_ms=32202 [health] ok event_at=32202 alerts=[false, false, false]
+ts_ms=32403 [health] ok event_at=32403 alerts=[false, false, false]
+ts_ms=32502 [scheduling] visibility_window_transition state=open window_start_ms=32501 window_end_ms=32601 at_ms=32502
+ts_ms=32603 [health] ok event_at=32603 alerts=[false, false, false]
+ts_ms=32603 [scheduling] visibility_window_transition state=closed window_start_ms=32501 window_end_ms=32601 at_ms=32603
+ts_ms=32803 [health] ok event_at=32803 alerts=[false, false, false]
+ts_ms=33003 [health] ok event_at=33003 alerts=[false, false, false]
+ts_ms=33003 [scheduling] visibility_window_transition state=open window_start_ms=33001 window_end_ms=33101 at_ms=33003
+ts_ms=33103 [scheduling] visibility_window_transition state=closed window_start_ms=33001 window_end_ms=33101 at_ms=33103
+ts_ms=33203 [health] ok event_at=33203 alerts=[false, false, false]
+ts_ms=33403 [health] ok event_at=33403 alerts=[false, false, false]
+ts_ms=33502 [scheduling] visibility_window_transition state=open window_start_ms=33501 window_end_ms=33601 at_ms=33502
+ts_ms=33602 [health] ok event_at=33602 alerts=[false, false, false]
+ts_ms=33602 [scheduling] visibility_window_transition state=closed window_start_ms=33501 window_end_ms=33601 at_ms=33602
+ts_ms=33803 [health] ok event_at=33803 alerts=[false, false, false]
+ts_ms=34002 [health] ok event_at=34002 alerts=[false, false, false]
+ts_ms=34003 [scheduling] visibility_window_transition state=open window_start_ms=34001 window_end_ms=34101 at_ms=34003
+ts_ms=34103 [scheduling] visibility_window_transition state=closed window_start_ms=34001 window_end_ms=34101 at_ms=34103
+ts_ms=34203 [health] ok event_at=34203 alerts=[false, false, false]
+ts_ms=34402 [health] ok event_at=34402 alerts=[false, false, false]
+ts_ms=34503 [scheduling] visibility_window_transition state=open window_start_ms=34501 window_end_ms=34601 at_ms=34503
+ts_ms=34602 [health] ok event_at=34602 alerts=[false, false, false]
+ts_ms=34603 [scheduling] visibility_window_transition state=closed window_start_ms=34501 window_end_ms=34601 at_ms=34603
+ts_ms=34803 [health] ok event_at=34803 alerts=[false, false, false]
+ts_ms=35002 [health] ok event_at=35002 alerts=[false, false, false]
+ts_ms=35002 [scheduling] visibility_window_transition state=open window_start_ms=35001 window_end_ms=35101 at_ms=35002
+ts_ms=35103 [scheduling] visibility_window_transition state=closed window_start_ms=35001 window_end_ms=35101 at_ms=35103
+ts_ms=35203 [health] ok event_at=35203 alerts=[false, false, false]
+ts_ms=35403 [health] ok event_at=35403 alerts=[false, false, false]
+ts_ms=35503 [scheduling] visibility_window_transition state=open window_start_ms=35501 window_end_ms=35601 at_ms=35503
+ts_ms=35602 [health] ok event_at=35602 alerts=[false, false, false]
+ts_ms=35603 [scheduling] visibility_window_transition state=closed window_start_ms=35501 window_end_ms=35601 at_ms=35603
+ts_ms=35803 [health] ok event_at=35803 alerts=[false, false, false]
+ts_ms=36003 [health] ok event_at=36003 alerts=[false, false, false]
+ts_ms=36003 [scheduling] visibility_window_transition state=open window_start_ms=36001 window_end_ms=36101 at_ms=36003
+ts_ms=36103 [scheduling] visibility_window_transition state=closed window_start_ms=36001 window_end_ms=36101 at_ms=36103
+ts_ms=36202 [health] ok event_at=36202 alerts=[false, false, false]
+ts_ms=36402 [health] ok event_at=36402 alerts=[false, false, false]
+ts_ms=36502 [scheduling] visibility_window_transition state=open window_start_ms=36501 window_end_ms=36601 at_ms=36502
+ts_ms=36602 [health] ok event_at=36602 alerts=[false, false, false]
+ts_ms=36602 [scheduling] visibility_window_transition state=closed window_start_ms=36501 window_end_ms=36601 at_ms=36602
+ts_ms=36803 [health] ok event_at=36803 alerts=[false, false, false]
+ts_ms=37002 [health] ok event_at=37002 alerts=[false, false, false]
+ts_ms=37003 [scheduling] visibility_window_transition state=open window_start_ms=37001 window_end_ms=37101 at_ms=37003
+ts_ms=37103 [scheduling] visibility_window_transition state=closed window_start_ms=37001 window_end_ms=37101 at_ms=37103
+ts_ms=37202 [health] ok event_at=37202 alerts=[false, false, false]
+ts_ms=37402 [health] ok event_at=37402 alerts=[false, false, false]
+ts_ms=37502 [scheduling] visibility_window_transition state=open window_start_ms=37501 window_end_ms=37601 at_ms=37502
+ts_ms=37602 [health] ok event_at=37602 alerts=[false, false, false]
+ts_ms=37603 [scheduling] visibility_window_transition state=closed window_start_ms=37501 window_end_ms=37601 at_ms=37603
+ts_ms=37803 [health] ok event_at=37803 alerts=[false, false, false]
+ts_ms=38003 [health] ok event_at=38003 alerts=[false, false, false]
+ts_ms=38003 [scheduling] visibility_window_transition state=open window_start_ms=38001 window_end_ms=38101 at_ms=38003
+ts_ms=38103 [scheduling] visibility_window_transition state=closed window_start_ms=38001 window_end_ms=38101 at_ms=38103
+ts_ms=38202 [health] ok event_at=38202 alerts=[false, false, false]
+ts_ms=38402 [health] ok event_at=38402 alerts=[false, false, false]
+ts_ms=38503 [scheduling] visibility_window_transition state=open window_start_ms=38501 window_end_ms=38601 at_ms=38503
+ts_ms=38603 [health] ok event_at=38603 alerts=[false, false, false]
+ts_ms=38603 [scheduling] visibility_window_transition state=closed window_start_ms=38501 window_end_ms=38601 at_ms=38603
+ts_ms=38803 [health] ok event_at=38803 alerts=[false, false, false]
+ts_ms=39002 [health] ok event_at=39002 alerts=[false, false, false]
+ts_ms=39003 [scheduling] visibility_window_transition state=open window_start_ms=39001 window_end_ms=39101 at_ms=39003
+ts_ms=39102 [scheduling] visibility_window_transition state=closed window_start_ms=39001 window_end_ms=39101 at_ms=39102
+ts_ms=39203 [health] ok event_at=39203 alerts=[false, false, false]
+ts_ms=39402 [health] ok event_at=39402 alerts=[false, false, false]
+ts_ms=39502 [scheduling] visibility_window_transition state=open window_start_ms=39501 window_end_ms=39601 at_ms=39502
+ts_ms=39603 [health] ok event_at=39603 alerts=[false, false, false]
+ts_ms=39603 [scheduling] visibility_window_transition state=closed window_start_ms=39501 window_end_ms=39601 at_ms=39603
+ts_ms=39803 [health] ok event_at=39803 alerts=[false, false, false]
+ts_ms=40003 [health] ok event_at=40003 alerts=[false, false, false]
+ts_ms=40003 [scheduling] visibility_window_transition state=open window_start_ms=40001 window_end_ms=40101 at_ms=40003
+ts_ms=40103 [scheduling] visibility_window_transition state=closed window_start_ms=40001 window_end_ms=40101 at_ms=40103
+ts_ms=40203 [health] ok event_at=40203 alerts=[false, false, false]
+ts_ms=40402 [health] ok event_at=40402 alerts=[false, false, false]
+ts_ms=40501 [scheduling] visibility_window_transition state=open window_start_ms=40501 window_end_ms=40601 at_ms=40501
+ts_ms=40602 [health] ok event_at=40602 alerts=[false, false, false]
+ts_ms=40602 [scheduling] visibility_window_transition state=closed window_start_ms=40501 window_end_ms=40601 at_ms=40602
+ts_ms=40803 [health] ok event_at=40803 alerts=[false, false, false]
+ts_ms=41003 [health] ok event_at=41003 alerts=[false, false, false]
+ts_ms=41003 [scheduling] visibility_window_transition state=open window_start_ms=41001 window_end_ms=41101 at_ms=41003
+ts_ms=41103 [scheduling] visibility_window_transition state=closed window_start_ms=41001 window_end_ms=41101 at_ms=41103
+ts_ms=41203 [health] ok event_at=41203 alerts=[false, false, false]
+ts_ms=41403 [health] ok event_at=41403 alerts=[false, false, false]
+ts_ms=41503 [scheduling] visibility_window_transition state=open window_start_ms=41501 window_end_ms=41601 at_ms=41503
+ts_ms=41602 [health] ok event_at=41602 alerts=[false, false, false]
+ts_ms=41603 [scheduling] visibility_window_transition state=closed window_start_ms=41501 window_end_ms=41601 at_ms=41603
+ts_ms=41803 [health] ok event_at=41803 alerts=[false, false, false]
+ts_ms=42003 [health] ok event_at=42003 alerts=[false, false, false]
+ts_ms=42003 [scheduling] visibility_window_transition state=open window_start_ms=42001 window_end_ms=42101 at_ms=42003
+ts_ms=42103 [scheduling] visibility_window_transition state=closed window_start_ms=42001 window_end_ms=42101 at_ms=42103
+ts_ms=42203 [health] ok event_at=42203 alerts=[false, false, false]
+ts_ms=42402 [health] ok event_at=42402 alerts=[false, false, false]
+ts_ms=42503 [scheduling] visibility_window_transition state=open window_start_ms=42501 window_end_ms=42601 at_ms=42503
+ts_ms=42602 [health] ok event_at=42602 alerts=[false, false, false]
+ts_ms=42603 [scheduling] visibility_window_transition state=closed window_start_ms=42501 window_end_ms=42601 at_ms=42603
+ts_ms=42802 [health] ok event_at=42802 alerts=[false, false, false]
+ts_ms=43002 [health] ok event_at=43002 alerts=[false, false, false]
+ts_ms=43003 [scheduling] visibility_window_transition state=open window_start_ms=43001 window_end_ms=43101 at_ms=43003
+ts_ms=43103 [scheduling] visibility_window_transition state=closed window_start_ms=43001 window_end_ms=43101 at_ms=43103
+ts_ms=43202 [health] ok event_at=43202 alerts=[false, false, false]
+ts_ms=43402 [health] ok event_at=43402 alerts=[false, false, false]
+ts_ms=43503 [scheduling] visibility_window_transition state=open window_start_ms=43501 window_end_ms=43601 at_ms=43503
+ts_ms=43602 [health] ok event_at=43602 alerts=[false, false, false]
+ts_ms=43603 [scheduling] visibility_window_transition state=closed window_start_ms=43501 window_end_ms=43601 at_ms=43603
+ts_ms=43803 [health] ok event_at=43803 alerts=[false, false, false]
+ts_ms=44002 [health] ok event_at=44002 alerts=[false, false, false]
+ts_ms=44002 [scheduling] visibility_window_transition state=open window_start_ms=44001 window_end_ms=44101 at_ms=44002
+ts_ms=44102 [scheduling] visibility_window_transition state=closed window_start_ms=44001 window_end_ms=44101 at_ms=44102
+ts_ms=44203 [health] ok event_at=44203 alerts=[false, false, false]
+ts_ms=44403 [health] ok event_at=44403 alerts=[false, false, false]
+ts_ms=44503 [scheduling] visibility_window_transition state=open window_start_ms=44501 window_end_ms=44601 at_ms=44503
+ts_ms=44603 [health] ok event_at=44603 alerts=[false, false, false]
+ts_ms=44603 [scheduling] visibility_window_transition state=closed window_start_ms=44501 window_end_ms=44601 at_ms=44603
+ts_ms=44803 [health] ok event_at=44803 alerts=[false, false, false]
+ts_ms=45003 [health] ok event_at=45003 alerts=[false, false, false]
+ts_ms=45003 [scheduling] visibility_window_transition state=open window_start_ms=45001 window_end_ms=45101 at_ms=45003
+ts_ms=45102 [scheduling] visibility_window_transition state=closed window_start_ms=45001 window_end_ms=45101 at_ms=45102
+ts_ms=45202 [health] ok event_at=45202 alerts=[false, false, false]
+ts_ms=45402 [health] ok event_at=45402 alerts=[false, false, false]
+ts_ms=45503 [scheduling] visibility_window_transition state=open window_start_ms=45501 window_end_ms=45601 at_ms=45503
+ts_ms=45602 [health] ok event_at=45602 alerts=[false, false, false]
+ts_ms=45602 [scheduling] visibility_window_transition state=closed window_start_ms=45501 window_end_ms=45601 at_ms=45602
+ts_ms=45803 [health] ok event_at=45803 alerts=[false, false, false]
+ts_ms=46003 [health] ok event_at=46003 alerts=[false, false, false]
+ts_ms=46003 [scheduling] visibility_window_transition state=open window_start_ms=46001 window_end_ms=46101 at_ms=46003
+ts_ms=46103 [scheduling] visibility_window_transition state=closed window_start_ms=46001 window_end_ms=46101 at_ms=46103
+ts_ms=46202 [health] ok event_at=46202 alerts=[false, false, false]
+ts_ms=46402 [health] ok event_at=46402 alerts=[false, false, false]
+ts_ms=46503 [scheduling] visibility_window_transition state=open window_start_ms=46501 window_end_ms=46601 at_ms=46503
+ts_ms=46603 [health] ok event_at=46603 alerts=[false, false, false]
+ts_ms=46603 [scheduling] visibility_window_transition state=closed window_start_ms=46501 window_end_ms=46601 at_ms=46603
+ts_ms=46803 [health] ok event_at=46803 alerts=[false, false, false]
+ts_ms=47003 [health] ok event_at=47003 alerts=[false, false, false]
+ts_ms=47003 [scheduling] visibility_window_transition state=open window_start_ms=47001 window_end_ms=47101 at_ms=47003
+ts_ms=47103 [scheduling] visibility_window_transition state=closed window_start_ms=47001 window_end_ms=47101 at_ms=47103
+ts_ms=47202 [health] ok event_at=47202 alerts=[false, false, false]
+ts_ms=47403 [health] ok event_at=47403 alerts=[false, false, false]
+ts_ms=47503 [scheduling] visibility_window_transition state=open window_start_ms=47501 window_end_ms=47601 at_ms=47503
+ts_ms=47603 [health] ok event_at=47603 alerts=[false, false, false]
+ts_ms=47603 [scheduling] visibility_window_transition state=closed window_start_ms=47501 window_end_ms=47601 at_ms=47603
+ts_ms=47803 [health] ok event_at=47803 alerts=[false, false, false]
+ts_ms=48002 [health] ok event_at=48002 alerts=[false, false, false]
+ts_ms=48002 [scheduling] visibility_window_transition state=open window_start_ms=48001 window_end_ms=48101 at_ms=48002
+ts_ms=48103 [scheduling] visibility_window_transition state=closed window_start_ms=48001 window_end_ms=48101 at_ms=48103
+ts_ms=48203 [health] ok event_at=48203 alerts=[false, false, false]
+ts_ms=48402 [health] ok event_at=48402 alerts=[false, false, false]
+ts_ms=48502 [scheduling] visibility_window_transition state=open window_start_ms=48501 window_end_ms=48601 at_ms=48502
+ts_ms=48602 [health] ok event_at=48602 alerts=[false, false, false]
+ts_ms=48603 [scheduling] visibility_window_transition state=closed window_start_ms=48501 window_end_ms=48601 at_ms=48603
+ts_ms=48803 [health] ok event_at=48803 alerts=[false, false, false]
+ts_ms=49003 [health] ok event_at=49003 alerts=[false, false, false]
+ts_ms=49003 [scheduling] visibility_window_transition state=open window_start_ms=49001 window_end_ms=49101 at_ms=49003
+ts_ms=49103 [scheduling] visibility_window_transition state=closed window_start_ms=49001 window_end_ms=49101 at_ms=49103
+ts_ms=49203 [health] ok event_at=49203 alerts=[false, false, false]
+ts_ms=49402 [health] ok event_at=49402 alerts=[false, false, false]
+ts_ms=49503 [scheduling] visibility_window_transition state=open window_start_ms=49501 window_end_ms=49601 at_ms=49503
+ts_ms=49602 [health] ok event_at=49602 alerts=[false, false, false]
+ts_ms=49603 [scheduling] visibility_window_transition state=closed window_start_ms=49501 window_end_ms=49601 at_ms=49603
+ts_ms=49803 [health] ok event_at=49803 alerts=[false, false, false]
+ts_ms=50002 [health] ok event_at=50002 alerts=[false, false, false]
+ts_ms=50003 [scheduling] visibility_window_transition state=open window_start_ms=50001 window_end_ms=50101 at_ms=50003
+ts_ms=50103 [scheduling] visibility_window_transition state=closed window_start_ms=50001 window_end_ms=50101 at_ms=50103
+ts_ms=50202 [health] ok event_at=50202 alerts=[false, false, false]
+ts_ms=50403 [health] ok event_at=50403 alerts=[false, false, false]
+ts_ms=50503 [scheduling] visibility_window_transition state=open window_start_ms=50501 window_end_ms=50601 at_ms=50503
+ts_ms=50603 [health] ok event_at=50603 alerts=[false, false, false]
+ts_ms=50603 [scheduling] visibility_window_transition state=closed window_start_ms=50501 window_end_ms=50601 at_ms=50603
+ts_ms=50803 [health] ok event_at=50803 alerts=[false, false, false]
+ts_ms=51003 [health] ok event_at=51003 alerts=[false, false, false]
+ts_ms=51003 [scheduling] visibility_window_transition state=open window_start_ms=51001 window_end_ms=51101 at_ms=51003
+ts_ms=51103 [scheduling] visibility_window_transition state=closed window_start_ms=51001 window_end_ms=51101 at_ms=51103
+ts_ms=51202 [health] ok event_at=51202 alerts=[false, false, false]
+ts_ms=51402 [health] ok event_at=51402 alerts=[false, false, false]
+ts_ms=51503 [scheduling] visibility_window_transition state=open window_start_ms=51501 window_end_ms=51601 at_ms=51503
+ts_ms=51603 [health] ok event_at=51603 alerts=[false, false, false]
+ts_ms=51603 [scheduling] visibility_window_transition state=closed window_start_ms=51501 window_end_ms=51601 at_ms=51603
+ts_ms=51803 [health] ok event_at=51803 alerts=[false, false, false]
+ts_ms=52002 [health] ok event_at=52002 alerts=[false, false, false]
+ts_ms=52002 [scheduling] visibility_window_transition state=open window_start_ms=52001 window_end_ms=52101 at_ms=52002
+ts_ms=52102 [scheduling] visibility_window_transition state=closed window_start_ms=52001 window_end_ms=52101 at_ms=52102
+ts_ms=52202 [health] ok event_at=52202 alerts=[false, false, false]
+ts_ms=52403 [health] ok event_at=52403 alerts=[false, false, false]
+ts_ms=52503 [scheduling] visibility_window_transition state=open window_start_ms=52501 window_end_ms=52601 at_ms=52503
+ts_ms=52602 [health] ok event_at=52602 alerts=[false, false, false]
+ts_ms=52602 [scheduling] visibility_window_transition state=closed window_start_ms=52501 window_end_ms=52601 at_ms=52602
+ts_ms=52801 [health] ok event_at=52801 alerts=[false, false, false]
+ts_ms=53003 [health] ok event_at=53003 alerts=[false, false, false]
+ts_ms=53004 [scheduling] visibility_window_transition state=open window_start_ms=53001 window_end_ms=53101 at_ms=53004
+ts_ms=53103 [scheduling] visibility_window_transition state=closed window_start_ms=53001 window_end_ms=53101 at_ms=53103
+ts_ms=53203 [health] ok event_at=53203 alerts=[false, false, false]
+ts_ms=53403 [health] ok event_at=53403 alerts=[false, false, false]
+ts_ms=53503 [scheduling] visibility_window_transition state=open window_start_ms=53501 window_end_ms=53601 at_ms=53503
+ts_ms=53603 [health] ok event_at=53603 alerts=[false, false, false]
+ts_ms=53603 [scheduling] visibility_window_transition state=closed window_start_ms=53501 window_end_ms=53601 at_ms=53603
+ts_ms=53803 [health] ok event_at=53803 alerts=[false, false, false]
+ts_ms=54002 [health] ok event_at=54002 alerts=[false, false, false]
+ts_ms=54003 [scheduling] visibility_window_transition state=open window_start_ms=54001 window_end_ms=54101 at_ms=54003
+ts_ms=54103 [scheduling] visibility_window_transition state=closed window_start_ms=54001 window_end_ms=54101 at_ms=54103
+ts_ms=54202 [health] ok event_at=54202 alerts=[false, false, false]
+ts_ms=54401 [health] ok event_at=54401 alerts=[false, false, false]
+ts_ms=54503 [scheduling] visibility_window_transition state=open window_start_ms=54501 window_end_ms=54601 at_ms=54503
+ts_ms=54603 [health] ok event_at=54603 alerts=[false, false, false]
+ts_ms=54603 [scheduling] visibility_window_transition state=closed window_start_ms=54501 window_end_ms=54601 at_ms=54603
+ts_ms=54802 [health] ok event_at=54802 alerts=[false, false, false]
+ts_ms=55002 [health] ok event_at=55002 alerts=[false, false, false]
+ts_ms=55003 [scheduling] visibility_window_transition state=open window_start_ms=55001 window_end_ms=55101 at_ms=55003
+ts_ms=55102 [scheduling] visibility_window_transition state=closed window_start_ms=55001 window_end_ms=55101 at_ms=55102
+ts_ms=55202 [health] ok event_at=55202 alerts=[false, false, false]
+ts_ms=55402 [health] ok event_at=55402 alerts=[false, false, false]
+ts_ms=55502 [scheduling] visibility_window_transition state=open window_start_ms=55501 window_end_ms=55601 at_ms=55502
+ts_ms=55602 [health] ok event_at=55602 alerts=[false, false, false]
+ts_ms=55603 [scheduling] visibility_window_transition state=closed window_start_ms=55501 window_end_ms=55601 at_ms=55603
+ts_ms=55802 [health] ok event_at=55802 alerts=[false, false, false]
+ts_ms=56002 [health] ok event_at=56002 alerts=[false, false, false]
+ts_ms=56002 [scheduling] visibility_window_transition state=open window_start_ms=56001 window_end_ms=56101 at_ms=56002
+ts_ms=56103 [scheduling] visibility_window_transition state=closed window_start_ms=56001 window_end_ms=56101 at_ms=56103
+ts_ms=56203 [health] ok event_at=56203 alerts=[false, false, false]
+ts_ms=56403 [health] ok event_at=56403 alerts=[false, false, false]
+ts_ms=56502 [scheduling] visibility_window_transition state=open window_start_ms=56501 window_end_ms=56601 at_ms=56502
+ts_ms=56602 [health] ok event_at=56602 alerts=[false, false, false]
+ts_ms=56603 [scheduling] visibility_window_transition state=closed window_start_ms=56501 window_end_ms=56601 at_ms=56603
+ts_ms=56803 [health] ok event_at=56803 alerts=[false, false, false]
+ts_ms=57003 [health] ok event_at=57003 alerts=[false, false, false]
+ts_ms=57003 [scheduling] visibility_window_transition state=open window_start_ms=57001 window_end_ms=57101 at_ms=57003
+ts_ms=57103 [scheduling] visibility_window_transition state=closed window_start_ms=57001 window_end_ms=57101 at_ms=57103
+ts_ms=57203 [health] ok event_at=57203 alerts=[false, false, false]
+ts_ms=57403 [health] ok event_at=57403 alerts=[false, false, false]
+ts_ms=57502 [scheduling] visibility_window_transition state=open window_start_ms=57501 window_end_ms=57601 at_ms=57502
+ts_ms=57603 [health] ok event_at=57603 alerts=[false, false, false]
+ts_ms=57603 [scheduling] visibility_window_transition state=closed window_start_ms=57501 window_end_ms=57601 at_ms=57603
+ts_ms=57803 [health] ok event_at=57803 alerts=[false, false, false]

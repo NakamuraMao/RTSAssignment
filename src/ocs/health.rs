@@ -18,11 +18,7 @@ pub fn check(alert_snapshot: [bool; 3]) -> bool {
         );
         false
     } else {
-        crate::ocs_ts_eprintln!(
-            "[health] ok event_at={} alerts={:?}",
-            at.0,
-            alert_snapshot
-        );
+        crate::ocs_ts_eprintln!("[health] ok event_at={} alerts={:?}", at.0, alert_snapshot);
         true
     }
 }

@@ -49,8 +49,7 @@ pub async fn run_uplink_listener(addr: &str) {
                 }
                 if command_id == NACK_COMMAND_ID {
                     if payload_len >= 16 {
-                        let missing_from =
-                            u64::from_le_bytes(buf[14..22].try_into().unwrap());
+                        let missing_from = u64::from_le_bytes(buf[14..22].try_into().unwrap());
                         let missing_to = u64::from_le_bytes(buf[22..30].try_into().unwrap());
                         crate::ocs_ts_eprintln!(
                             "[uplink] nack_recv peer={} missing_from={} missing_to={}",

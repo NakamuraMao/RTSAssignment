@@ -221,13 +221,10 @@ fn sample_tick(
     let actual_ms = t_read_start.0;
     // Delayed: suppress sending for the target sensor.
     // Keep phase state updated to avoid counting fault-window gaps as normal-operation jitter.
-    if fault.active
-        && fault.sensor_id == Some(sensor_id)
-        && fault.kind == FaultKind::Delayed
-    {
+    if fault.active && fault.sensor_id == Some(sensor_id) && fault.kind == FaultKind::Delayed {
         if state.last_sample_ms > 0 && jitter_threshold_ms > 0 {
             let actual_interval_ms = actual_ms.saturating_sub(state.last_sample_ms);
-            let jitter_ms = actual_interval_ms.saturating_sub(period_ms);
+            let jitter_ms = actual_interval_ms.abs_diff(period_ms);
             if let Some(metrics) = bench_metrics {
                 if let Ok(mut m) = metrics.try_lock() {
                     m.thermal_sensor_fault_max_jitter_ms =
@@ -257,8 +254,7 @@ fn sample_tick(
         state.next_deadline_ms = actual_ms.saturating_add(period_ms);
         let now_ms = time::now_ms().0;
         let last_log_ms = last_priority_drop_log_ms.load(Ordering::Relaxed);
-        if last_log_ms == 0 || now_ms.saturating_sub(last_log_ms) >= PRIORITY_DROP_LOG_INTERVAL_MS
-        {
+        if last_log_ms == 0 || now_ms.saturating_sub(last_log_ms) >= PRIORITY_DROP_LOG_INTERVAL_MS {
             crate::ocs_ts_eprintln!(
                 "[sensors] drop priority buffer_high sensor_id={} event_at={}",
                 sensor_id.0,
@@ -352,14 +348,20 @@ fn sample_tick(
 
     if state.last_sample_ms > 0 && jitter_threshold_ms > 0 {
         let actual_interval_ms = actual_ms.saturating_sub(state.last_sample_ms);
-        let jitter_ms = actual_interval_ms.saturating_sub(period_ms);
+        let jitter_ms = actual_interval_ms.abs_diff(period_ms);
         if let Some(metrics) = bench_metrics {
             if let Ok(mut m) = metrics.try_lock() {
                 m.thermal_sensor_max_jitter_ms =
                     m.thermal_sensor_max_jitter_ms.max(jitter_ms as i64);
             }
         }
-        if jitter_ms > jitter_threshold_ms {
+        if jitter_ms >= jitter_threshold_ms {
+            if let Some(metrics) = bench_metrics {
+                if let Ok(mut m) = metrics.try_lock() {
+                    m.critical_jitter_violation_count =
+                        m.critical_jitter_violation_count.saturating_add(1);
+                }
+            }
             let at = time::now_ms();
             let _ = safety_tx.try_send(SafetyEvent {
                 at,
@@ -367,13 +369,6 @@ fn sample_tick(
                 sensor_id: Some(sensor_id),
                 measured_value_ms: Some(jitter_ms),
             });
-            crate::ocs_ts_eprintln!(
-                "[sensors] jitter_exceeded sensor_id={} period={} actual_interval={} jitter_ms={}",
-                sensor_id.0,
-                period_ms,
-                actual_interval_ms,
-                jitter_ms
-            );
         }
     }
 
