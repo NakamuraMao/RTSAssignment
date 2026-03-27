@@ -4,7 +4,7 @@
 //! Ctrl+C via `ShutdownHandle::try_shutdown` connects to Supervisor's graceful shutdown, waiting for `run` to complete.
 
 use std::marker::PhantomData;
-use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread::JoinHandle;
 use std::time::Duration;
@@ -15,6 +15,7 @@ use tokio::time::timeout;
 use super::benchmarking;
 use super::downlink;
 use super::safety;
+use super::test_env;
 use super::scheduling;
 use super::sensors;
 use super::time;
@@ -255,6 +256,9 @@ impl OcsRuntime<RuntimeRunning> {
                 const OCS_UPLINK_BIND: &str = "127.0.0.1:9001";
 
                 let active_ms = Arc::new(AtomicU64::new(0));
+                let delay_thermal_recovered = Arc::new(AtomicBool::new(false));
+
+                test_env::log_active_test_modes_once();
 
                 let alert_rx_bench = alert_rx.clone();
 
@@ -303,6 +307,7 @@ impl OcsRuntime<RuntimeRunning> {
                     safety_tx,
                     buffer_sample_count,
                     bench_metrics.clone(),
+                    Arc::clone(&delay_thermal_recovered),
                 ));
                 sup.spawn(scheduling::run_scheduling(
                     buffer_rx,
@@ -335,6 +340,7 @@ impl OcsRuntime<RuntimeRunning> {
                     metrics_rx,
                     alert_rx_bench,
                     bench_metrics.clone(),
+                    delay_thermal_recovered,
                 ));
             }
         };
@@ -345,14 +351,18 @@ impl OcsRuntime<RuntimeRunning> {
         };
         tokio::pin!(supervisor_run);
 
+        let mut wait_after_signal = false;
         tokio::select! {
             res = tokio::signal::ctrl_c() => {
                 let _ = res;
                 shutdown_ctrl_c.try_shutdown();
+                wait_after_signal = true;
             }
             _ = &mut supervisor_run => {}
         }
-        supervisor_run.await;
+        if wait_after_signal {
+            supervisor_run.await;
+        }
         if thermal_thread.is_none() {
             thermal_thread = thermal_thread_slot
                 .lock()
@@ -443,6 +453,7 @@ async fn receiver_loop(
     safety_tx: mpsc::Sender<SafetyEvent>,
     buffer_sample_count: Arc<AtomicUsize>,
     bench_metrics: Arc<Mutex<BenchmarkMetrics>>,
+    delay_thermal_recovered: Arc<AtomicBool>,
 ) {
     let mut last_seen: [Option<u64>; 3] = [None, None, None];
 
@@ -492,6 +503,17 @@ async fn receiver_loop(
                             }
                         }
                         last_seen[idx] = Some(now);
+
+                        // Optional test: delay first thermal Recovered after benchmark fault clear (recovery > abort threshold).
+                        if sid == SensorId(0) && delay_thermal_recovered.load(Ordering::Acquire) {
+                            delay_thermal_recovered.store(false, Ordering::Release);
+                            let ms = test_env::slow_recovery_delay_ms();
+                            crate::ocs_ts_eprintln!(
+                                "[receiver] ocs_test_slow_recovery delay_ms={} before Recovered",
+                                ms
+                            );
+                            tokio::time::sleep(Duration::from_millis(ms)).await;
+                        }
 
                         // send Recovered on successful reception (only reset/clear when safety is in alert)
                         let _ = safety_tx.try_send(SafetyEvent {

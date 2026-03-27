@@ -14,6 +14,7 @@ use crate::gcs::types::MAX_PAYLOAD_LEN;
 use crate::reliability::{CircuitBreaker, ExponentialBackoff};
 use crate::wire::{FIXED_HEADER_BYTES, LENGTH_PREFIX_BYTES};
 
+use super::test_env;
 use super::time;
 use super::types::{BenchmarkMetrics, DownlinkPacket};
 use crate::supervisor::debug_log_ndjson;
@@ -75,7 +76,20 @@ pub async fn run_downlink(
     let mut backoff = ExponentialBackoff::new(BACKOFF_BASE_MS, BACKOFF_MAX_MS);
     let mut setup_fail_count: u32 = 0;
 
+    test_env::log_active_test_modes_once();
+    let stall_enabled = test_env::force_downlink_stall();
+    let stall_ms = test_env::downlink_stall_ms();
+    let mut stall_once_done = false;
+
     'packets: while let Some(packet) = downlink_rx.recv().await {
+        if stall_enabled && !stall_once_done {
+            stall_once_done = true;
+            crate::ocs_ts_eprintln!(
+                "[downlink] test_stall sleep_ms={} (consumer paused; queue may fill)",
+                stall_ms
+            );
+            tokio::time::sleep(Duration::from_millis(stall_ms)).await;
+        }
         let prev = queued.fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| {
             if v > 0 {
                 Some(v - 1)
@@ -128,9 +142,24 @@ pub async fn run_downlink(
             }
 
             let init_at = time::now_ms();
+            let extra_init_delay_ms = if test_env::force_init_timeout() {
+                let ms = test_env::init_timeout_extra_ms();
+                crate::ocs_ts_eprintln!(
+                    "[downlink] test_init_timeout extra_delay_ms={} (before udp setup)",
+                    ms
+                );
+                ms
+            } else {
+                0
+            };
             match timeout(
                 Duration::from_millis(DOWNLINK_INIT_TIMEOUT_MS),
-                setup_udp_connected(gcs_addr),
+                async {
+                    if extra_init_delay_ms > 0 {
+                        tokio::time::sleep(Duration::from_millis(extra_init_delay_ms)).await;
+                    }
+                    setup_udp_connected(gcs_addr).await
+                },
             )
             .await
             {

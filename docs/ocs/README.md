@@ -5,6 +5,18 @@ OCS receives commands (UDP) from `GCS` and runs the pipeline in this order: sens
 
 1. Start `GCS` in another terminal: `cargo run --bin gcs`
 2. Start `OCS` in a separate terminal: `cargo run --bin ocs`
+test environment
+1. Intentionally trigger Degraded mode / buffer drops
+run:
+OCS_TEST_FORCE_DOWNLINK_STALL=true OCS_TEST_DOWNLINK_STALL_MS=5000 cargo run --bin ocs > "logs/ocs_$(date +%Y%m%d_%H%M%S).log" 2>&1
+
+2. Trigger a downlink initialization timeout (>5 ms)
+run:
+OCS_TEST_FORCE_INIT_TIMEOUT=true OCS_TEST_INIT_TIMEOUT_EXTRA_MS=6 cargo run --bin ocs > "logs/ocs_$(date +%Y%m%d_%H%M%S).log" 2>&1
+
+3. Force recovery to exceed ~200 ms and trigger a Mission Abort
+run:
+OCS_TEST_FORCE_SLOW_RECOVERY=true OCS_TEST_SLOW_RECOVERY_DELAY_MS=250 cargo run --bin ocs > "logs/ocs_$(date +%Y%m%d_%H%M%S).log" 2>&1
 
 UDP assumptions (hard-coded in the code):
 - GCS downlink receive address: `127.0.0.1:9000`

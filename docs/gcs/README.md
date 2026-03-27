@@ -3,8 +3,9 @@
 ## How to run
 GCS receives telemetry (downlink) over UDP, schedules commands to be sent at the intended execution time, and monitors the system while managing `fault` / `interlock`.
 
-1. Start `OCS`: `cargo run --bin ocs`
-2. Start `GCS` in another terminal: `cargo run --bin gcs`
+1. Start `OCS`: `cargo run --bin ocs`. If want to see all benchmarking not in the terminal run cargo run --bin gcs > "logs/gcs_$(date +%Y%m%d_%H%M%S).log" 2>&1
+2. Start `GCS` in another terminal: `cargo run --bin gcs` If want to see all benchmarking not in the terminal run cargo run --bin ocs > "logs/ocs_$(date +%Y%m%d_%H%M%S).log" 2>&1
+
 
 UDP assumptions (hard-coded in the code):
 - GCS downlink receive address: `127.0.0.1:9000`

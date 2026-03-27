@@ -1,5 +1,6 @@
 //! OCS: fault injection (Delayed) every 60s, wait for alert, measure recovery time, evaluate metrics and log.
 
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
@@ -7,6 +8,7 @@ use tokio::sync::{mpsc, watch};
 use tokio::time::timeout;
 
 use super::safety;
+use super::test_env;
 use super::types::{
     BenchmarkMetrics, FaultInjectionState, FaultKind, RecoveryTimeMetric, SensorId,
 };
@@ -24,6 +26,7 @@ pub async fn run_benchmarking(
     mut metrics_rx: mpsc::Receiver<RecoveryTimeMetric>,
     mut alert_rx: watch::Receiver<[bool; 3]>,
     bench_metrics: Arc<Mutex<BenchmarkMetrics>>,
+    delay_thermal_recovered: Arc<AtomicBool>,
 ) {
     let mut cycle: u64 = 0;
     let mut interval = tokio::time::interval(Duration::from_secs(BENCH_INTERVAL_SECS));
@@ -176,6 +179,14 @@ pub async fn run_benchmarking(
 
         // 3. clear fault
         let _ = fault_tx.send(FaultInjectionState::inactive());
+        if test_env::force_slow_recovery() {
+            delay_thermal_recovered.store(true, Ordering::Release);
+            crate::ocs_ts_eprintln!(
+                "[benchmarking] cycle={} ocs_test_slow_recovery: next thermal Recovered will be delayed by {}ms",
+                cycle,
+                test_env::slow_recovery_delay_ms()
+            );
+        }
         crate::ocs_ts_eprintln!(
             "[benchmarking] cycle={} fault cleared, waiting for recovery metric",
             cycle

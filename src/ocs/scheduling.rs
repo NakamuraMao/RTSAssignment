@@ -341,6 +341,7 @@ async fn run_compression_lane(
     mut rx: mpsc::Receiver<CompressionTrigger>,
     downlink_tx: mpsc::Sender<DownlinkPacket>,
     downlink_queued: Arc<AtomicUsize>,
+    metrics: Arc<Mutex<BenchmarkMetrics>>,
     report_tx: mpsc::Sender<CompletionReport>,
 ) {
     let mut prev_in_visibility_window: Option<bool> = None;
@@ -381,6 +382,9 @@ async fn run_compression_lane(
                         p.sequence,
                         p.prepared_at.0
                     );
+                    if let Ok(mut m) = metrics.try_lock() {
+                        m.total_dropped_samples = m.total_dropped_samples.saturating_add(1);
+                    }
                 }
                 Err(mpsc::error::TrySendError::Closed(_)) => return,
             }
@@ -536,6 +540,9 @@ async fn run_compression_lane(
                         p.sequence,
                         prepared_at.0
                     );
+                    if let Ok(mut m) = metrics.try_lock() {
+                        m.total_dropped_samples = m.total_dropped_samples.saturating_add(1);
+                    }
                 }
                 Err(mpsc::error::TrySendError::Closed(_)) => return,
             }
@@ -712,6 +719,7 @@ pub async fn run_scheduling(
         compression_rx,
         downlink_tx.clone(),
         downlink_queued.clone(),
+        Arc::clone(&metrics),
         report_tx.clone(),
     ));
     tokio::spawn(run_simple_lane(
